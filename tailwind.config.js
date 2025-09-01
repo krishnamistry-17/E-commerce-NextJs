@@ -10,6 +10,8 @@ module.exports = {
     extend: {
       colors: {
         bggray: "#F2F3F4",
+        graytext: "#ADADAD",
+        ratingtext: "#B6B6B6",
         regalblue: "#253D4E",
         bgbrown: "#7E7E7E",
         bgfruit1: "#F4F6FA",
@@ -20,6 +22,11 @@ module.exports = {
         bgfruit6: "#FFF3EB",
         bgfruit7: "#FFF3FF",
         shopbtn: "#3BB77E",
+        cartbtn: "#DEF9EC",
+        productborder: "#ECECEC",
+        pinktag: "#F74B81",
+        bluetag: "#67BCEE",
+        orangetag: "#F59758",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -28,6 +35,8 @@ module.exports = {
         "quick-medium-500": ["Quicksand-Medium"],
         "quick-regular-400": ["Quicksand-Regular"],
         "quick-light-300": ["Quicksand-Light"],
+        "lato-regular-400": ["Lato-Regular"],
+        "lato-bold-700": ["Lato-Bold"],
       },
       screens: {
         xs: "320px",

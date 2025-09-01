@@ -1,47 +1,84 @@
+// import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { Product } from '../types/product';
+// export interface CartItem {
+//   id: string;
+//   title: string;
+//   price: number;
+//   quantity: number;
+//   image?: string;
+// }
 
-type CartItem = Product & { quantity: number };
+// interface CartState {
+//   items: CartItem[];
+// }
 
-type CartContextType = {
-  cart: CartItem[];
-  addToCart: (product: Product) => void;
-  removeFromCart: (id: number) => void;
-};
+// const initialState: CartState = {
+//   items: [],
+// };
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+// const cartSlice = createSlice({
+//   name: 'cart',
+//   initialState,
+//   reducers: {
+//     addToCart(state, action: PayloadAction<CartItem>) {
+//       const itemIndex = state.items.findIndex(item => item.id === action.payload.id);
+//       if (itemIndex >= 0) {
+//         // If item already exists, increase quantity
+//         state.items[itemIndex].quantity += action.payload.quantity;
+//       } else {
+//         // Add new item
+//         state.items.push(action.payload);
+//       }
+//     },
+//     removeFromCart(state, action: PayloadAction<string>) {
+//       state.items = state.items.filter(item => item.id !== action.payload);
+//     },
+//     updateQuantity(state, action: PayloadAction<{ id: string; quantity: number }>) {
+//       const item = state.items.find(item => item.id === action.payload.id);
+//       if (item && action.payload.quantity > 0) {
+//         item.quantity = action.payload.quantity;
+//       }
+//     },
+//     clearCart(state) {
+//       state.items = [];
+//     },
+//   },
+// });
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+// export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
+// export default cartSlice.reducer;
+// import { Provider } from 'react-redux';
+// import { store } from '../store'; // Adjust path accordingly
+// import type { AppProps } from 'next/app';
 
-  const addToCart = (product: Product) => {
-    setCart(prev => {
-      const exists = prev.find(item => item.id === product.id);
-      if (exists) {
-        return prev.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
+// export default function MyApp({ Component, pageProps }: AppProps) {
+//   return (
+//     <Provider store={store}>
+//       <Component {...pageProps} />
+//     </Provider>
+//   );
+// }
+// import { useDispatch } from 'react-redux';
+// import { addToCart } from '../store/cartSlice'; // Adjust path accordingly
 
-  const removeFromCart = (id: number) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
+// const dispatch = useDispatch();
 
-  return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
-      {children}
-    </CartContext.Provider>
-  );
-};
+// const handleAddToCart = (item: DailySells) => {
+//   dispatch(
+//     addToCart({
+//       id: item.id,
+//       title: item.title,
+//       price: item.newPrice, // assuming newPrice is number, else parse it
+//       quantity: 1,
+//       image: item.image,
+//     })
+//   );
+// };
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within CartProvider");
-  return context;
-};
+// // Inside your JSX, replace the button with:
+// <button
+//   onClick={() => handleAddToCart(item)}
+//   className="text-[14px] font-lato-bold-700 text-shopbtn "
+// >
+//   {item.cart}
+// </button>

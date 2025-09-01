@@ -1,13 +1,20 @@
 import React from "react";
 import { Categories } from "./pages/categories/page";
-import { headings, products, bannerheadings } from "../data/product";
+import {
+  headings,
+  products,
+  bannerheadings,
+  popularproductheadings,
+  popluarproducts,
+  dailysells,
+  dailydatas,
+} from "../data/product";
+import PopularProduct from "./pages/popularproduct/page";
+import DailySells from "./pages/dailysells/page";
 
 const Page = () => {
-  // Example: pick first heading and all products for now
   const heading = headings;
-  
 
-  // Optionally filter products by heading.title category
   // const filteredProducts = products.filter(
   //   (product) => product.category === heading.title
   // );
@@ -19,6 +26,11 @@ const Page = () => {
         products={products}
         bannerheading={bannerheadings}
       />
+      <PopularProduct
+        heading={popularproductheadings}
+        popularproduct={popluarproducts}
+      />
+      <DailySells heading={dailysells} dailydata={dailydatas} />
     </div>
   );
 };

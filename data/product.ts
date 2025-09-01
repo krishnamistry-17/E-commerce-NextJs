@@ -1,4 +1,12 @@
-import { BannerHeading, Heading, Product } from "../types/product";
+import {
+  BannerHeading,
+  DailyBestSells,
+  DailySells,
+  Heading,
+  PopularProductHeadings,
+  PopularProducts,
+  Product,
+} from "../types/product";
 import image1 from "../assets/images/image1.png";
 import image2 from "../assets/images/image2.png";
 import image3 from "../assets/images/image3.png";
@@ -10,6 +18,13 @@ import image9 from "../assets/svgs/image9.svg";
 import banner1 from "../assets/images/banner-1.png";
 import banner2 from "../assets/images/banner-2.png";
 import banner3 from "../assets/images/banner-3.png";
+import product1 from "../assets/images/product1.png";
+import product2 from "../assets/images/product2.png";
+import product3 from "../assets/images/product3.png";
+import product4 from "../assets/images/product4.png";
+import product5 from "../assets/images/product5.png";
+import rating from "../assets/svgs/rating.svg";
+import cart from "../assets/svgs/cart.svg";
 
 export const products: Product[] = [
   {
@@ -79,20 +94,21 @@ export const products: Product[] = [
 ];
 
 export const headings: Heading[] = [
+  { id: 1, title: "All" },
   {
-    id: 1,
+    id: 2,
     title: "Fruits",
   },
   {
-    id: 2,
+    id: 3,
     title: "Coffes & Teas",
   },
   {
-    id: 3,
+    id: 4,
     title: "Pet Foods",
   },
   {
-    id: 4,
+    id: 5,
     title: "Vegetables",
   },
 ];
@@ -116,5 +132,217 @@ export const bannerheadings: BannerHeading[] = [
     banner: "The best Organic Products Online",
     btn: "Shop Now",
     image: banner3,
+  },
+];
+
+export const popularproductheadings: PopularProductHeadings[] = [
+  {
+    id: 1,
+    title: "All",
+  },
+  {
+    id: 2,
+    title: "Snack",
+  },
+  {
+    id: 3,
+    title: "Hodo Foods",
+  },
+  {
+    id: 4,
+    title: "Pet Foods",
+  },
+  {
+    id: 5,
+    title: "Meats",
+  },
+  {
+    id: 6,
+    title: "Vegetables",
+  },
+  {
+    id: 7,
+    title: "Fruits",
+  },
+];
+
+export const popluarproducts: PopularProducts[] = [
+  {
+    id: 1,
+    tag: "Hot",
+    image: product1,
+    category: "Snack",
+    title: "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+    ratingimage: rating,
+    rating: "(4.0)",
+    by: "NestFood",
+    newPrice: "$28.85",
+    oldPrice: "$32.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 2,
+    tag: "Sale",
+    image: product2,
+    category: "Hodo Foods",
+    title: "All Natural Italian-Style Chicken Meatballs",
+    ratingimage: rating,
+    rating: "(3.5)",
+    by: "Stouffer",
+    newPrice: "$52.85",
+    oldPrice: "$55.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 3,
+    tag: "New",
+    image: product3,
+    category: "Snack",
+    title: "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+    ratingimage: rating,
+    rating: "(4.0)",
+    by: "StarKist",
+    newPrice: "$48.85",
+    oldPrice: "$52.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 4,
+    tag: "",
+    image: product4,
+    category: "Vegetables",
+    title: "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+    ratingimage: rating,
+    rating: "(4.0)",
+    by: "StarKist",
+    newPrice: "$48.85",
+    oldPrice: "$52.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 5,
+    tag: "-14%",
+    image: product5,
+    category: "Pet Foods",
+    title: "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+    ratingimage: rating,
+    rating: "(4.0)",
+    by: "StarKist",
+    newPrice: "$48.85",
+    oldPrice: "$52.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 3,
+    tag: "New",
+    image: product3,
+    category: "Snack",
+    title: "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+    ratingimage: rating,
+    rating: "(4.0)",
+    by: "StarKist",
+    newPrice: "$48.85",
+    oldPrice: "$52.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 1,
+    tag: "Hot",
+    image: product1,
+    category: "Snack",
+    title: "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+    ratingimage: rating,
+    rating: "(4.0)",
+    by: "NestFood",
+    newPrice: "$28.85",
+    oldPrice: "$32.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+  {
+    id: 2,
+    tag: "Sale",
+    image: product2,
+    category: "Hodo Foods",
+    title: "All Natural Italian-Style Chicken Meatballs",
+    ratingimage: rating,
+    rating: "(3.5)",
+    by: "Stouffer",
+    newPrice: "$52.85",
+    oldPrice: "$55.8",
+    cartimage: cart,
+    cart: "Add",
+  },
+];
+
+export const dailysells: DailyBestSells[] = [
+  { id: 0, title: "All" },
+  { id: 1, title: "Featured" },
+  { id: 2, title: "Popular" },
+  { id: 3, title: "New added" },
+];
+
+export const dailydatas: DailySells[] = [
+  {
+    id: "1",
+    tag: "Save 35%",
+    image: product1,
+    category: "Featured",
+    title: "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+    ratingimage: rating,
+    newPrice: "$28.85",
+    oldPrice: "$32.8",
+    cartimage: cart,
+    cart: "Add",
+    sold: "Sold:",
+    soldnumber: "90/120",
+  },
+  {
+    id: "2",
+    tag: "Sale",
+    image: product2,
+    category: "Popular",
+    title: "All Natural Italian-Style Chicken Meatballs",
+    ratingimage: rating,
+    newPrice: "$52.85",
+    oldPrice: "$55.8",
+    cartimage: cart,
+    cart: "Add",
+    sold: "Sold:",
+    soldnumber: "90/120",
+  },
+  {
+    id: "3",
+    tag: "Best Sale",
+    image: product3,
+    category: "Featured",
+    title: "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+    ratingimage: rating,
+    newPrice: "$48.85",
+    oldPrice: "$52.8",
+    cartimage: cart,
+    cart: "Add",
+    sold: "Sold:",
+    soldnumber: "90/120",
+  },
+  {
+    id: "4",
+    tag: "Save 15%",
+    image: product4,
+    category: "New added",
+    title: "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+    ratingimage: rating,
+    newPrice: "$48.85",
+    oldPrice: "$52.8",
+    cartimage: cart,
+    cart: "Add",
+    sold: "Sold:",
+    soldnumber: "90/120",
   },
 ];

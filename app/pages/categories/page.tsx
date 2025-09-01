@@ -12,7 +12,6 @@ type Props = {
 };
 
 export const Categories = ({ heading, products, bannerheading }: Props) => {
-  console.log("products :", products);
   const [activeTab, setActiveTab] = useState(heading[0]?.title);
 
   const categoryBgColors: Record<string, string> = {
@@ -49,7 +48,7 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
                       <div
                         key={index}
                         onClick={() => setActiveTab(item?.title)}
-                        className={` cursor-pointer ${
+                        className={` cursor-pointer  pt-2 xs375:pt-0  ${
                           activeTab === item?.title
                             ? " text-shopbtn"
                             : "text-regalblue"
@@ -80,29 +79,31 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
             className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-[24px] 
           rounded-[10px] p-4 text-center items-center"
           >
-            {filteredProduct?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`py-[22px]
+            {(activeTab === "All" ? products : filteredProduct)?.map(
+              (item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`py-[22px]
                   ${categoryBgColors[item?.category]}
                   `}
-                >
-                  <div>
-                    <Image
-                      src={item?.image}
-                      alt={item?.title}
-                      className=" items-cente justify-center w-full"
-                    />
-                    <p>{item?.title}</p>
-                    <p>
-                      {item?.price}
-                      <span className="pl-1">{item?.item}</span>
-                    </p>
+                  >
+                    <div>
+                      <Image
+                        src={item?.image}
+                        alt={item?.title}
+                        className=" items-cente justify-center w-full"
+                      />
+                      <p>{item?.title}</p>
+                      <p>
+                        {item?.price}
+                        <span className="pl-1">{item?.item}</span>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              }
+            )}
           </div>
         </div>
         <div className="pt-[25px] pb-[56px] pl-[12px]">
@@ -113,8 +114,24 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
           >
             {bannerheading.map((item, index) => {
               return (
-                <div key={index}>
+                <div key={index} className=" relative">
                   <Image src={item?.image} alt="name" />
+                  <div className=" absolute top-8">
+                    <p
+                      className="lg:text-[24px] text-[16px] font-quick-bold-700
+                     text-regalblue lg:max-w-[235px] max-w-[209px] pl-4"
+                    >
+                      {item?.banner}
+                    </p>
+                    <div className="pt-[15px] pl-4 ">
+                      <button
+                        className="text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px]
+                        py-[8px] pl-[13px] pr-[28.11px]"
+                      >
+                        Shop Now
+                      </button>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -124,12 +141,3 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
     </>
   );
 };
-
-
-// echo "# E-commerce-NextJs" >> README.md
-// git init
-// git add README.md
-// git commit -m "first commit"
-// git branch -M main
-// git remote add origin https://github.com/krishnamistry-17/E-commerce-NextJs.git
-// git push -u origin main
