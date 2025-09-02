@@ -27,7 +27,7 @@ export type PopularProductHeadings = {
 };
 
 export type PopularProducts = {
-  id: number;
+  id: string;
   tag: string;
   image: StaticImageData;
   category: string;
@@ -35,8 +35,8 @@ export type PopularProducts = {
   ratingimage: StaticImageData;
   rating: string;
   by: string;
-  newPrice: string;
-  oldPrice: string;
+  newPrice: number;
+  oldPrice: number;
   cartimage: StaticImageData;
   cart: string;
 };
@@ -53,10 +53,28 @@ export type DailySells = {
   category: string;
   title: string;
   ratingimage: StaticImageData;
-  newPrice: string;
-  oldPrice: string;
+  newPrice: number;
+  oldPrice: number;
   cartimage: StaticImageData;
   cart: string;
   sold: string;
   soldnumber: string;
+};
+
+export type DealsHeading = {
+  id: number;
+  title: string;
+};
+
+export type DailyDeals = {
+  id: string;
+  image: StaticImageData;
+  title: string;
+  ratingimage: StaticImageData;
+  rating: string;
+  by: string;
+  newPrice: number;
+  oldPrice: number;
+  cartimage: StaticImageData;
+  cart: string;
 };

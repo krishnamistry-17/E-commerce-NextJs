@@ -8,9 +8,12 @@ import {
   popluarproducts,
   dailysells,
   dailydatas,
+  dealsheading,
+  dailydeals,
 } from "../data/product";
 import PopularProduct from "./pages/popularproduct/page";
 import DailySells from "./pages/dailysells/page";
+import DealsDay from "./pages/deals/page";
 
 const Page = () => {
   const heading = headings;
@@ -31,6 +34,7 @@ const Page = () => {
         popularproduct={popluarproducts}
       />
       <DailySells heading={dailysells} dailydata={dailydatas} />
+      <DealsDay heading={dealsheading} dailydeals={dailydeals} />
     </div>
   );
 };

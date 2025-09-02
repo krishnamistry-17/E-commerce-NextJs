@@ -5,6 +5,7 @@ import bestbanner from "../../../assets/images/bestbanner.png";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../slice/cartSlice";
+import { toast } from "react-toast";
 
 type Props = {
   heading: DailyBestSells[];
@@ -27,14 +28,16 @@ const DailySells = ({ heading, dailydata }: Props) => {
   );
 
   const handleCart = (item: DailySells) => {
+    console.log("item :", item);
     dispatch(
       addToCart({
         id: item.id,
         title: item.title,
-        price: 1,
+        newPrice: item.newPrice,
         quantity: 1,
       })
     );
+    toast.success("Item added to cart");
   };
 
   return (

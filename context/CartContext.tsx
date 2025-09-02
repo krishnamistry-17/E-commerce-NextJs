@@ -82,3 +82,115 @@
 // >
 //   {item.cart}
 // </button>
+// "use client";
+// import React from "react";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/store";
+// import Link from "next/link";
+// import Image from "next/image";
+// import cartIcon from "@/assets/icons/cart.svg"; // Adjust path as needed
+
+// const CartIcon = () => {
+//   const cartItems = useSelector((state: RootState) => state.cart.items);
+//   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+//   return (
+//     <Link href="/cart">
+//       <div className="relative cursor-pointer">
+//         <Image src={cartIcon} alt="Cart" width={24} height={24} />
+//         {totalQuantity > 0 && (
+//           <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+//             {totalQuantity}
+//           </span>
+//         )}
+//       </div>
+//     </Link>
+//   );
+// };
+
+// export default CartIcon;
+// // app/cart/page.tsx
+// "use client";
+// import React from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import { RootState } from "@/store";
+// import { removeFromCart, updateQuantity, clearCart } from "../slice/cartSlice";
+
+// const CartPage = () => {
+//   const cartItems = useSelector((state: RootState) => state.cart.items);
+//   const dispatch = useDispatch();
+
+//   const totalPrice = cartItems.reduce(
+//     (acc, item) => acc + item.price * item.quantity,
+//     0
+//   );
+
+//   const handleQuantityChange = (id: string, quantity: number) => {
+//     if (quantity > 0) {
+//       dispatch(updateQuantity({ id, quantity }));
+//     }
+//   };
+
+//   return (
+//     <div className="p-8">
+//       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+
+//       {cartItems.length === 0 ? (
+//         <p className="text-gray-600">Your cart is empty.</p>
+//       ) : (
+//         <div className="space-y-6">
+//           {cartItems.map((item) => (
+//             <div
+//               key={item.id}
+//               className="flex justify-between items-center border p-4 rounded-md"
+//             >
+//               <div>
+//                 <p className="text-lg font-semibold">{item.title}</p>
+//                 <p>Price: ${item.price.toFixed(2)}</p>
+//                 <div className="flex items-center mt-2">
+//                   <label className="mr-2">Qty:</label>
+//                   <input
+//                     type="number"
+//                     value={item.quantity}
+//                     min={1}
+//                     className="w-16 p-1 border rounded"
+//                     onChange={(e) =>
+//                       handleQuantityChange(item.id, Number(e.target.value))
+//                     }
+//                   />
+//                 </div>
+//               </div>
+//               <div className="text-right">
+//                 <p className="font-bold">
+//                   ${(item.price * item.quantity).toFixed(2)}
+//                 </p>
+//                 <button
+//                   onClick={() => dispatch(removeFromCart(item.id))}
+//                   className="text-red-600 hover:underline mt-2 block"
+//                 >
+//                   Remove
+//                 </button>
+//               </div>
+//             </div>
+//           ))}
+//           <div className="pt-4">
+//             <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+//             <button
+//               onClick={() => dispatch(clearCart())}
+//               className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+//             >
+//               Clear Cart
+//             </button>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default CartPage;
+// import Link from "next/link";
+
+// <Link href="/cart">
+//   <button className="bg-shopbtn text-white px-4 py-2 rounded">View Cart</button>
+// </Link>

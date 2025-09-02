@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { PopularProductHeadings, PopularProducts } from "@/types/product";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
+import { addToCart } from "../slice/cartSlice";
 
 type Props = {
   heading: PopularProductHeadings[];
@@ -30,6 +31,17 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
     const findName = heading?.find((product) => product?.title === "All");
     console.log("findName :", findName);
   }, []);
+
+  const handleCart = (item: PopularProducts) => {
+    dispatch(
+      addToCart({
+        id: item.id,
+        title: item.title,
+        newPrice: item.newPrice,
+        quantity: 1,
+      })
+    );
+  };
 
   return (
     <>
@@ -121,7 +133,10 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
                             </span>
                           </p>
                         </div>
-                        <div className="flex items-center justify-center gap-1 bg-cartbtn rounded-[4px] w-[84.91px] h-[36px]">
+                        <div
+                          className="flex items-center justify-center gap-1 bg-cartbtn rounded-[4px] w-[84.91px] h-[36px]"
+                          onClick={() => handleCart(item)}
+                        >
                           <Image src={item?.cartimage} alt="cart" />
                           <button className="text-[14px] font-lato-bold-700 text-shopbtn ">
                             {item?.cart}
