@@ -13,6 +13,8 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { useState } from "react";
 import ThemeToggle from "../theme/page";
 // import ThemeToggle from "../theme/page";
+import cart from "../../assets/svgs/cart.svg";
+import CartIcon from "../pages/carticon/page";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +46,10 @@ export default function Navbar() {
           <Link href="/blog" className="">
             Blog
           </Link>
-          <Link href="/pages/cart">Cart</Link>
+          <Link href="/pages/cart">
+            <Image src={cart} alt="cart" className="w-6 h-6" />
+            <CartIcon />
+          </Link>
           <div>
             <ThemeToggle />
           </div>

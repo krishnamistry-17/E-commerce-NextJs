@@ -35,6 +35,7 @@ const DailySells = ({ heading, dailydata }: Props) => {
         title: item.title,
         newPrice: item.newPrice,
         quantity: 1,
+        image: item?.image,
       })
     );
     toast.success("Item added to cart");

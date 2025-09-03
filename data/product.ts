@@ -1,4 +1,5 @@
 import {
+  Advertise,
   BannerHeading,
   DailyBestSells,
   DailyDeals,
@@ -8,6 +9,8 @@ import {
   PopularProductHeadings,
   PopularProducts,
   Product,
+  Products,
+  ProductsHeading,
 } from "../types/product";
 import image1 from "../assets/images/image1.png";
 import image2 from "../assets/images/image2.png";
@@ -29,7 +32,17 @@ import deal1 from "../assets/images/deal1.png";
 import deal2 from "../assets/images/deal2.png";
 import deal3 from "../assets/images/deal3.png";
 import deal4 from "../assets/images/deal4.png";
+import sell1 from "../assets/images/sell1.png";
+import sell2 from "../assets/images/sell2.png";
+import sell3 from "../assets/images/sell3.png";
+import sell4 from "../assets/images/sell4.png";
+import sell5 from "../assets/images/sell5.png";
+import sell6 from "../assets/images/sell6.png";
 import rating from "../assets/svgs/rating.svg";
+import ad1 from "../assets/svgs/ad1.svg";
+import ad2 from "../assets/svgs/ad2.svg";
+import ad3 from "../assets/svgs/ad3.svg";
+import ad4 from "../assets/svgs/ad4.svg";
 import cart from "../assets/svgs/cart.svg";
 
 export const products: Product[] = [
@@ -431,5 +444,77 @@ export const dailydeals: DailyDeals[] = [
     oldPrice: 32.8,
     cartimage: cart,
     cart: "Add",
+  },
+];
+export const mainheading: ProductsHeading[] = [
+  {
+    productheadings: [
+      "Top Selling",
+      "Trending Products",
+      "Recently added",
+      "Top Rated",
+    ],
+  },
+];
+export const newproducts: Products[] = [
+  {
+    id: "1",
+    image: sell1,
+    image1: sell4,
+    title: "Nestle Original Coffee-Mate Coffee Creamer",
+    ratingimage: rating,
+    rating: "4.0",
+    newPrice: 28.85,
+    oldPrice: 32.8,
+    category: "Top Selling",
+  },
+  {
+    id: "2",
+    image: sell2,
+    image1: sell5,
+    title: "Nestle Original Coffee-Mate Coffee Creamer",
+    ratingimage: rating,
+    rating: "4.0",
+    newPrice: 28.85,
+    oldPrice: 32.8,
+    category: "Top Selling",
+  },
+  {
+    id: "3",
+    image: sell3,
+    image1: sell6,
+    title: "Nestle Original Coffee-Mate Coffee Creamer",
+    ratingimage: rating,
+    rating: "4.0",
+    newPrice: 28.85,
+    oldPrice: 32.8,
+    category: "Top Selling",
+  },
+];
+
+export const advertise: Advertise[] = [
+  {
+    id: 1,
+    image: ad1,
+    title: "Best prices & offers",
+    order: "Orders $50 or more",
+  },
+  {
+    id: 2,
+    image: ad2,
+    title: "Best prices & offers",
+    order: "Orders $50 or more",
+  },
+  {
+    id: 3,
+    image: ad3,
+    title: "Best prices & offers",
+    order: "Orders $50 or more",
+  },
+  {
+    id: 4,
+    image: ad4,
+    title: "Best prices & offers",
+    order: "Orders $50 or more",
   },
 ];

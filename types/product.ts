@@ -1,3 +1,4 @@
+import { mainheading } from "./../data/product";
 import { StaticImageData } from "next/image";
 
 export type Product = {
@@ -77,4 +78,27 @@ export type DailyDeals = {
   oldPrice: number;
   cartimage: StaticImageData;
   cart: string;
+};
+
+export type ProductsHeading = {
+  productheadings: string[];
+};
+
+export type Products = {
+  id: string;
+  image: StaticImageData;
+  image1: StaticImageData;
+  title: string;
+  ratingimage: StaticImageData;
+  rating: string;
+  newPrice: number;
+  oldPrice: number;
+  category: string;
+};
+
+export type Advertise = {
+  id: number;
+  image: StaticImageData;
+  title: string;
+  order: string;
 };

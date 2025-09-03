@@ -1,7 +1,11 @@
+"use client";
+
 import { DealsHeading, DailyDeals } from "@/types/product";
 import Image from "next/image";
 import React from "react";
 import next from "../../../assets/svgs/next.svg";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../slice/cartSlice";
 
 type Props = {
   heading: DealsHeading[];
@@ -9,9 +13,23 @@ type Props = {
 };
 
 const DealsDay = ({ heading, dailydeals }: Props) => {
+  const dispatch = useDispatch();
+
+  const hnadleCart = (item: DailyDeals) => {
+    dispatch(
+      addToCart({
+        id: item?.id,
+        title: item?.title,
+        newPrice: item?.newPrice,
+        quantity: 1,
+        image: item?.image,
+      })
+    );
+  };
+
   return (
     <>
-      <div className="pt-[50px]">
+      <div className="py-[50px] ">
         <div className="flex flex-col">
           <div className="md:flex justify-between items-center">
             <div>
@@ -43,64 +61,64 @@ const DealsDay = ({ heading, dailydeals }: Props) => {
             </div>
           </div>
           <div className="pt-[43px]">
-            <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 xl:gap-[24px] gap-4">
-              <>
-                {dailydeals?.map((item, index) => {
-                  return (
-                    <>
-                      <div key={index} className=" relative">
-                        <div>
-                          <Image
-                            src={item?.image}
-                            alt="image"
-                            className="w-[378px]"
-                          />
-                        </div>
-                        <div className="rounded-[10px] border border-productborder bg-white absolute bottom-[-93px] xl:left-1 lg:left-[15px] xl:max-w-[298px] max-w-[220px] w-full gap-[24px]">
-                          <div className="flex flex-col px-[25px] ">
-                            <p className="text-[16px] font-quick-bold-700 text-regalblue pt-[8px] ">
-                              {item?.title}
-                            </p>
-                            <div className="text-[14px] font-lato-regular-400 text-ratingtext pt-[8px] flex items-center">
-                              <Image src={item?.ratingimage} alt="rating" />
-                              <span className="text-shopbtn pl-1">
-                                {item?.rating}
-                              </span>
-                            </div>
-                            <div>
-                              <p className="text-[14px] font-lato-regular-400 text-ratingtext pt-[8px]">
-                                By
-                                <span className="text-shopbtn pl-1">
-                                  {item?.by}
-                                </span>
-                              </p>
-                            </div>
+            <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+              {dailydeals?.map((item, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="w-full">
+                    <Image
+                      src={item?.image}
+                      alt="image"
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
 
-                            <div className="flex justify-between items-center">
-                              <div className=" flex justify-between items-center pt-[22px]">
-                                <div>
-                                  <p className="text-[18px] font-quick-bold-700 text-shopbtn">
-                                    {item?.newPrice}
-                                    <span className="text-[14px] text-ratingtext pl-[10.46px] line-through">
-                                      {item?.oldPrice}
-                                    </span>
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center justify-center gap-2  bg-cartbtn rounded-[4px] w-[84.91px] h-[36px]">
-                                <Image src={item?.cartimage} alt="cart" />
-                                <button className="text-[14px] font-lato-bold-700 text-shopbtn ">
-                                  {item?.cart}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                  <div
+                    className="mt-[-50px] z-10 rounded-[10px] border border-productborder bg-white 
+          w-[90%] sm:w-[85%] md:w-[90%] xl:w-[268px] shadow-md p-4"
+                  >
+                    <div className="flex flex-col">
+                      <p className="text-[16px] font-quick-bold-700 text-regalblue pt-2">
+                        {item?.title}
+                      </p>
+
+                      <div className="text-[14px] font-lato-regular-400 text-ratingtext pt-2 flex items-center">
+                        <Image src={item?.ratingimage} alt="rating" />
+                        <span className="text-shopbtn pl-1">
+                          {item?.rating}
+                        </span>
+                      </div>
+
+                      <p className="text-[14px] font-lato-regular-400 text-ratingtext pt-2">
+                        By
+                        <span className="text-shopbtn pl-1">{item?.by}</span>
+                      </p>
+
+                      <div className="flex justify-between items-center pt-4">
+                        {/* Prices */}
+                        <div>
+                          <p className="text-[18px] font-quick-bold-700 text-shopbtn">
+                            {item?.newPrice}
+                            <span className="text-[14px] text-ratingtext pl-2 line-through">
+                              {item?.oldPrice}
+                            </span>
+                          </p>
+                        </div>
+
+                        {/* Cart Button */}
+                        <div
+                          className="flex items-center gap-2 bg-cartbtn rounded-[4px] px-3 py-2 cursor-pointer"
+                          onClick={() => hnadleCart(item)}
+                        >
+                          <Image src={item?.cartimage} alt="cart" />
+                          <button className="text-[14px] font-lato-bold-700 text-shopbtn">
+                            {item?.cart}
+                          </button>
                         </div>
                       </div>
-                    </>
-                  );
-                })}
-              </>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
