@@ -50,6 +50,9 @@ const Cart = () => {
                         <Image
                           src={item?.image}
                           alt="image"
+                          width={25}
+                          height={25}
+                          unoptimized
                           className="w-16 h-16"
                         />
                       </div>

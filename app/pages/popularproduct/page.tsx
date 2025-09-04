@@ -91,12 +91,12 @@ const PopularProduct = () => {
         <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
           Popular Products
         </p>
-        <div className="flex gap-4 pt-4 md:pt-0">
+        <div className="sm:flex gap-4 pt-4 md:pt-0">
           {heading?.map((item, index) => (
             <div
               key={index}
               onClick={() => setActiveTab(item.title)}
-              className={`cursor-pointer ${
+              className={`cursor-pointer pt-2 xs375:pt-0  pl-[29px] xs375:pl-0 ${
                 activeTab === item.title ? "text-shopbtn" : "text-regalblue"
               }`}
             >

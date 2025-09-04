@@ -1,6 +1,7 @@
 import {
   Advertise,
   BannerHeading,
+  BrowseHeading,
   DailyBestSells,
   DailyDeals,
   DailySells,
@@ -23,6 +24,8 @@ import {
 import banner1 from "../public/images/banner-1.png";
 import banner2 from "../public/images/banner-2.png";
 import banner3 from "../public/images/banner-3.png";
+import deals from "../public/svgs/deals.svg";
+import drop from "../public/svgs/drop.svg";
 // import product1 from "../assets/images/product1.png";
 // import product2 from "../assets/images/product2.png";
 // import product3 from "../assets/images/product3.png";
@@ -518,3 +521,52 @@ export const bannerheadings: BannerHeading[] = [
 //     order: "Orders $50 or more",
 //   },
 // ];
+
+export const browseheading: BrowseHeading[] = [
+  {
+    id: 1,
+    title: "Deals",
+    image: deals,
+  },
+  {
+    id: 2,
+    title: "Home",
+    image: drop,
+  },
+
+  {
+    id: 3,
+    title: "About",
+    image: drop,
+  },
+  {
+    id: 4,
+    title: "Shop",
+    image: drop,
+  },
+  {
+    id: 5,
+    title: "Vendores",
+    image: drop,
+  },
+  {
+    id: 4,
+    title: "Mega menu",
+    image: drop,
+  },
+  {
+    id: 5,
+    title: "Blog",
+    image: drop,
+  },
+  {
+    id: 6,
+    title: "Pages",
+    image: drop,
+  },
+  {
+    id: 7,
+    title: "Contact",
+    image: "",
+  },
+];

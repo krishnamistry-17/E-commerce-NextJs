@@ -102,3 +102,9 @@ export type Advertise = {
   title: string;
   order: string;
 };
+
+export type BrowseHeading = {
+  id: number;
+  image: StaticImageData;
+  title: string;
+};

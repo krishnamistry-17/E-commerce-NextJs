@@ -7,11 +7,7 @@ import { FiSend } from "react-icons/fi";
 import { Advertise } from "@/types/product";
 import axiosInstance from "@/lib/axios";
 
-type Props = {
-  advertise: Advertise[];
-};
-
-const Banner = ({ advertise }: Props) => {
+const Banner = () => {
   const [product, setProducts] = useState<Advertise[]>([]);
   useEffect(() => {
     const fetchProducts = async () => {

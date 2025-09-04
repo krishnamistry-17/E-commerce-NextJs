@@ -17,7 +17,6 @@ const Page = () => {
     <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[55px]">
       <Categories />
       <PopularProduct />
-
       <DailySells />
       <DealsDay />
       <Products />

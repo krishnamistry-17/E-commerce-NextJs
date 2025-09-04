@@ -16,7 +16,7 @@ export default function ThemeToggle() {
     <button
       onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
       type="button"
-      className="px-4 py-2 focus:outline-none ring-0"
+      className=" py-2 focus:outline-none ring-0"
     >
       {currentTheme === "dark" ? "☀️" : "🌙"}
     </button>

@@ -15,31 +15,48 @@ import ThemeToggle from "../theme/page";
 // import ThemeToggle from "../theme/page";
 import cart from "../../public/svgs/cart.svg";
 import CartIcon from "../pages/carticon/page";
-
+import logo from "../../public/svgs/logo.svg";
+import HeaderTop from "../headertop/page";
+import { FaSearch } from "react-icons/fa";
+import drop from "../../public/svgs/drop.svg";
+import BrowseCategories from "../browsecategory/page";
+import { browseheading} from "@/data/product";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
     <>
+      <div>
+        <HeaderTop />
+      </div>
       <nav
         className="w-full border-b border-gray-200  shadow-sm 
     md:px-4 px-2 py-3 flex justify-between items-center relative"
       >
         <Link href="/" className="flex items-center gap-2 bg-white p-2">
-          <Image
-            src="/next.svg"
-            alt="Next.js logo"
-            width={100}
-            height={38}
-            priority
-          />
+          <Image src={logo} alt="logo" width={140} height={45} priority />
         </Link>
 
-        <div className="hidden md:flex items-center gap-6 text-sm">
-          <Link href="/about" className="">
-            About
-          </Link>
+        <div className="md:flex hidden xl:w-[450px] lg:w-[401px] md:w-[350px] w-[250px] h-fit px-3 py-4 items-center border border-progessbtn rounded-[4px]">
+          <div className="flex items-center w-full bg-white rounded-[50px] ">
+            <p className="text-[14px] font-quick-bold-700 text-regalblue flex items-center gap-[12px]">
+              All Categories
+              <span>
+                <Image src={drop} alt="drop" width={12} height={12} />
+              </span>
+            </p>
+            <input
+              type="search"
+              placeholder="Search for items.."
+              className="flex-grow bg-transparent outline-none text-inputtext"
+            />
+
+            <FaSearch className="text-gray-500 mr-2 ml-3" />
+          </div>
+        </div>
+
+        <div className="hidden lg:flex items-center gap-6 text-sm">
           <Link href="/contact" className="">
             Contact
           </Link>
@@ -50,9 +67,9 @@ export default function Navbar() {
             <Image src={cart} alt="cart" className="w-6 h-6" />
             <CartIcon />
           </Link>
-          <div>
+          {/* <div>
             <ThemeToggle />
-          </div>
+          </div> */}
 
           <SignedOut>
             <SignInButton mode="modal">
@@ -75,20 +92,20 @@ export default function Navbar() {
               User Profile
             </Link>
             <SignOutButton>
-              <button className="px-4 py-1 rounded border border-black ">
+              <button className="px-4 py-1 rounded border border-black lg:block hidden">
                 Sign Out
               </button>
             </SignOutButton>
           </SignedIn>
         </div>
 
-        <div className="md:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-2">
           <SignedIn>
-            <div>
+            {/* <div>
               <ThemeToggle />
-            </div>
+            </div> */}
             <SignOutButton>
-              <button className="text-sm px-3 py-1 rounded border border-black ">
+              <button className="text-sm px-3 py-1 rounded border border-black lg:block hidden">
                 Sign Out
               </button>
             </SignOutButton>
@@ -107,33 +124,42 @@ export default function Navbar() {
             </SignUpButton>
           </SignedOut>
 
+          <Link href="/pages/cart">
+            <Image src={cart} alt="cart" className="w-6 h-6" />
+            <CartIcon />
+          </Link>
+
           <button onClick={toggleMenu} aria-label="Menu">
             <SlOptionsVertical size={22} />
           </button>
         </div>
 
         {isMenuOpen && (
-          <div className="absolute top-[60px] right-4 w-50 bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 md:hidden">
+          <div className="absolute top-[60px] right-4 w-[105px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
             <nav className="flex flex-col gap-3 text-sm">
-              <Link href="/about" className="">
-                About
-              </Link>
-              <Link href="/contact" className="">
+              <Link href="/contact" className="pl-1">
                 Contact
               </Link>
-              <Link href="/blog" className="">
+              <Link href="/blog" className="pl-1">
                 Blog
               </Link>
-              <Link href="/pages/cart">Cart</Link>
               <SignedIn>
-                <Link href="/user-profile" className=" ">
+                <Link href="/user-profile" className="pl-1">
                   Profile
                 </Link>
+              </SignedIn>
+              <SignedIn>
+                <SignOutButton>
+                  <button>Sign Out</button>
+                </SignOutButton>
               </SignedIn>
             </nav>
           </div>
         )}
       </nav>
+      <div>
+        <BrowseCategories browseheading={browseheading} />
+   </div>
     </>
   );
 }
