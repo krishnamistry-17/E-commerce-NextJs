@@ -10,7 +10,7 @@ export default function ThemeToggle() {
   useEffect(() => {
     setMount(true);
   }, []);
-  console.log("theme", currentTheme);
+
 
   return (
     <button

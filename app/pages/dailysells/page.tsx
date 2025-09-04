@@ -1,20 +1,40 @@
 "use client";
 import { DailyBestSells, DailySells } from "@/types/product";
-import React, { useState } from "react";
-import bestbanner from "../../../assets/images/bestbanner.png";
+import React, { useEffect, useState } from "react";
+import bestbanner from "../../../public/images/bestbanner.png";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../slice/cartSlice";
 import { toast } from "react-toast";
+import axiosInstance from "@/lib/axios";
 
-type Props = {
-  heading: DailyBestSells[];
-  dailydata: DailySells[];
-};
-
-const DailySells = ({ heading, dailydata }: Props) => {
-  const [activeTab, setActiveTab] = useState(heading[0]?.title);
+const DailySells = () => {
+  const [data, setData] = useState([]);
+  const [product, setProducts] = useState<DailySells[]>([]);
+  const [heading, setHeadings] = useState<DailyBestSells[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("All");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get<DailySells[]>("/dailydatas");
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    const fetchProductsheading = async () => {
+      try {
+        const res = await axiosInstance.get<DailyBestSells[]>("/dailysells");
+        setHeadings(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+    fetchProductsheading();
+  }, []);
 
   const categoriesWiseTag: Record<string, string> = {
     "Save 35%": "bg-pinktag",
@@ -23,12 +43,12 @@ const DailySells = ({ heading, dailydata }: Props) => {
     "Save 15%": "bg-orangetag",
   };
 
-  const filteredProduct = dailydata?.filter(
-    (product) => product?.category === activeTab
+  const filteredProduct = product?.filter(
+    (products) => products?.category === activeTab
   );
 
   const handleCart = (item: DailySells) => {
-    console.log("item :", item);
+
     dispatch(
       addToCart({
         id: item.id,
@@ -86,9 +106,12 @@ const DailySells = ({ heading, dailydata }: Props) => {
                     src={bestbanner}
                     alt="bestbanner"
                     className=" w-[378px]"
+                    width={25}
+                    height={25}
+                    unoptimized
                   />
                 </div>
-                {(activeTab === "All" ? dailydata : filteredProduct)?.map(
+                {(activeTab === "All" ? product : filteredProduct)?.map(
                   (item, index) => {
                     return (
                       <div
@@ -109,7 +132,10 @@ const DailySells = ({ heading, dailydata }: Props) => {
                         <Image
                           src={item?.image}
                           alt={item?.category}
-                          className="pt-[25px] px-[25px]"
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className="pt-[25px] px-[25px] w-full"
                         />
                         <div className="flex flex-col px-[25px] ">
                           <p className="text-[12px] text-graytext font-lato-regular-400">
@@ -119,7 +145,14 @@ const DailySells = ({ heading, dailydata }: Props) => {
                             {item?.title}
                           </p>
                           <div className="flex gap-[7.9px] items-center pt-[8px]">
-                            <Image src={item?.ratingimage} alt="rating" />
+                            <Image
+                              src={item?.ratingimage}
+                              alt="rating"
+                              width={25}
+                              height={25}
+                              unoptimized
+                              className="  w-[60px]"
+                            />
                           </div>
                           <div className=" flex justify-between items-center pt-[22px]">
                             <div>
@@ -147,7 +180,14 @@ const DailySells = ({ heading, dailydata }: Props) => {
                             className="flex items-center justify-center gap-2 my-[12px] bg-cartbtn rounded-[4px] h-[36px]"
                             onClick={() => handleCart(item)}
                           >
-                            <Image src={item?.cartimage} alt="cart" />
+                            <Image
+                              src={item?.cartimage}
+                              alt="cart"
+                              width={25}
+                              height={25}
+                              unoptimized
+                              className="  w-5"
+                            />
                             <button className="text-[14px] font-lato-bold-700 text-shopbtn ">
                               {item?.cart}
                             </button>

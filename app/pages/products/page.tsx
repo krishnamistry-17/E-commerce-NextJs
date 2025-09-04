@@ -1,14 +1,42 @@
+"use client";
+
+import axiosInstance from "@/lib/axios";
 import { Products, ProductsHeading } from "@/types/product";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   mainheading: ProductsHeading[];
   newproducts: Products[];
 };
 
-const Products = ({ mainheading, newproducts }: Props) => {
-  const headingsArray = mainheading[0]?.productheadings || [];
+const Products = () => {
+  const [data, setData] = useState([]);
+  const [product, setProducts] = useState<Products[]>([]);
+  const [heading, setHeadings] = useState<ProductsHeading[]>([]);
+
+  const headingsArray = heading[0]?.productheadings || [];
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get<Products[]>("/newproducts");
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    const fetchProductsHeading = async () => {
+      try {
+        const res = await axiosInstance.get<ProductsHeading[]>("/mainheading");
+        setHeadings(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+    fetchProductsHeading();
+  }, []);
   return (
     <>
       <div className="pt-[50px]">
@@ -26,7 +54,7 @@ const Products = ({ mainheading, newproducts }: Props) => {
                 </div>
 
                 <div className="pt-[10px]">
-                  {newproducts.map((item, index) => {
+                  {product.map((item, index) => {
                     const imageToUse =
                       colIndex % 2 === 0 ? item.image : item.image1;
 
@@ -39,6 +67,9 @@ const Products = ({ mainheading, newproducts }: Props) => {
                           <Image
                             src={imageToUse}
                             alt={item.category}
+                            width={25}
+                            height={25}
+                            unoptimized
                             className="w-full h-auto object-cover"
                           />
                         </div>
@@ -47,7 +78,14 @@ const Products = ({ mainheading, newproducts }: Props) => {
                             {item.title}
                           </p>
                           <div className="text-[14px] font-lato-regular-400 text-ratingtext pt-1 flex items-center">
-                            <Image src={item.ratingimage} alt="rating" />
+                            <Image
+                              src={item.ratingimage}
+                              alt="rating"
+                              width={25}
+                              height={25}
+                              unoptimized
+                              className="  w-[60px]"
+                            />
                             <span className="text-shopbtn pl-1">
                               {item.rating}
                             </span>

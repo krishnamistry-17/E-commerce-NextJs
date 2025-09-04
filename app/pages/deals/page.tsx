@@ -2,18 +2,39 @@
 
 import { DealsHeading, DailyDeals } from "@/types/product";
 import Image from "next/image";
-import React from "react";
-import next from "../../../assets/svgs/next.svg";
+import React, { useEffect, useState } from "react";
+import next from "../../../public/svgs/next.svg";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../slice/cartSlice";
+import axiosInstance from "@/lib/axios";
 
-type Props = {
-  heading: DealsHeading[];
-  dailydeals: DailyDeals[];
-};
+const DealsDay = () => {
+  const [data, setData] = useState([]);
+  const [product, setProducts] = useState<DailyDeals[]>([]);
+  const [heading, setHeadings] = useState<DealsHeading[]>([]);
 
-const DealsDay = ({ heading, dailydeals }: Props) => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get<DailyDeals[]>("/dailydeals");
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    const fetchProductsHeading = async () => {
+      try {
+        const res = await axiosInstance.get<DealsHeading[]>("/dealsheading");
+        setHeadings(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+    fetchProductsHeading();
+  }, []);
 
   const hnadleCart = (item: DailyDeals) => {
     dispatch(
@@ -52,7 +73,14 @@ const DealsDay = ({ heading, dailydeals }: Props) => {
                     >
                       {item?.title}
                       <span>
-                        <Image src={next} alt="next" />
+                        <Image
+                          src={next}
+                          alt="next"
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className="  w-full"
+                        />
                       </span>
                     </div>
                   );
@@ -62,12 +90,15 @@ const DealsDay = ({ heading, dailydeals }: Props) => {
           </div>
           <div className="pt-[43px]">
             <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
-              {dailydeals?.map((item, index) => (
+              {product?.map((item, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div className="w-full">
                     <Image
                       src={item?.image}
                       alt="image"
+                      width={25}
+                      height={25}
+                      unoptimized
                       className="w-full h-auto object-cover"
                     />
                   </div>
@@ -82,7 +113,14 @@ const DealsDay = ({ heading, dailydeals }: Props) => {
                       </p>
 
                       <div className="text-[14px] font-lato-regular-400 text-ratingtext pt-2 flex items-center">
-                        <Image src={item?.ratingimage} alt="rating" />
+                        <Image
+                          src={item?.ratingimage}
+                          alt="rating"
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className="  w-[60px]"
+                        />
                         <span className="text-shopbtn pl-1">
                           {item?.rating}
                         </span>
@@ -109,7 +147,14 @@ const DealsDay = ({ heading, dailydeals }: Props) => {
                           className="flex items-center gap-2 bg-cartbtn rounded-[4px] px-3 py-2 cursor-pointer"
                           onClick={() => hnadleCart(item)}
                         >
-                          <Image src={item?.cartimage} alt="cart" />
+                          <Image
+                            src={item?.cartimage}
+                            alt="cart"
+                            width={25}
+                            height={25}
+                            unoptimized
+                            className="  w-full"
+                          />
                           <button className="text-[14px] font-lato-bold-700 text-shopbtn">
                             {item?.cart}
                           </button>

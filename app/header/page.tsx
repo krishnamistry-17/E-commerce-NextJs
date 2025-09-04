@@ -13,7 +13,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { useState } from "react";
 import ThemeToggle from "../theme/page";
 // import ThemeToggle from "../theme/page";
-import cart from "../../assets/svgs/cart.svg";
+import cart from "../../public/svgs/cart.svg";
 import CartIcon from "../pages/carticon/page";
 
 export default function Navbar() {

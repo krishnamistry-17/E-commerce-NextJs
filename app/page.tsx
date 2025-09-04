@@ -1,19 +1,5 @@
 import React from "react";
 import { Categories } from "./pages/categories/page";
-import {
-  headings,
-  products,
-  bannerheadings,
-  popularproductheadings,
-  popluarproducts,
-  dailysells,
-  dailydatas,
-  dealsheading,
-  dailydeals,
-  mainheading,
-  newproducts,
-  advertise,
-} from "../data/product";
 import PopularProduct from "./pages/popularproduct/page";
 import DailySells from "./pages/dailysells/page";
 import DealsDay from "./pages/deals/page";
@@ -21,7 +7,7 @@ import Products from "./pages/products/page";
 import Banner from "./pages/banner/page";
 
 const Page = () => {
-  const heading = headings;
+  // const heading = headings;
 
   // const filteredProducts = products.filter(
   //   (product) => product.category === heading.title
@@ -29,19 +15,13 @@ const Page = () => {
 
   return (
     <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[55px]">
-      <Categories
-        heading={headings}
-        products={products}
-        bannerheading={bannerheadings}
-      />
-      <PopularProduct
-        heading={popularproductheadings}
-        popularproduct={popluarproducts}
-      />
-      <DailySells heading={dailysells} dailydata={dailydatas} />
-      <DealsDay heading={dealsheading} dailydeals={dailydeals} />
-      <Products mainheading={mainheading} newproducts={newproducts} />
-      <Banner advertise={advertise} />
+      <Categories />
+      <PopularProduct />
+
+      <DailySells />
+      <DealsDay />
+      <Products />
+      <Banner  />
     </div>
   );
 };

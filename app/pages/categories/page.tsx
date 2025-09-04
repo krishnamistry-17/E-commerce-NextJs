@@ -1,18 +1,47 @@
 "use client";
 import { BannerHeading, Heading, Product } from "@/types/product";
 import Image from "next/image";
-import next from "../../../assets/svgs/next.svg";
-import previous from "../../../assets/svgs/previous.svg";
-import { useState } from "react";
+import next from "../../../public/svgs/next.svg";
+import previous from "../../../public/svgs/next.svg";
+import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axios";
 
-type Props = {
-  heading: Heading[];
-  products: Product[];
-  bannerheading: BannerHeading[];
-};
+export const Categories = () => {
+  const [data, setData] = useState([]);
+  const [product, setProducts] = useState<Product[]>([]);
+  const [heading, setHeadings] = useState<Heading[]>([]);
+  const [bannerheading, setBannerHeading] = useState<BannerHeading[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("All");
 
-export const Categories = ({ heading, products, bannerheading }: Props) => {
-  const [activeTab, setActiveTab] = useState(heading[0]?.title);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get<Product[]>("/products");
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    const fetchHeadings = async () => {
+      try {
+        const res = await axiosInstance.get<Heading[]>("/headings");
+        setHeadings(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    const fetchbannerHeading = async () => {
+      try {
+        const res = await axiosInstance.get<BannerHeading[]>("/bannerheadings");
+        setBannerHeading(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchbannerHeading();
+    fetchProducts();
+    fetchHeadings();
+  }, []);
 
   const categoryBgColors: Record<string, string> = {
     "Cake & Milk": "bg-bgfruit2",
@@ -22,9 +51,16 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
     "Pet Foods": "bg-bgfruit7",
   };
 
-  const filteredProduct = products.filter(
-    (product) => product?.category === activeTab
+  const filteredProduct = product.filter(
+    (products) => products?.category === activeTab
   );
+  
+
+  useEffect(() => {
+    fetch("http://localhost:4000/products")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
 
   return (
     <>
@@ -79,7 +115,7 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
             className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-[24px] 
           rounded-[10px] p-4 text-center items-center"
           >
-            {(activeTab === "All" ? products : filteredProduct)?.map(
+            {(activeTab === "All" ? product : filteredProduct)?.map(
               (item, index) => {
                 return (
                   <div
@@ -92,7 +128,10 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
                       <Image
                         src={item?.image}
                         alt={item?.title}
-                        className=" items-cente justify-center w-full"
+                        width={25}
+                        height={25}
+                        unoptimized
+                        className=" items-center justify-center w-full"
                       />
                       <p>{item?.title}</p>
                       <p>
@@ -115,7 +154,14 @@ export const Categories = ({ heading, products, bannerheading }: Props) => {
             {bannerheading.map((item, index) => {
               return (
                 <div key={index} className=" relative">
-                  <Image src={item?.image} alt="name" />
+                  <Image
+                    src={item?.image}
+                    alt="name"
+                    width={25}
+                    height={25}
+                    unoptimized
+                    className="  w-full"
+                  />
                   <div className=" absolute top-8">
                     <p
                       className="lg:text-[24px] text-[16px] font-quick-bold-700

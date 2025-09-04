@@ -1,14 +1,30 @@
-import React from "react";
-import food from "../../../assets/images/food.png";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import food from "../../../public/images/food.png";
 import Image from "next/image";
 import { FiSend } from "react-icons/fi";
 import { Advertise } from "@/types/product";
+import axiosInstance from "@/lib/axios";
 
 type Props = {
   advertise: Advertise[];
 };
 
 const Banner = ({ advertise }: Props) => {
+  const [product, setProducts] = useState<Advertise[]>([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get<Advertise[]>("/advertise");
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   return (
     <div className="py-[40px]">
       <div
@@ -52,18 +68,28 @@ const Banner = ({ advertise }: Props) => {
           <Image
             src={food}
             alt="food"
+            width={25}
+            height={25}
+            unoptimized
             className=" absolute right-0 bottom-0 xl:w-[50%] lg:w-[44%] md:w-[53%] w-[50%] 
             object-cover "
           />
         </div>
       </div>
       <div className=" pt-[40px] grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-[24px]">
-        {advertise?.map((item, index) => {
+        {product?.map((item, index) => {
           return (
             <div key={index} className="bg-bgfruit1 rounded-[10px] p-[20px]">
               <div className="flex items-center gap-[20px]">
                 <div>
-                  <Image src={item?.image} alt="adimage" />
+                  <Image
+                    src={item?.image}
+                    alt="adimage"
+                    width={25}
+                    height={25}
+                    unoptimized
+                    className="w-full"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <p className="text-[18px] text-advertistext font-quick-semibold-600">

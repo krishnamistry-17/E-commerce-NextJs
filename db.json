@@ -1,8 +1,9 @@
+
 {
   "products": [
     {
       "id": 1,
-      "image": "image1.png",
+      "image": "/svgs/image8.svg",
       "title": "Cake & Milk",
       "price": 26,
       "item": "item",
@@ -10,7 +11,7 @@
     },
     {
       "id": 2,
-      "image": "image2.png",
+      "image": "/svgs/image9.svg",
       "title": "Oganic Kiwi",
       "price": 28,
       "item": "item",
@@ -18,7 +19,7 @@
     },
     {
       "id": 3,
-      "image": "image3.png",
+      "image": "/svgs/image8.svg",
       "title": "Peach",
       "price": 14,
       "item": "item",
@@ -26,7 +27,7 @@
     },
     {
       "id": 4,
-      "image": "image4.png",
+      "image": "/svgs/image7.svg",
       "title": "Red Apple",
       "price": 54,
       "item": "item",
@@ -34,7 +35,7 @@
     },
     {
       "id": 5,
-      "image": "image6.png",
+      "image": "/svgs/image7.svg",
       "title": "Coffes & Tea",
       "price": 89,
       "item": "item",
@@ -42,7 +43,7 @@
     },
     {
       "id": 6,
-      "image": "image7.svg",
+      "image": "/svgs/image7.svg",
       "title": "Vegetables",
       "price": 72,
       "item": "item",
@@ -50,7 +51,7 @@
     },
     {
       "id": 7,
-      "image": "image8.svg",
+      "image": "/svgs/image8.svg",
       "title": "Strawberry",
       "price": 36,
       "item": "item",
@@ -58,7 +59,7 @@
     },
     {
       "id": 8,
-      "image": "image9.svg",
+      "image": "/svgs/image9.svg",
       "title": "Black plum",
       "price": 123,
       "item": "item",
@@ -77,19 +78,19 @@
       "id": 1,
       "banner": "Everyday Fresh & Clean with Our Products",
       "btn": "Shop Now",
-      "image": "banner-1.png"
+      "image": "/images/banner-1.png"
     },
     {
       "id": 2,
       "banner": "Make your Breakfast Healthy and Easy",
       "btn": "Shop Now",
-      "image": "banner-2.png"
+      "image": "/images/banner-2.png"
     },
     {
       "id": 3,
       "banner": "The best Organic & Clean Products Online",
       "btn": "Shop Now",
-      "image": "banner-3.png"
+      "image": "/images/banner-3.png"
     }
   ],
   "popularproductheadings": [
@@ -101,332 +102,332 @@
     { "id": 6, "title": "Vegetables" },
     { "id": 7, "title": "Fruits" }
   ],
-  "popluarproducts": [
-    {
-      "id": "1",
-      "tag": "Hot",
-      "image": "product1.png",
-      "category": "Snack",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "NestFood",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "2",
-      "tag": "Sale",
-      "image": "product2.png",
-      "category": "Hodo Foods",
-      "title": "All Natural Italian-Style Chicken Meatballs",
-      "ratingimage": "rating.svg",
-      "rating": "(3.5)",
-      "by": "Stouffer",
-      "newPrice": 52.85,
-      "oldPrice": 55.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "3",
-      "tag": "New",
-      "image": "product3.png",
-      "category": "Snack",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "StarKist",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "4",
-      "tag": "",
-      "image": "product4.png",
-      "category": "Vegetables",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "StarKist",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "5",
-      "tag": "-14%",
-      "image": "product5.png",
-      "category": "Pet Foods",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "StarKist",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "3",
-      "tag": "New",
-      "image": "product3.png",
-      "category": "Snack",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "StarKist",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "1",
-      "tag": "Hot",
-      "image": "product1.png",
-      "category": "Snack",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "NestFood",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "2",
-      "tag": "Sale",
-      "image": "product2.png",
-      "category": "Hodo Foods",
-      "title": "All Natural Italian-Style Chicken Meatballs",
-      "ratingimage": "rating.svg",
-      "rating": "(3.5)",
-      "by": "Stouffer",
-      "newPrice": 52.85,
-      "oldPrice": 55.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "5",
-      "tag": "-14%",
-      "image": "product3.png",
-      "category": "Meats",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "rating": "(4.0)",
-      "by": "StarKist",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "2",
-      "tag": "Sale",
-      "image": "product2.png",
-      "category": "Fruits",
-      "title": "All Natural Italian-Style Chicken Meatballs",
-      "ratingimage": "rating.svg",
-      "rating": "(3.5)",
-      "by": "Stouffer",
-      "newPrice": 52.85,
-      "oldPrice": 55.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    }
-  ],
-  "dailysells": [
-    { "id": 0, "title": "All" },
-    { "id": 1, "title": "Featured" },
-    { "id": 2, "title": "Popular" },
-    { "id": 3, "title": "New added" }
-  ],
-  "dailydatas": [
-    {
-      "id": "1",
-      "tag": "Save 35%",
-      "image": "product1.png",
-      "category": "Featured",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add",
-      "sold": "Sold:",
-      "soldnumber": "90/120"
-    },
-    {
-      "id": "2",
-      "tag": "Sale",
-      "image": "product2.png",
-      "category": "Popular",
-      "title": "All Natural Italian-Style Chicken Meatballs",
-      "ratingimage": "rating.svg",
-      "newPrice": 52.85,
-      "oldPrice": 55.8,
-      "cartimage": "cart.svg",
-      "cart": "Add",
-      "sold": "Sold:",
-      "soldnumber": "90/120"
-    },
-    {
-      "id": "3",
-      "tag": "Best Sale",
-      "image": "product3.png",
-      "category": "Featured",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add",
-      "sold": "Sold:",
-      "soldnumber": "90/120"
-    },
-    {
-      "id": "4",
-      "tag": "Save 15%",
-      "image": "product4.png",
-      "category": "New added",
-      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
-      "ratingimage": "rating.svg",
-      "newPrice": 48.85,
-      "oldPrice": 52.8,
-      "cartimage": "cart.svg",
-      "cart": "Add",
-      "sold": "Sold:",
-      "soldnumber": "90/120"
-    }
-  ],
-  "dealsheading": [{ "id": 0, "title": "All Deals" }],
-  "dailydeals": [
-    {
-      "id": "1",
-      "image": "deal1.png",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "by": "Nest Food",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "2",
-      "image": "deal2.png",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "by": "Nest Food",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "3",
-      "image": "deal3.png",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "by": "Nest Food",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    },
-    {
-      "id": "4",
-      "image": "deal4.png",
-      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "by": "Nest Food",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "cartimage": "cart.svg",
-      "cart": "Add"
-    }
-  ],
-  "mainheading": [
-    {
-      "productheadings": [
-        "Top Selling",
-        "Trending Products",
-        "Recently added",
-        "Top Rated"
-      ]
-    }
-  ],
-  "newproducts": [
-    {
-      "id": "1",
-      "image": "sell1.png",
-      "image1": "sell4.png",
-      "title": "Nestle Original Coffee-Mate Coffee Creamer",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "category": "Top Selling"
-    },
-    {
-      "id": "2",
-      "image": "sell2.png",
-      "image1": "sell5.png",
-      "title": "Nestle Original Coffee-Mate Coffee Creamer",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "category": "Top Selling"
-    },
-    {
-      "id": "3",
-      "image": "sell3.png",
-      "image1": "sell6.png",
-      "title": "Nestle Original Coffee-Mate Coffee Creamer",
-      "ratingimage": "rating.svg",
-      "rating": "4.0",
-      "newPrice": 28.85,
-      "oldPrice": 32.8,
-      "category": "Top Selling"
-    }
-  ],
-  "advertise": [
-    {
-      "id": 1,
-      "image": "ad1.svg",
-      "title": "Best prices & offers",
-      "order": "Orders $50 or more"
-    },
-    {
-      "id": 2,
-      "image": "ad2.svg",
-      "title": "Best prices & offers",
-      "order": "Orders $50 or more"
-    },
-    {
-      "id": 3,
-      "image": "ad3.svg",
-      "title": "Best prices & offers",
-      "order": "Orders $50 or more"
-    },
-    {
-      "id": 4,
-      "image": "ad4.svg",
-      "title": "Best prices & offers",
-      "order": "Orders $50 or more"
-    }
-  ]
+   "popluarproducts": [
+     {
+       "id": "1",
+       "tag": "Hot",
+       "image": "/images/product1.png",
+       "category": "Snack",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "NestFood",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "2",
+       "tag": "Sale",
+       "image": "/images/product2.png",
+       "category": "Hodo Foods",
+       "title": "All Natural Italian-Style Chicken Meatballs",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
+       "by": "Stouffer",
+       "newPrice": 52.85,
+       "oldPrice": 55.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "3",
+       "tag": "New",
+       "image": "/images/product3.png",
+       "category": "Snack",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "StarKist",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "4",
+       "tag": "",
+       "image": "/images/product4.png",
+       "category": "Vegetables",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "StarKist",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "5",
+       "tag": "-14%",
+       "image": "/images/product5.png",
+       "category": "Pet Foods",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "StarKist",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "3",
+       "tag": "New",
+       "image": "/images/product3.png",
+       "category": "Snack",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "StarKist",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "1",
+       "tag": "Hot",
+       "image": "/images/product1.png",
+       "category": "Snack",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "NestFood",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "2",
+       "tag": "Sale",
+       "image": "/images/product2.png",
+       "category": "Hodo Foods",
+       "title": "All Natural Italian-Style Chicken Meatballs",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
+       "by": "Stouffer",
+       "newPrice": 52.85,
+       "oldPrice": 55.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "5",
+       "tag": "-14%",
+       "image": "/images/product3.png",
+       "category": "Meats",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "StarKist",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "2",
+       "tag": "Sale",
+       "image": "/images/product2.png",
+       "category": "Fruits",
+       "title": "All Natural Italian-Style Chicken Meatballs",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
+       "by": "Stouffer",
+       "newPrice": 52.85,
+       "oldPrice": 55.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     }
+   ],
+   "dailysells": [
+     { "id": 0, "title": "All" },
+     { "id": 1, "title": "Featured" },
+     { "id": 2, "title": "Popular" },
+     { "id": 3, "title": "New added" }
+   ],
+   "dailydatas": [
+     {
+       "id": "1",
+       "tag": "Save 35%",
+       "image": "/images/product1.png",
+       "category": "Featured",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add",
+       "sold": "Sold:",
+       "soldnumber": "90/120"
+     },
+     {
+       "id": "2",
+       "tag": "Sale",
+       "image": "/images/product2.png",
+       "category": "Popular",
+       "title": "All Natural Italian-Style Chicken Meatballs",
+       "ratingimage": "/svgs/rating.svg",
+       "newPrice": 52.85,
+       "oldPrice": 55.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add",
+       "sold": "Sold:",
+       "soldnumber": "90/120"
+     },
+     {
+       "id": "3",
+       "tag": "Best Sale",
+       "image": "/images/product3.png",
+       "category": "Featured",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add",
+       "sold": "Sold:",
+       "soldnumber": "90/120"
+     },
+     {
+       "id": "4",
+       "tag": "Save 15%",
+       "image": "/images/product4.png",
+       "category": "New added",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add",
+       "sold": "Sold:",
+       "soldnumber": "90/120"
+     }
+   ],
+   "dealsheading": [{ "id": 0, "title": "All Deals" }],
+   "dailydeals": [
+     {
+       "id": "1",
+       "image": "/images/deal1.png",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "by": "Nest Food",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "2",
+       "image": "/images/deal2.png",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "by": "Nest Food",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "3",
+       "image": "/images/deal3.png",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "by": "Nest Food",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "4",
+       "image": "/images/deal4.png",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "by": "Nest Food",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     }
+   ],
+   "mainheading": [
+     {
+       "productheadings": [
+         "Top Selling",
+         "Trending Products",
+         "Recently added",
+         "Top Rated"
+       ]
+     }
+   ],
+   "newproducts": [
+     {
+       "id": "1",
+       "image": "/images/sell1.png",
+       "image1": "/images/sell4.png",
+       "title": "Nestle Original Coffee-Mate Coffee Creamer",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "category": "Top Selling"
+     },
+     {
+       "id": "2",
+       "image": "/images/sell2.png",
+       "image1": "/images/sell5.png",
+       "title": "Nestle Original Coffee-Mate Coffee Creamer",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "category": "Top Selling"
+     },
+     {
+       "id": "3",
+       "image": "/images/sell3.png",
+       "image1": "/images/sell6.png",
+       "title": "Nestle Original Coffee-Mate Coffee Creamer",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "4.0",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "category": "Top Selling"
+     }
+   ],
+   "advertise": [
+     {
+       "id": 1,
+       "image": "/svgs/ad1.svg",
+       "title": "Best prices & offers",
+       "order": "Orders $50 or more"
+     },
+     {
+       "id": 2,
+       "image": "/svgs/ad2.svg",
+       "title": "Best prices & offers",
+       "order": "Orders $50 or more"
+     },
+     {
+       "id": 3,
+       "image": "/svgs/ad3.svg",
+       "title": "Best prices & offers",
+       "order": "Orders $50 or more"
+     },
+     {
+       "id": 4,
+       "image": "/svgs/ad4.svg",
+       "title": "Best prices & offers",
+       "order": "Orders $50 or more"
+     }
+   ]
 }

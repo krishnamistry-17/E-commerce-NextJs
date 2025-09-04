@@ -9,8 +9,7 @@ import { MdDelete } from "react-icons/md";
 const Cart = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
-  console.log("cartItems?? ??????:", cartItems);
-  
+
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.newPrice * item.quantity,
     0

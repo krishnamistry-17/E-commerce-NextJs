@@ -1,22 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PopularProductHeadings, PopularProducts } from "@/types/product";
 import { addToCart } from "../slice/cartSlice";
 import { showDetails } from "../slice/productDetailSlice";
+import axiosInstance from "@/lib/axios";
 
-type Props = {
-  heading: PopularProductHeadings[];
-  popularproduct: PopularProducts[];
-};
+const PopularProduct = () => {
+  const [data, setData] = useState([]);
+  const [product, setProducts] = useState<PopularProducts[]>([]);
+  const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
 
-const PopularProduct = ({ heading, popularproduct }: Props) => {
   const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get<PopularProducts[]>(
+          "/popluarproducts"
+        );
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    const fetchProductsHeading = async () => {
+      try {
+        const res = await axiosInstance.get<PopularProductHeadings[]>(
+          "/popularproductheadings"
+        );
+        setHeadings(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+    fetchProductsHeading();
+  }, []);
 
   const categoriesWiseTag: Record<string, string> = {
     Hot: "bg-pinktag",
@@ -27,8 +52,8 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
 
   const filteredProduct =
     activeTab === "All"
-      ? popularproduct
-      : popularproduct?.filter((product) => product?.category === activeTab);
+      ? product
+      : product?.filter((products) => products?.category === activeTab);
 
   const handleCart = (item: PopularProducts) => {
     dispatch(
@@ -67,7 +92,7 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
           Popular Products
         </p>
         <div className="flex gap-4 pt-4 md:pt-0">
-          {heading.map((item, index) => (
+          {heading?.map((item, index) => (
             <div
               key={index}
               onClick={() => setActiveTab(item.title)}
@@ -82,7 +107,7 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
       </div>
 
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 pt-8">
-        {filteredProduct.map((item, index) => (
+        {filteredProduct?.map((item, index) => (
           <div
             key={index}
             className="rounded-[15px] border border-productborder relative cursor-pointer"
@@ -97,14 +122,28 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
                 {item?.tag}
               </p>
             </div>
-            <Image src={item.image} alt={item.category} className="pt-6 px-6" />
+            <Image
+              src={item.image}
+              alt={item.category}
+              className="pt-6 px-6 w-full"
+              width={25}
+              height={25}
+              unoptimized
+            />
             <div className="px-6 pb-6">
               <p className="text-sm text-graytext">{item?.category}</p>
               <p className="text-lg font-bold text-regalblue pt-2">
                 {item?.title}
               </p>
               <div className="flex items-center gap-2 pt-2">
-                <Image src={item.ratingimage} alt="rating" />
+                <Image
+                  src={item.ratingimage}
+                  alt="rating"
+                  width={25}
+                  height={25}
+                  unoptimized
+                  className="  w-[60px]"
+                />
                 <p className="text-sm text-ratingtext">{item?.rating}</p>
               </div>
               <p className="text-sm text-ratingtext pt-2">
@@ -126,7 +165,14 @@ const PopularProduct = ({ heading, popularproduct }: Props) => {
                     handleCart(item);
                   }}
                 >
-                  <Image src={item.cartimage} alt="cart" />
+                  <Image
+                    src={item.cartimage}
+                    alt="cart"
+                    width={25}
+                    height={25}
+                    unoptimized
+                    className="  w-full"
+                  />
                   <button className="text-sm font-bold text-shopbtn ml-1">
                     {item.cart}
                   </button>
