@@ -1,5 +1,5 @@
-// import { mainheading } from "./../data/product";
 import { StaticImageData } from "next/image";
+// import { mainheading } from "./../data/product";
 
 export type Product = {
   id: number;
@@ -107,4 +107,43 @@ export type BrowseHeading = {
   id: number;
   image: StaticImageData;
   title: string;
+};
+
+export type FooterMain = {
+  image: StaticImageData;
+  para: string;
+};
+
+export type FooterDetails = {
+  icon: StaticImageData;
+  detail: string;
+};
+
+export type FooterContent = {
+  mainheading: string;
+  mainheading1: string;
+  mainheading2: string;
+  mainheading3: string;
+};
+
+export type FooterHeading = {
+  subheadings: string;
+  subheadings1: string;
+  subheadings2: string;
+  subheadings3: string;
+};
+
+export type FooterApp = {
+  mainheading: string;
+  subheading: string;
+  image1: StaticImageData;
+  image2: StaticImageData;
+  paymentheading: string;
+  image3: StaticImageData;
+};
+
+export type Category = {
+  image: StaticImageData;
+  title: string;
+  quantity: number;
 };

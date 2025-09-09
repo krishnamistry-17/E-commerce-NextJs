@@ -9,6 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        bordercolor:"#F1F1F1",
         bggray: "#F2F3F4",
         graytext: "#ADADAD",
         ratingtext: "#B6B6B6",
@@ -28,7 +29,9 @@ module.exports = {
         cartbtn: "#DEF9EC",
         productborder: "#ECECEC",
         pinktag: "#F74B81",
+        bgpink:"#FDE0E9",
         bluetag: "#67BCEE",
+        offertext:"#FDC040",
         orangetag: "#F59758",
       },
       fontFamily: {

@@ -2,10 +2,16 @@ import {
   Advertise,
   BannerHeading,
   BrowseHeading,
+  Category,
   DailyBestSells,
   DailyDeals,
   DailySells,
   DealsHeading,
+  FooterApp,
+  FooterContent,
+  FooterDetails,
+  FooterHeading,
+  FooterMain,
   Heading,
   PopularProductHeadings,
   PopularProducts,
@@ -26,6 +32,19 @@ import banner2 from "../public/images/banner-2.png";
 import banner3 from "../public/images/banner-3.png";
 import deals from "../public/svgs/deals.svg";
 import drop from "../public/svgs/drop.svg";
+import logo from "../public/svgs/logo.svg";
+import location from "../public/svgs/location.svg";
+import call from "../public/svgs/call.svg";
+import message from "../public/svgs/message.svg";
+import time from "../public/svgs/time.svg";
+import app from "../public/svgs/app.svg";
+import googleplay from "../public/svgs/googleplay.svg";
+import paymentmethod from "../public/svgs/paymentmethod.svg";
+import category1 from "../public/svgs/category1.svg";
+import category2 from "../public/svgs/category2.svg";
+import category3 from "../public/svgs/category3.svg";
+import category4 from "../public/svgs/category4.svg";
+import category5 from "../public/svgs/category5.svg";
 // import product1 from "../assets/images/product1.png";
 // import product2 from "../assets/images/product2.png";
 // import product3 from "../assets/images/product3.png";
@@ -568,5 +587,125 @@ export const browseheading: BrowseHeading[] = [
     id: 7,
     title: "Contact",
     image: "",
+  },
+];
+
+export const footerfirst: FooterMain[] = [
+  {
+    image: logo,
+    para: "Awesome grocery store website template",
+  },
+];
+
+export const footersecond: FooterDetails[] = [
+  {
+    icon: location,
+    detail:
+      "Address: 5171 W Campbell Ave undefined Kent, Utah 53127 United States",
+  },
+  {
+    icon: call,
+    detail: " Call Us:(+91) - 540-025-124553",
+  },
+  {
+    icon: message,
+    detail: "Email:sale@Nest.com",
+  },
+  {
+    icon: time,
+    detail: "Hours:10:00 - 18:00, Mon - Sat",
+  },
+];
+
+export const footerthird: FooterContent[] = [
+  {
+    mainheading: "Account",
+    mainheading1: "Company",
+    mainheading2: "Corporate",
+    mainheading3: "Popular",
+  },
+];
+
+export const footerheadings: FooterHeading[] = [
+  {
+    subheadings: "Sign In",
+    subheadings1: "About us",
+    subheadings2: "Become a Vendor",
+    subheadings3: "Milk & Flavoured Milk",
+  },
+  {
+    subheadings: "View Cart",
+    subheadings1: "Delivery Information",
+    subheadings2: "Affiliate Program",
+    subheadings3: "Butter and Margarine",
+  },
+  {
+    subheadings: "My Wishlist",
+    subheadings1: "Privacy Policy",
+    subheadings2: "Farm Business",
+    subheadings3: "Eggs Substitutes",
+  },
+  {
+    subheadings: "Track My Order",
+    subheadings1: "Terms & Conditions",
+    subheadings2: "Farm Careers",
+    subheadings3: "Marmalades",
+  },
+  {
+    subheadings: "Help Ticket",
+    subheadings1: "Contact Us",
+    subheadings2: "Our Suppliers",
+    subheadings3: "Sour Cream and Dips",
+  },
+  {
+    subheadings: "Shipping Details",
+    subheadings1: "Support Center",
+    subheadings2: "Accessibility",
+    subheadings3: "Tea & Kombucha",
+  },
+  {
+    subheadings: "Compare products",
+    subheadings1: "Careers",
+    subheadings2: "Promotions",
+    subheadings3: "Cheese",
+  },
+];
+
+export const footerapp: FooterApp[] = [
+  {
+    mainheading: "Install App",
+    subheading: "From App Store or Google Play",
+    image1: app,
+    image2: googleplay,
+    paymentheading: "Secured Payment Gateways",
+    image3: paymentmethod,
+  },
+];
+
+export const catrgories: Category[] = [
+  {
+    image: category1,
+    title: "Milks & Dairies",
+    quantity: 5,
+  },
+  {
+    image: category2,
+    title: "Clothing",
+    quantity: 6,
+  },
+  {
+    image: category3,
+    title: "Pet Foods",
+    quantity: 7,
+  },
+  {
+    image: category3,
+    title: "Baking material",
+    quantity: 12,
+  },
+  {
+    image: category3,
+    title: "Fresh Fruit",
+    quantity: 16,
   },
 ];
