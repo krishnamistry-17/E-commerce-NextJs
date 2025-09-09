@@ -153,6 +153,7 @@ const Footer = ({ footerfirst }: Props) => {
                     alt="paymentmethod"
                     width={224}
                     height={32}
+                    style={{ width: "auto", height: "auto" }}
                   />
                 </div>
               </div>

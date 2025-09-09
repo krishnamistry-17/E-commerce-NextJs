@@ -1,39 +1,31 @@
 "use client";
-import { useDispatch, useSelector } from "react-redux";
-import { notFound } from "next/navigation";
-import { RootState } from "@reduxjs/toolkit/query";
-import home from "../../../public/svgs/home.svg";
-import cart from "../../../public/svgs/whitecart.svg";
-import whishlist from "../../../public/svgs/whishlist.svg";
-import repeat from "../../../public/svgs/repeat.svg";
-import Image from "next/image";
-import right from "../../../public/svgs/right.svg";
-import p1 from "../../../public/images/p1.png";
-import p2 from "../../../public/images/p2.png";
-import p3 from "../../../public/images/p3.png";
-import category1 from "../../../public/svgs/category1.svg";
-import category2 from "../../../public/svgs/category2.svg";
-import category3 from "../../../public/svgs/category3.svg";
-import category4 from "../../../public/svgs/category4.svg";
-import category5 from "../../../public/svgs/category5.svg";
+
+import { Products } from "@/types/product";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { addToCart, updateQuantity } from "@/app/pages/slice/cartSlice";
-import { Product, Products } from "@/types/product";
+import Image from "next/image";
+import home from "../public/svgs/home.svg";
+import cart from "../public/svgs/whitecart.svg";
+import whishlist from "../public/svgs/whishlist.svg";
+import repeat from "../public/svgs/repeat.svg";
+import right from "../public/svgs/right.svg";
+import p1 from "../public/images/p1.png";
+import p2 from "../public/images/p2.png";
+import p3 from "../public/images/p3.png";
+import category1 from "../public/svgs/category1.svg";
+import category2 from "../public/svgs/category2.svg";
+import category3 from "../public/svgs/category3.svg";
+import category4 from "../public/svgs/category4.svg";
+import category5 from "../public/svgs/category5.svg";
 
 type Props = {
-  params: {
-    id: string;
-  };
+  product: Products;
 };
 
-const ProductDetailPage = ({ params }: Props) => {
+const ProductDetailPage = ({ product }: Props) => {
+  const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("60g");
-
-  const product = useSelector((state: RootState) =>
-    state.productDetails.items.find((item) => item?.id === params.id)
-  );
-  console.log("product :", product);
-  const dispatch = useDispatch(); 
 
   const handleQuantityChange = (id: string, quantity: number) => {
     if (quantity > 0) {
@@ -44,15 +36,14 @@ const ProductDetailPage = ({ params }: Props) => {
   const handleCart = (item: Products) => {
     dispatch(
       addToCart({
-        id: item?.id,
-        title: item?.title,
-        newPrice: item?.newPrice,
+        id: item.id,
+        title: item.title,
+        newPrice: item.newPrice,
         quantity: 1,
-        image: item?.image,
+        image: item.image,
       })
     );
   };
-
   return (
     <div>
       <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5">

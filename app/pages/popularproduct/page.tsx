@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
@@ -68,6 +67,7 @@ const PopularProduct = () => {
   };
 
   const handleDetails = (item: PopularProducts) => {
+    console.log("item???selected :", item);
     dispatch(
       showDetails({
         id: item?.id,
