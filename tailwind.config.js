@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       colors: {
         bordercolor:"#F1F1F1",
+        checkboxborder:"#CED4DA",
         bggray: "#F2F3F4",
         graytext: "#ADADAD",
         ratingtext: "#B6B6B6",

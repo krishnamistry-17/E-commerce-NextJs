@@ -7,6 +7,8 @@ import next from "../../../public/svgs/next.svg";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../slice/cartSlice";
 import axiosInstance from "@/lib/axios";
+import { showDetails } from "../slice/productDetailSlice";
+import { useRouter } from "next/navigation";
 
 const DealsDay = () => {
   const [data, setData] = useState([]);
@@ -14,6 +16,7 @@ const DealsDay = () => {
   const [heading, setHeadings] = useState<DealsHeading[]>([]);
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -46,6 +49,22 @@ const DealsDay = () => {
         image: item?.image,
       })
     );
+  };
+
+  const handleDetails = (item: DailyDeals) => {
+    dispatch(
+      showDetails({
+        id: item?.id,
+        title: item?.title,
+        newPrice: item?.newPrice,
+        image: item?.image,
+        ratingimage: item?.ratingimage,
+        rating: item?.rating,
+        oldPrice: item?.oldPrice,
+        category: item?.category,
+      })
+    );
+    router.push(`/product/${item?.id}`);
   };
 
   return (
@@ -91,7 +110,11 @@ const DealsDay = () => {
           <div className="pt-[43px]">
             <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
               {product?.map((item, index) => (
-                <div key={index} className="flex flex-col items-center">
+                <div
+                  key={index}
+                  className="flex flex-col items-center"
+                  onClick={() => handleDetails(item)}
+                >
                   <div className="w-full">
                     <Image
                       src={item?.image}
@@ -145,7 +168,10 @@ const DealsDay = () => {
                         {/* Cart Button */}
                         <div
                           className="flex items-center gap-2 bg-cartbtn rounded-[4px] px-3 py-2 cursor-pointer"
-                          onClick={() => hnadleCart(item)}
+                          onClick={(e) => {
+                            hnadleCart(item);
+                            e.stopPropagation();
+                          }}
                         >
                           <Image
                             src={item?.cartimage}

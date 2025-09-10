@@ -127,6 +127,7 @@ const ProductDetailPage = ({ product }: Props) => {
                   alt="rating"
                   width={60}
                   height={20}
+                  className="w-full"
                 />
                 <p className="text-[14px] font-lato-regular-400 text-bgbrown">
                   {product?.rating}

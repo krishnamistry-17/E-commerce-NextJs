@@ -7,7 +7,7 @@
       "title": "Cake & Milk",
       "price": 26,
       "item": "item",
-      "category": "Pet Foods"
+      "price": 26,"category": "Pet Foods"
     },
     {
       "id": 2,
@@ -258,6 +258,7 @@
        "category": "Featured",
        "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
        "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
        "newPrice": 28.85,
        "oldPrice": 32.8,
        "cartimage": "/svgs/cart.svg",
@@ -272,6 +273,7 @@
        "category": "Popular",
        "title": "All Natural Italian-Style Chicken Meatballs",
        "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
        "newPrice": 52.85,
        "oldPrice": 55.8,
        "cartimage": "/svgs/cart.svg",
@@ -286,6 +288,7 @@
        "category": "Featured",
        "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
        "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
        "newPrice": 48.85,
        "oldPrice": 52.8,
        "cartimage": "/svgs/cart.svg",
@@ -300,6 +303,7 @@
        "category": "New added",
        "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
        "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
        "newPrice": 48.85,
        "oldPrice": 52.8,
        "cartimage": "/svgs/cart.svg",
@@ -320,7 +324,8 @@
        "newPrice": 28.85,
        "oldPrice": 32.8,
        "cartimage": "/svgs/cart.svg",
-       "cart": "Add"
+       "cart": "Add",
+       "category": "Vegetables"
      },
      {
        "id": "2",
@@ -332,7 +337,8 @@
        "newPrice": 28.85,
        "oldPrice": 32.8,
        "cartimage": "/svgs/cart.svg",
-       "cart": "Add"
+       "cart": "Add",
+         "category": "Fruits"
      },
      {
        "id": "3",
@@ -344,7 +350,8 @@
        "newPrice": 28.85,
        "oldPrice": 32.8,
        "cartimage": "/svgs/cart.svg",
-       "cart": "Add"
+       "cart": "Add",
+       "category": "Vegetables"
      },
      {
        "id": "4",
@@ -356,7 +363,8 @@
        "newPrice": 28.85,
        "oldPrice": 32.8,
        "cartimage": "/svgs/cart.svg",
-       "cart": "Add"
+       "cart": "Add",
+         "category": "Fruits"
      }
    ],
    "mainheading": [
@@ -429,6 +437,163 @@
        "title": "Best prices & offers",
        "order": "Orders $50 or more"
      }
-   ]
+   ],
+   "filterednewproducts": [
+    {
+      "id":1,
+      "image": "/images/p1.png",
+       "title": "Chen Cardigan",
+       "price": "$99.50",
+       "ratingimage":"/svgs/rating.svg"
+    },
+    {
+      "id":2,
+      "image": "/images/p2.png",
+       "title": "Chen Sweater",
+       "price": "$89.50",
+       "ratingimage":"/svgs/rating.svg"
+    },
+    {
+      "id":3,
+      "image": "/images/p4.png",
+       "title": "Colorful Jacket",
+       "price": "$25",
+       "ratingimage":"/svgs/rating.svg"
+    }
+   ],
+   "informationbutton": [
+    {
+      "id":1,
+      "title":"Description"
+    },
+    {
+      "id":2,
+      "title":"Additional info"
+    },
+    {
+      "id":1,
+      "title":"Vendor"
+    },
+    {
+      "id":1,
+      "title":"Reviews (3)"
+    }
+   ],
+   "InformationContent":[
+    {
+      "para1":"Uninhibited carnally hired played in whimpered dear gorilla koala depending and much yikes off far quetzal goodness and from for grimaced goodness unaccountably and meadowlark near unblushingly crucial scallop tightly neurotic hungrily some and dear furiously this apart.",
+      "para2":"Spluttered narrowly yikes left moth in yikes bowed this that grizzly much hello on spoon-fed that alas rethought much decently richly and wow against the frequent fluidly at formidable acceptably flapped besides and much circa far over the bucolically hey precarious goldfinch mastodon goodness gnashed a jellyfish and one however because.",
+      "para3":"Laconic overheard dear woodchuck wow this outrageously taut beaver hey hello far meadowlark imitatively egregiously hugged that yikes minimally unanimous pouted flirtatiously as beaver beheld above forward energetic across this jeepers beneficently cockily less a the raucously that magic upheld far so the this where crud then below after jeez enchanting drunkenly more much wow callously irrespective limpet.",
+      "para4":"Less lion goodness that euphemistically robin expeditiously bluebird smugly scratched far while thus cackled sheepishly rigid after due one assenting regarding censorious while occasional or this more crane went more as this less much amid overhung anathematic because much held one exuberantly sheep goodness so where rat wry well concomitantly.",
+      "para5":"Scallop or far crud plain remarkably far by thus far iguana lewd precociously and and less rattlesnake contrary caustic wow this near alas and next and pled the yikes articulate about as less cackled dalmatian in much less well jeering for the thanks blindly sentimental whimpered less across objectively fanciful grimaced wildly some wow and rose jeepers outgrew lugubrious luridly irrationally attractively dachshund.",
+       "title1": "Suggested Use",
+      "content1": "Refrigeration not necessary.",
+      "content2": "Stir before serving",
+      "title2": "Other Ingredients",
+      "content3": "Organic raw pecans, organic raw cashews.",
+      "content4": "This butter was produced using a LTG (Low Temperature Grinding) process",
+      "content5": "Made in machinery that processes tree nuts but does not process peanuts, gluten, dairy or soy",
+      "title3": "Warnings",
+      "content6": "Oil separation occurs naturally. May contain pieces of shell."
+    }
+   ],
+   "InformationList": [
+     {
+     "title":"Type Of Packing",
+     "content":"Bottle"
+    },
+    {
+      "title":"Color",
+      "content":"Green, Pink, Powder Blue, Purple"
+    },
+    {
+      "title":"Quantity Per Case",
+      "content":"100ml"
+    },
+    {
+      "title":"Ethyl Alcohol",
+      "content":"70%"
+    },
+     {
+      "title":"Piece In One",
+      "content":"Carton"
+    }
+   ],
+   "PopularProducts":[
+     {
+       "id": "1",
+       "tag": "Hot",
+       "image": "/images/product1.png",
+       "category": "Snack",
+       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "NestFood",
+       "newPrice": 28.85,
+       "oldPrice": 32.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "2",
+       "tag": "Sale",
+       "image": "/images/product2.png",
+       "category": "Hodo Foods",
+       "title": "All Natural Italian-Style Chicken Meatballs",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(3.5)",
+       "by": "Stouffer",
+       "newPrice": 52.85,
+       "oldPrice": 55.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     },
+     {
+       "id": "3",
+       "tag": "New",
+       "image": "/images/product3.png",
+       "category": "Snack",
+       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+       "ratingimage": "/svgs/rating.svg",
+       "rating": "(4.0)",
+       "by": "StarKist",
+       "newPrice": 48.85,
+       "oldPrice": 52.8,
+       "cartimage": "/svgs/cart.svg",
+       "cart": "Add"
+     }
+   ],
+   
+  "allProducts": [
+    { "id": 1, "image": "/svgs/image8.svg", "title": "Cake & Milk", "price": 26, "category": "Pet Foods" ,"ratingimage": "/svgs/rating.svg", "rating": "(4.0)"},
+    { "id": 2, "image": "/svgs/image9.svg", "title": "Oganic Kiwi", "price": 28, "category": "Fruits","ratingimage": "/svgs/rating.svg", "rating": "(4.0)" },
+    { "id": 3, "image": "/svgs/image8.svg", "title": "Peach", "price": 14, "category": "Fruits" ,"ratingimage": "/svgs/rating.svg", "rating": "(4.0)"},
+    { "id": 4, "image": "/svgs/image7.svg", "title": "Red Apple", "price": 54, "category": "Fruits","ratingimage": "/svgs/rating.svg", "rating": "(4.0)" },
+    { "id": 5, "image": "/svgs/image7.svg", "title": "Coffes & Tea", "price": 89, "category": "Coffes & Teas","ratingimage": "/svgs/rating.svg", "rating": "(4.0)" },
+    { "id": 6, "image": "/svgs/image7.svg", "title": "Vegetables", "price": 72, "category": "Vegetables" ,"ratingimage": "/svgs/rating.svg", "rating": "(4.0)"},
+    { "id": 7, "image": "/svgs/image8.svg", "title": "Strawberry", "price": 36, "category": "Fruits","ratingimage": "/svgs/rating.svg", "rating": "(4.0)" },
+    { "id": 8, "image": "/svgs/image9.svg", "title": "Black plum", "price": 123, "category": "Fruits","ratingimage": "/svgs/rating.svg", "rating": "(4.0)" },
+    { "id": 9, "tag": "Hot", "image": "/images/product1.png","price": 26, "category": "Snack", "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice","ratingimage": "/svgs/rating.svg", "rating": "(4.0)", "by": "NestFood", "newPrice": 28.85, "oldPrice": 32.8 },
+    { "id": 10, "tag": "Sale", "image": "/images/product2.png", "price": 26,"category": "Hodo Foods", "title": "All Natural Italian-Style Chicken Meatballs","ratingimage": "/svgs/rating.svg", "rating": "(3.5)", "by": "Stouffer", "newPrice": 52.85, "oldPrice": 55.8 },
+    { "id": 11, "tag": "New", "image": "/images/product3.png", "price": 26,"category": "Snack", "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn","ratingimage": "/svgs/rating.svg", "rating": "(4.0)", "by": "StarKist", "newPrice": 48.85, "oldPrice": 52.8 },
+    { "id": 12, "tag": "", "image": "/images/product4.png", "price": 26,"category": "Vegetables", "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn","ratingimage": "/svgs/rating.svg", "rating": "(4.0)", "by": "StarKist", "newPrice": 48.85, "oldPrice": 52.8 },
+    { "id": 13, "tag": "-14%", "image": "/images/product5.png", "price": 26,"category": "Pet Foods", "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn","ratingimage": "/svgs/rating.svg", "rating": "(4.0)", "by": "StarKist", "newPrice": 48.85, "oldPrice": 52.8 },
+    { "id": 14, "tag": "Save 35%", "image": "/images/product1.png", "price": 26,"category": "Featured", "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice","ratingimage": "/svgs/rating.svg", "rating": "(3.5)", "newPrice": 28.85, "oldPrice": 32.8 },
+    { "id": 15, "tag": "Sale", "image": "/images/product2.png", "price": 26,"category": "Popular", "title": "All Natural Italian-Style Chicken Meatballs","ratingimage": "/svgs/rating.svg", "rating": "(3.5)", "newPrice": 52.85, "oldPrice": 55.8 },
+    { "id": 16, "tag": "Best Sale", "image": "/images/product3.png", "price": 26,"category": "Featured", "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn","ratingimage": "/svgs/rating.svg", "rating": "(3.5)", "newPrice": 48.85, "oldPrice": 52.8 },
+    { "id": 17, "tag": "Save 15%", "image": "/images/product4.png", "price": 26,"category": "New added", "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn","ratingimage": "/svgs/rating.svg", "rating": "(3.5)", "newPrice": 48.85, "oldPrice": 52.8 },
+    { "id": 18, "image": "/images/deal1.png", "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice","ratingimage": "/svgs/rating.svg", "rating": "4.0", "by": "Nest Food", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Vegetables" },
+    { "id": 19, "image": "/images/deal2.png", "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice","ratingimage": "/svgs/rating.svg", "rating": "4.0", "by": "Nest Food", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Fruits" },
+    { "id": 20, "image": "/images/deal3.png", "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice","ratingimage": "/svgs/rating.svg", "rating": "4.0", "by": "Nest Food", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Vegetables" },
+    { "id": 21, "image": "/images/deal4.png", "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice","ratingimage": "/svgs/rating.svg", "rating": "4.0", "by": "Nest Food", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Fruits" },
+    { "id": 22, "image": "/images/sell1.png", "title": "Nestle Original Coffee-Mate Coffee Creamer","ratingimage": "/svgs/rating.svg", "rating": "4.0", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Top Selling" },
+    { "id": 23, "image": "/images/sell2.png", "title": "Nestle Original Coffee-Mate Coffee Creamer","ratingimage": "/svgs/rating.svg", "rating": "4.0", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Top Selling" },
+    { "id": 24, "image": "/images/sell3.png", "title": "Nestle Original Coffee-Mate Coffee Creamer","ratingimage": "/svgs/rating.svg", "rating": "4.0", "newPrice": 28.85, "oldPrice": 32.8, "price": 26,"category": "Top Selling" },
+    { "id": 25, "image": "/images/p1.png", "title": "Chen Cardigan", "price": "$99.50","ratingimage": "/svgs/rating.svg", "rating": "4.0" },
+    { "id": 26, "image": "/images/p2.png", "title": "Chen Sweater", "price": "$89.50","ratingimage": "/svgs/rating.svg", "rating": "4.0" },
+    { "id": 27, "image": "/images/p4.png", "title": "Colorful Jacket", "price": "$25","ratingimage": "/svgs/rating.svg", "rating": "4.0" }
+  ]
+
+
    
 }

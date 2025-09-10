@@ -5,7 +5,6 @@ export interface ProductDetails {
   id: string;
   title: string;
   newPrice: number;
-  quantity: number;
   image: StaticImageData;
   ratingimage: StaticImageData;
   rating: string;

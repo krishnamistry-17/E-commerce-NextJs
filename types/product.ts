@@ -54,6 +54,7 @@ export type DailySells = {
   category: string;
   title: string;
   ratingimage: StaticImageData;
+  rating: string;
   newPrice: number;
   oldPrice: number;
   cartimage: StaticImageData;
@@ -78,6 +79,7 @@ export type DailyDeals = {
   oldPrice: number;
   cartimage: StaticImageData;
   cart: string;
+  category: string;
 };
 
 export type ProductsHeading = {
@@ -146,4 +148,63 @@ export type Category = {
   image: StaticImageData;
   title: string;
   quantity: number;
+};
+
+export type FilteredNewProduct = {
+  id: number;
+  image: StaticImageData;
+  title: string;
+  price: string;
+  ratingimage: StaticImageData;
+};
+
+export type InformationButton = {
+  id: number;
+  title: string;
+};
+
+export type InformationContent = {
+  para1: string;
+  para2: string;
+  para3: string;
+  para4: string;
+  para5: string;
+  title1: string;
+  content1: string;
+  content2: string;
+  title2: string;
+  content3: string;
+  content4: string;
+  content5: string;
+  title3: string;
+  content6: string;
+};
+
+export type InformationList = {
+  title: string;
+  content: string;
+};
+
+export type RelatedProducts = {
+  id: string;
+  tag: string;
+  image: StaticImageData;
+  category: string;
+  title: string;
+  ratingimage: StaticImageData;
+  rating: string;
+  by: string;
+  newPrice: number;
+  oldPrice: number;
+  cartimage: StaticImageData;
+  cart: string;
+};
+
+export type AllProducts = {
+  id: number;
+  image: StaticImageData;
+  ratingimage: StaticImageData;
+  title: string;
+  price: number;
+  category: string;
 };

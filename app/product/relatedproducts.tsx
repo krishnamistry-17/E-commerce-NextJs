@@ -1,45 +1,29 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import axiosInstance from "@/lib/axios";
+import { RelatedProducts } from "@/types/product";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { PopularProductHeadings, PopularProducts } from "@/types/product";
-import { addToCart } from "../slice/cartSlice";
-import { showDetails } from "../slice/productDetailSlice";
-import axiosInstance from "@/lib/axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../pages/slice/cartSlice";
+import { showDetails } from "../pages/slice/productDetailSlice";
 
-const PopularProduct = () => {
-  const [data, setData] = useState([]);
-  const [product, setProducts] = useState<PopularProducts[]>([]);
-  const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
-
-  const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
+const Relatedproducts = () => {
+  const [product, setProduct] = useState<RelatedProducts[]>([]);
   const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axiosInstance.get<PopularProducts[]>(
-          "/popluarproducts"
+        const res = await axiosInstance.get<RelatedProducts[]>(
+          "/PopularProducts"
         );
-        setProducts(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
-    const fetchProductsHeading = async () => {
-      try {
-        const res = await axiosInstance.get<PopularProductHeadings[]>(
-          "/popularproductheadings"
-        );
-        setHeadings(res.data);
+        setProduct(res.data);
       } catch (error) {
         console.error("Error fetching products", error);
       }
     };
     fetchProducts();
-    fetchProductsHeading();
   }, []);
 
   const categoriesWiseTag: Record<string, string> = {
@@ -49,12 +33,7 @@ const PopularProduct = () => {
     "-14%": "bg-orangetag",
   };
 
-  const filteredProduct =
-    activeTab === "All"
-      ? product
-      : product?.filter((products) => products?.category === activeTab);
-
-  const handleCart = (item: PopularProducts) => {
+  const handleCart = (item: RelatedProducts) => {
     dispatch(
       addToCart({
         id: item.id,
@@ -66,7 +45,7 @@ const PopularProduct = () => {
     );
   };
 
-  const handleDetails = (item: PopularProducts) => {
+  const handleDetails = (item: RelatedProducts) => {
     dispatch(
       showDetails({
         id: item?.id,
@@ -79,33 +58,22 @@ const PopularProduct = () => {
         category: item?.category,
       })
     );
-
-    router.push(`/product/${item.id}`);
+    router.push(`/product/${item?.id}`);
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="md:flex justify-between items-center">
-        <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
-          Popular Products
-        </p>
-        <div className="sm:flex gap-4 pt-4 md:pt-0">
-          {heading?.map((item, index) => (
-            <div
-              key={index}
-              onClick={() => setActiveTab(item.title)}
-              className={`cursor-pointer pt-2 xs375:pt-0  pl-[29px] xs375:pl-0 ${
-                activeTab === item.title ? "text-shopbtn" : "text-regalblue"
-              }`}
-            >
-              {item.title}
-            </div>
-          ))}
-        </div>
+    <div
+      className="max-w-[1082.86px] 
+     rounded-[15px] xl:py-[41px] xl:px-[50px] px-5 py-5"
+    >
+      <p className="text-[32px] font-quick-bold-700 text-regalblue pb-4">
+        Related Product
+      </p>
+      <div className="w-full bg-gray-200 rounded-full h-[3px] mb-4 dark:bg-gray-700">
+        <div className="bg-progessbtn h-[3px] rounded-full dark:bg-shopbtn w-[23%]"></div>
       </div>
-
-      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 pt-8">
-        {filteredProduct?.map((item, index) => (
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 pt-8">
+        {product?.map((item, index) => (
           <div
             key={index}
             className="rounded-[15px] border border-productborder relative cursor-pointer"
@@ -184,4 +152,4 @@ const PopularProduct = () => {
   );
 };
 
-export default PopularProduct;
+export default Relatedproducts;

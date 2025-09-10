@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../slice/cartSlice";
 import { toast } from "react-toast";
 import axiosInstance from "@/lib/axios";
+import { showDetails } from "../slice/productDetailSlice";
+import { useRouter } from "next/navigation";
 
 const DailySells = () => {
   const [data, setData] = useState([]);
@@ -14,6 +16,7 @@ const DailySells = () => {
   const [heading, setHeadings] = useState<DailyBestSells[]>([]);
   const [activeTab, setActiveTab] = useState<string>("All");
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,7 +51,6 @@ const DailySells = () => {
   );
 
   const handleCart = (item: DailySells) => {
-
     dispatch(
       addToCart({
         id: item.id,
@@ -59,6 +61,22 @@ const DailySells = () => {
       })
     );
     toast.success("Item added to cart");
+  };
+
+  const handleDetails = (item: DailySells) => {
+    dispatch(
+      showDetails({
+        id: item?.id,
+        title: item?.title,
+        newPrice: item?.newPrice,
+        image: item?.image,
+        ratingimage: item?.ratingimage,
+        rating: item?.rating,
+        oldPrice: item?.oldPrice,
+        category: item?.category,
+      })
+    );
+    router.push(`/product/${item?.id}`);
   };
 
   return (
@@ -117,6 +135,7 @@ const DailySells = () => {
                       <div
                         key={index}
                         className="rounded-[15px] border border-productborder relative max-w-[298px] w-full gap-[24px]"
+                        onClick={() => handleDetails(item)}
                       >
                         <div className=" absolute top-0">
                           <p
@@ -178,7 +197,10 @@ const DailySells = () => {
                           </p>
                           <div
                             className="flex items-center justify-center gap-2 my-[12px] bg-cartbtn rounded-[4px] h-[36px]"
-                            onClick={() => handleCart(item)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCart(item);
+                            }}
                           >
                             <Image
                               src={item?.cartimage}
