@@ -20,7 +20,7 @@ import HeaderTop from "../headertop/page";
 import { FaSearch } from "react-icons/fa";
 import drop from "../../public/svgs/drop.svg";
 import BrowseCategories from "../browsecategory/page";
-import { browseheading} from "@/data/product";
+import { browseheading } from "@/data/product";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
@@ -40,12 +40,6 @@ export default function Navbar() {
 
         <div className="md:flex hidden xl:w-[450px] lg:w-[401px] md:w-[350px] w-[250px] h-fit px-3 py-4 items-center border border-progessbtn rounded-[4px]">
           <div className="flex items-center w-full bg-white rounded-[50px] ">
-            <p className="text-[14px] font-quick-bold-700 text-regalblue flex items-center gap-[12px]">
-              All Categories
-              <span>
-                <Image src={drop} alt="drop" width={12} height={12} />
-              </span>
-            </p>
             <input
               type="search"
               placeholder="Search for items.."
@@ -101,9 +95,6 @@ export default function Navbar() {
 
         <div className="lg:hidden flex items-center gap-2">
           <SignedIn>
-            {/* <div>
-              <ThemeToggle />
-            </div> */}
             <SignOutButton>
               <button className="text-sm px-3 py-1 rounded border border-black lg:block hidden">
                 Sign Out
@@ -137,12 +128,6 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="absolute top-[60px] md:right-4 right-1 w-[105px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
             <nav className="flex flex-col gap-3 text-sm">
-              {/* <Link href="/contact" className="pl-1">
-                Contact
-              </Link>
-              <Link href="/blog" className="pl-1">
-                Blog
-              </Link> */}
               <SignedIn>
                 <Link href="/user-profile" className="pl-[9px]">
                   Profile
@@ -159,7 +144,7 @@ export default function Navbar() {
       </nav>
       <div>
         <BrowseCategories browseheading={browseheading} />
-   </div>
+      </div>
     </>
   );
 }

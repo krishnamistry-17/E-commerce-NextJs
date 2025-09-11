@@ -86,7 +86,7 @@ const DealsDay = () => {
               <p
                 className="lg:text-[16px] xs375:text-[13px] text-[16px] pt-[18px]
                 font-quick-semibold-600 text-regalblue 
-                md:flex items-center justify-between gap-[19.63px]
+                md:flex hidden items-center justify-between gap-[19.63px]
                 "
               >
                 {heading?.map((item, index) => {

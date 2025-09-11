@@ -1,10 +1,12 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import categories from "../../public/svgs/browse.svg";
 import drop from "../../public/svgs/drop.svg";
 import head from "../../public/svgs/headphone.svg";
-import { BrowseHeading } from "@/types/product";
+import { BrowseHeading, Heading } from "@/types/product";
 import deals from "../../public/svgs/deals.svg";
+import axiosInstance from "@/lib/axios";
+import { FaSearch } from "react-icons/fa";
 
 type Props = {
   browseheading: BrowseHeading[];
@@ -13,8 +15,12 @@ type Props = {
 const BrowseCategories = ({ browseheading }: Props) => {
   const [activeTab, setActiveTab] = useState<string>("Deals");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [categoryMenu, setCategoryMenu] = useState(false);
+  const [heading, setHeadings] = useState<Heading[]>([]);
+  const [isClicked, setIsClicked] = useState(false);
   const toogleMenu = () => setIsMenuOpen((prev) => !prev);
+  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+  const toggleSearchMenu = () => setIsClicked((prev) => !prev);
 
   const tileWiseImage: Record<string, string> = {
     Deals: deals,
@@ -27,14 +33,27 @@ const BrowseCategories = ({ browseheading }: Props) => {
     Contact: drop,
   };
 
+  useEffect(() => {
+    const fetchHeadings = async () => {
+      try {
+        const res = await axiosInstance.get<Heading[]>("/headings");
+        setHeadings(res.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchHeadings();
+  }, []);
+
   return (
     <div>
-      <div className="w-full border-b border-gray-200 py-[14.5px] md:px-2 px-5 relative">
+      <div className="w-full border-b border-gray-200 py-[14.5px] md:px-2  relative">
         <div className="md:flex justify-between items-center">
           <div
-            className=" bg-shopbtn text-[16px] font-quick-bold-700 text-white
-             py-[12px] px-[6px] 
+            className=" bg-shopbtn text-[16px] font-quick-bold-700 text-white cursor-pointer
+             py-[12px] px-[6px] mx-2
           flex items-center rounded-[5px]"
+            onClick={toggleCategoryMenu}
           >
             <div className="flex items-center">
               <Image src={categories} alt="categories" height={20} width={20} />
@@ -45,9 +64,29 @@ const BrowseCategories = ({ browseheading }: Props) => {
               <Image src={drop} alt="drop" width={20} height={20} />
             </div>
           </div>
+          {categoryMenu && (
+            <div
+              className=" absolute md:top-[70px] top-[107px] left-3  bg-white
+               border border-bordercolor p-3 z-50"
+            >
+              <div>
+                <p
+                  className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] 
+                 p-4 
+                  font-quicksand-600 
+                  text-regalblue
+                  flex flex-col  gap-2  "
+                >
+                  {heading?.map((item, index) => {
+                    return <div key={index}>{item?.title}</div>;
+                  })}
+                </p>
+              </div>
+            </div>
+          )}
           <div
             className="  lg:flex hidden  gap-4 text-[14px] sm:text-[15px] md:text-[16px] 
-             font-quicksand-700 text-regal-blue"
+             font-quicksand-700 text-regalblue"
           >
             {browseheading?.map((item, index) => (
               <div
@@ -71,20 +110,40 @@ const BrowseCategories = ({ browseheading }: Props) => {
           <div className="  lg:hidden md:pt-0 pt-3">
             <div className="flex justify-between items-center">
               <button
-                className="font-quick-bold-700 text-[16px] text-regalblue flex items-center gap-3"
+                className="font-quick-bold-700 text-[16px] text-regalblue flex items-center gap-3 px-2"
                 onClick={toogleMenu}
               >
                 Menu
                 <Image src={drop} alt="drop" width={20} height={20} />
               </button>
-              <div className="sm:hidden">
+
+              <div
+                onClick={toggleSearchMenu}
+                className="sm:hidden flex items-center gap-[10px] px-2"
+              >
+                <FaSearch className="text-gray-500 mr-2 ml-3 md:hidden" />
                 <Image src={head} alt="head" width={36} height={38} />
               </div>
+            </div>
+            <div>
+              {isClicked && (
+                <div
+                  className="absolute top-[110px]  w-full my-1 
+                bg-white border border-gray-200 rounded-md  p-4 z-50 md:hidden"
+                >
+                  <input
+                    type="search"
+                    placeholder="Search for items.."
+                    className="flex-grow bg-transparent outline-none text-inputtext"
+                  />
+                </div>
+              )}
             </div>
 
             {isMenuOpen && (
               <div
-                className=" absolute md:top-[60px] top-[107px] md:left-1/2 left-3 w-[105px] bg-white
+                className=" absolute md:top-[60px] top-[107px] md:left-1/2 left-3 w-[105px]
+                 bg-white
                border border-bordercolor p-3 z-50  lg:hidden"
               >
                 <div

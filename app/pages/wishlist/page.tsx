@@ -9,7 +9,6 @@ import { MdDelete } from "react-icons/md";
 
 const WhishList = () => {
   const wishItem = useSelector((state: RootState) => state.wish.items);
-  console.log("wishItem :", wishItem);
   const dispatch = useDispatch();
 
   return (

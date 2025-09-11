@@ -50,7 +50,6 @@ const ProductDetailPage = ({ params }: Props) => {
   const product = useSelector((state: RootState) =>
     state.productDetails.items.find((item) => item?.id === params.id)
   );
-  console.log("product :", product);
 
   const handleChange = (e) => {
     setValue(e.target.value);

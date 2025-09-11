@@ -10,6 +10,7 @@ import { showDetails } from "../slice/productDetailSlice";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { IoCheckmarkOutline } from "react-icons/io5";
+import drop from "../../../public/svgs/drop.svg";
 
 const DailySells = () => {
   const [data, setData] = useState([]);
@@ -19,6 +20,8 @@ const DailySells = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
+  const [categoryMenu, setCategoryMenu] = useState(false);
+  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -88,7 +91,7 @@ const DailySells = () => {
     <>
       <div className="pt-[50px]">
         <div className="flex flex-col">
-          <div className="md:flex justify-between items-center">
+          <div className="md:flex hidden justify-between items-center">
             <div>
               <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
                 Daily Best Sells
@@ -121,17 +124,63 @@ const DailySells = () => {
               </p>
             </div>
           </div>
+          <div className="md:hidden justify-between items-center">
+            <div>
+              <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700 pb-4">
+                Daily Best Sells
+              </p>
+            </div>
+            {/* Dropdown trigger */}
+            <div
+              className="flex items-center justify-between w-full bg-white py-2 px-4 
+                          rounded-[50px] border border-gray-400 cursor-pointer"
+              onClick={toggleCategoryMenu}
+            >
+              <p className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}>
+                {activeTab}
+              </p>
+              <Image
+                src={drop}
+                alt="Dropdown Icon"
+                height={30}
+                width={30}
+                className="mr-2 ml-3"
+              />
+            </div>
+
+            {/* Dropdown menu */}
+            {categoryMenu && (
+              <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
+                {heading?.map((item, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setActiveTab(item.title);
+                      setCategoryMenu(false);
+                    }}
+                    className={`cursor-pointer py-2 px-4 rounded-[10px] ${
+                      activeTab === item.title
+                        ? "text-shopbtn "
+                        : "text-regalblue"
+                    } `}
+                  >
+                    {item.title}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="pt-[43px]">
-            <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 xl:gap-[24px] gap-4">
+            <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 xl:gap-[24px] gap-4 items-stretch">
               <>
-                <div>
+                <div className="h-full flex">
                   <Image
                     src={bestbanner}
                     alt="bestbanner"
-                    className=" w-[378px]"
                     width={25}
                     height={25}
                     unoptimized
+                    className="object-cover w-full h-full rounded-[15px]"
                   />
                 </div>
                 {(activeTab === "All" ? product : filteredProduct)?.map(
@@ -139,7 +188,7 @@ const DailySells = () => {
                     return (
                       <div
                         key={index}
-                        className="rounded-[15px] border border-productborder relative  gap-[24px]"
+                        className="flex flex-col justify-between h-full min-h-[480px] rounded-[15px] border border-productborder relative"
                         onClick={() => handleDetails(item)}
                       >
                         <div className=" absolute top-0">
@@ -194,34 +243,36 @@ const DailySells = () => {
                               className=" accent-shopbtn  rounded-[4px]"
                             />
                           </div>
-                          <p className="text-[14px] font-lato-regular-400 text-ratingtext pt-[8px]">
+                          <p className="text-[14px] font-lato-regular-400 text-ratingtext py-[8px]">
                             {item?.sold}
                             <span className="text-shopbtn pl-1">
                               {item?.soldnumber}
                             </span>
                           </p>
-                          <div
-                            className="flex items-center justify-center gap-2 my-[12px] bg-cartbtn rounded-[4px] h-[36px]"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCart(item);
-                            }}
-                          >
-                            {clickedCartIds.has(item?.id) ? (
-                              <IoCheckmarkOutline className="text-shopbtn" />
-                            ) : (
-                              <Image
-                                src={item?.cartimage}
-                                alt="cart"
-                                width={25}
-                                height={25}
-                                unoptimized
-                                className="w-5"
-                              />
-                            )}
-                            <button className="text-[14px] font-lato-bold-700 text-shopbtn ">
-                              {item?.cart}
-                            </button>
+                          <div className=" mt-auto pb-4">
+                            <div
+                              className="flex items-center justify-center gap-2 bg-cartbtn rounded-[4px] h-[36px]"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCart(item);
+                              }}
+                            >
+                              {clickedCartIds.has(item?.id) ? (
+                                <IoCheckmarkOutline className="text-shopbtn" />
+                              ) : (
+                                <Image
+                                  src={item?.cartimage}
+                                  alt="cart"
+                                  width={25}
+                                  height={25}
+                                  unoptimized
+                                  className="w-5"
+                                />
+                              )}
+                              <button className="text-[14px] font-lato-bold-700 text-shopbtn">
+                                {item?.cart}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>

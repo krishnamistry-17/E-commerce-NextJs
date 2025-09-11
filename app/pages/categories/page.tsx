@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import food from "../../../public/images/food.png";
 import { FiSend } from "react-icons/fi";
+import drop from "../../../public/svgs/drop.svg";
 
 export const Categories = () => {
   const [data, setData] = useState([]);
@@ -14,6 +15,8 @@ export const Categories = () => {
   const [heading, setHeadings] = useState<Heading[]>([]);
   const [bannerheading, setBannerHeading] = useState<BannerHeading[]>([]);
   const [activeTab, setActiveTab] = useState<string>("All");
+  const [categoryMenu, setCategoryMenu] = useState(false);
+  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -118,16 +121,16 @@ export const Categories = () => {
       <div>
         <div className="flex flex-col pt-[55px]">
           <div className="md:flex justify-between items-center">
-            <div className="md:flex justify-between  items-center pb-[43px]">
+            <div className="md:flex hidden justify-between  items-center pb-[43px]">
               <div>
-                <p className="lg:text-[32px] text-[27px] font-quick-bold-700 text-regal-blue">
+                <p className="lg:text-[32px] text-[27px] font-quick-bold-700 text-regalblue">
                   Featured Categories
                 </p>
               </div>
               <div>
                 <p
                   className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] pl-[29px] pt-[20px] font-quicksand-600 
-                  text-regal-blue
+                  text-regalblue
                   xs375:flex items-center gap-[27.5px]"
                 >
                   {heading?.map((item, index) => {
@@ -148,6 +151,55 @@ export const Categories = () => {
                 </p>
               </div>
             </div>
+            <div className="md:hidden justify-between  items-center pb-[43px]">
+              <div>
+                <p className="lg:text-[32px] text-[27px] font-quick-bold-700 text-regalblue pb-4">
+                  Featured Categories
+                </p>
+              </div>
+              {/* Dropdown trigger */}
+              <div
+                className="flex items-center justify-between w-full bg-white py-2 px-4 
+                rounded-[50px] border border-gray-400 cursor-pointer"
+                onClick={toggleCategoryMenu}
+              >
+                <p
+                  className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}
+                >
+                  {activeTab}
+                </p>
+                <Image
+                  src={drop}
+                  alt="Dropdown Icon"
+                  height={30}
+                  width={30}
+                  className="mr-2 ml-3"
+                />
+              </div>
+
+              {/* Dropdown menu */}
+              {categoryMenu && (
+                <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
+                  {heading?.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setActiveTab(item.title);
+                        setCategoryMenu(false);
+                      }}
+                      className={`cursor-pointer py-2 px-4 rounded-[10px] ${
+                        activeTab === item.title
+                          ? "text-shopbtn "
+                          : "text-regalblue"
+                      } `}
+                    >
+                      {item.title}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div className="lg:flex items-center justify-between gap-2.5 hidden">
               <span className="bg-bggray w-[40px] h-[40px] rounded-full">
                 <Image

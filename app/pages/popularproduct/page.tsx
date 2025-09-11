@@ -9,6 +9,7 @@ import { showDetails } from "../slice/productDetailSlice";
 import axiosInstance from "@/lib/axios";
 import { toast } from "react-toastify";
 import { IoCheckmarkOutline } from "react-icons/io5";
+import drop from "../../../public/svgs/drop.svg";
 
 const PopularProduct = () => {
   const [data, setData] = useState([]);
@@ -16,6 +17,9 @@ const PopularProduct = () => {
   const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
   const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
   const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
+  const [categoryMenu, setCategoryMenu] = useState(false);
+  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -90,7 +94,7 @@ const PopularProduct = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="md:flex justify-between items-center">
+      <div className="md:flex hidden justify-between items-center">
         <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
           Popular Products
         </p>
@@ -107,6 +111,50 @@ const PopularProduct = () => {
             </div>
           ))}
         </div>
+      </div>
+      <div className="md:hidden justify-between items-center">
+        <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700 pb-4">
+          Popular Products
+        </p>
+        {/* Dropdown trigger */}
+        <div
+          className="flex items-center justify-between w-full bg-white py-2 px-4 
+                       rounded-[50px] border border-gray-400 cursor-pointer"
+          onClick={toggleCategoryMenu}
+        >
+          <p className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}>
+            {activeTab}
+          </p>
+          <Image
+            src={drop}
+            alt="Dropdown Icon"
+            height={30}
+            width={30}
+            className="mr-2 ml-3"
+          />
+        </div>
+
+        {/* Dropdown menu */}
+        {categoryMenu && (
+          <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
+            {heading?.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setActiveTab(item.title);
+                  setCategoryMenu(false);
+                }}
+                className={`cursor-pointer py-2 px-4 rounded-[10px] ${
+                  activeTab === item.title
+                    ? "text-shopbtn font-bold"
+                    : "text-regalblue"
+                } hover:bg-gray-100`}
+              >
+                {item.title}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 pt-8">
