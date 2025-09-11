@@ -3,6 +3,7 @@ import option from "../../public/svgs/option.svg";
 import drop from "../../public/svgs/drop.svg";
 import Image from "next/image";
 import Link from "next/link";
+import WishListIcon from "../pages/wishlisticon/page";
 
 const HeaderTop = () => {
   return (
@@ -19,9 +20,13 @@ const HeaderTop = () => {
             <p className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px]">
               My Account <span className=" text-black pl-[8.5px]">|</span>
             </p>
-            <p className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px]">
+            <Link
+              className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px]"
+              href={"/pages/wishlist"}
+            >
               Wishlist <span className=" text-black pl-[8.5px]">|</span>
-            </p>
+              <WishListIcon />
+            </Link>
             <p className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px]">
               Order Tracking
             </p>

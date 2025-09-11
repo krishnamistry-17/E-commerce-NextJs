@@ -548,17 +548,6 @@ export const browseheading: BrowseHeading[] = [
     image: deals,
   },
   {
-    id: 2,
-    title: "Home",
-    image: drop,
-  },
-
-  {
-    id: 3,
-    title: "About",
-    image: drop,
-  },
-  {
     id: 4,
     title: "Shop",
     image: drop,
@@ -568,11 +557,7 @@ export const browseheading: BrowseHeading[] = [
     title: "Vendores",
     image: drop,
   },
-  {
-    id: 4,
-    title: "Mega menu",
-    image: drop,
-  },
+
   {
     id: 5,
     title: "Blog",

@@ -31,7 +31,7 @@ const Footer = ({ footerfirst }: Props) => {
   return (
     <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 xl:pt-[55px] pt-5">
       <div className=" grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 grid-cols-1 xl:gap-[50px] gap-5">
-        <div className="flex flex-col">
+        <div className="flex flex-col xl:pl-0 pl-[12px]">
           {footerfirst?.map((item, index) => (
             <div key={index}>
               <Link href="/">
@@ -49,11 +49,8 @@ const Footer = ({ footerfirst }: Props) => {
             </div>
           ))}
           {footersecond?.map((item, index) => (
-            <div className="flex flex-col  pt-[16px]" key={index}>
-              <div className="text-[15px] font-lato-regular-400 text-regalblue flex items-center ">
-                <span>
-                  <Image src={item?.icon} alt="call" width={20} height={20} />
-                </span>
+            <div className="flex flex-col  pt-[16px] " key={index}>
+              <div className="text-[15px] font-lato-regular-400 text-regalblue flex items-center gap-2 ">
                 {item?.detail}
               </div>
             </div>

@@ -135,16 +135,16 @@ export default function Navbar() {
         </div>
 
         {isMenuOpen && (
-          <div className="absolute top-[60px] right-4 w-[105px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
+          <div className="absolute top-[60px] md:right-4 right-1 w-[105px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
             <nav className="flex flex-col gap-3 text-sm">
-              <Link href="/contact" className="pl-1">
+              {/* <Link href="/contact" className="pl-1">
                 Contact
               </Link>
               <Link href="/blog" className="pl-1">
                 Blog
-              </Link>
+              </Link> */}
               <SignedIn>
-                <Link href="/user-profile" className="pl-1">
+                <Link href="/user-profile" className="pl-[9px]">
                   Profile
                 </Link>
               </SignedIn>

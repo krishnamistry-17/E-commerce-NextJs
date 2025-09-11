@@ -1,26 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StaticImageData } from "next/image";
 
-export interface CartItem {
+export interface WishItem {
   id: string;
   title: string;
   newPrice: number;
   quantity: number;
   image: StaticImageData;
 }
-interface CartState {
-  items: CartItem[];
+interface WishState {
+  items: WishItem[];
 }
 
-const initialState: CartState = {
+const initialState: WishState = {
   items: [],
 };
 
-const cartSlice = createSlice({
-  name: "cart",
+const wishSlice = createSlice({
+  name: "wish",
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<CartItem>) {
+    addToWishList(state, action: PayloadAction<WishItem>) {
       const itemIndex = state?.items?.findIndex(
         (item) => item?.id === action?.payload?.id
       );
@@ -32,25 +32,15 @@ const cartSlice = createSlice({
         state?.items?.push(action?.payload);
       }
     },
-    removeFromCart(state, action: PayloadAction<string>) {
+    removeFromWishList(state, action: PayloadAction<string>) {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
-    updateQuantity(
-      state,
-      action: PayloadAction<{ id: string; quantity: number }>
-    ) {
-      const item = state.items.find((item) => item.id === action.payload.id);
-      if (item && action.payload.quantity >= 1) {
-        item.quantity = action.payload.quantity;
-      }
-    },
-
-    clearCart(state) {
+    clearWishList(state) {
       state.items = [];
     },
   },
 });
-export const { addToCart, removeFromCart, updateQuantity, clearCart } =
-  cartSlice.actions;
+export const { addToWishList, removeFromWishList, clearWishList } =
+  wishSlice.actions;
 
-export default cartSlice.reducer;
+export default wishSlice.reducer;

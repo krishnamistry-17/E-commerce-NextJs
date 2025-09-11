@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import Header from "../app/header/page";
 import Footer from "./footer/page";
 import { Provider } from "react-redux";
@@ -39,6 +41,7 @@ export default function RootLayout({
           <Provider store={store}>
             <Header />
             {children}
+            <ToastContainer />
             <Footer
               footerfirst={footerfirst}
               footersecond={footersecond}

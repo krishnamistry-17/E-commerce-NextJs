@@ -7,13 +7,15 @@ import { PopularProductHeadings, PopularProducts } from "@/types/product";
 import { addToCart } from "../slice/cartSlice";
 import { showDetails } from "../slice/productDetailSlice";
 import axiosInstance from "@/lib/axios";
+import { toast } from "react-toastify";
+import { IoCheckmarkOutline } from "react-icons/io5";
 
 const PopularProduct = () => {
   const [data, setData] = useState([]);
   const [product, setProducts] = useState<PopularProducts[]>([]);
   const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
-
   const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
+  const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -64,6 +66,9 @@ const PopularProduct = () => {
         image: item?.image,
       })
     );
+    // Add this item ID to clicked cart IDs
+    setClickedCartIds((prev) => new Set(prev).add(item?.id));
+    toast.success("Item added to cart");
   };
 
   const handleDetails = (item: PopularProducts) => {
@@ -163,14 +168,18 @@ const PopularProduct = () => {
                     handleCart(item);
                   }}
                 >
-                  <Image
-                    src={item.cartimage}
-                    alt="cart"
-                    width={25}
-                    height={25}
-                    unoptimized
-                    className="  w-full"
-                  />
+                  {clickedCartIds.has(item?.id) ? (
+                    <IoCheckmarkOutline className="text-shopbtn" />
+                  ) : (
+                    <Image
+                      src={item?.cartimage}
+                      alt="cart"
+                      width={25}
+                      height={25}
+                      unoptimized
+                      className="w-5"
+                    />
+                  )}
                   <button className="text-sm font-bold text-shopbtn ml-1">
                     {item.cart}
                   </button>

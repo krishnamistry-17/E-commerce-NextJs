@@ -9,12 +9,14 @@ import { addToCart } from "../slice/cartSlice";
 import axiosInstance from "@/lib/axios";
 import { showDetails } from "../slice/productDetailSlice";
 import { useRouter } from "next/navigation";
+import { IoCheckmarkOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 const DealsDay = () => {
   const [data, setData] = useState([]);
   const [product, setProducts] = useState<DailyDeals[]>([]);
   const [heading, setHeadings] = useState<DealsHeading[]>([]);
-
+  const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -49,6 +51,9 @@ const DealsDay = () => {
         image: item?.image,
       })
     );
+    // Add this item ID to clicked cart IDs
+    setClickedCartIds((prev) => new Set(prev).add(item?.id));
+    toast.success("Item added to cart");
   };
 
   const handleDetails = (item: DailyDeals) => {
@@ -173,14 +178,18 @@ const DealsDay = () => {
                             e.stopPropagation();
                           }}
                         >
-                          <Image
-                            src={item?.cartimage}
-                            alt="cart"
-                            width={25}
-                            height={25}
-                            unoptimized
-                            className="  w-full"
-                          />
+                          {clickedCartIds.has(item?.id) ? (
+                            <IoCheckmarkOutline className="text-shopbtn" />
+                          ) : (
+                            <Image
+                              src={item?.cartimage}
+                              alt="cart"
+                              width={25}
+                              height={25}
+                              unoptimized
+                              className="w-5"
+                            />
+                          )}
                           <button className="text-[14px] font-lato-bold-700 text-shopbtn">
                             {item?.cart}
                           </button>

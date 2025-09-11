@@ -11,11 +11,13 @@ type Props = {
 };
 
 const BrowseCategories = ({ browseheading }: Props) => {
-  const [activeTab, setActiveTab] = useState<string>("Home");
+  const [activeTab, setActiveTab] = useState<string>("Deals");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toogleMenu = () => setIsMenuOpen((prev) => !prev);
 
   const tileWiseImage: Record<string, string> = {
     Deals: deals,
-    Home: drop,
     About: drop,
     Shop: drop,
     Vendores: drop,
@@ -27,10 +29,11 @@ const BrowseCategories = ({ browseheading }: Props) => {
 
   return (
     <div>
-      <div className="w-full border-b border-gray-200 py-[14.5px] px-2">
-        <div className="flex flex-wrap justify-between items-center">
+      <div className="w-full border-b border-gray-200 py-[14.5px] md:px-2 px-5 relative">
+        <div className="md:flex justify-between items-center">
           <div
-            className=" bg-shopbtn text-[16px] font-quick-bold-700 text-white py-[12px] px-[6px] 
+            className=" bg-shopbtn text-[16px] font-quick-bold-700 text-white
+             py-[12px] px-[6px] 
           flex items-center rounded-[5px]"
           >
             <div className="flex items-center">
@@ -43,7 +46,7 @@ const BrowseCategories = ({ browseheading }: Props) => {
             </div>
           </div>
           <div
-            className="flex flex-wrap gap-4 text-[14px] sm:text-[15px] md:text-[16px] 
+            className="  lg:flex hidden  gap-4 text-[14px] sm:text-[15px] md:text-[16px] 
              font-quicksand-700 text-regal-blue"
           >
             {browseheading?.map((item, index) => (
@@ -58,16 +61,47 @@ const BrowseCategories = ({ browseheading }: Props) => {
                 <Image
                   src={tileWiseImage[item?.title]}
                   alt="image"
-                  width={14}
-                  height={14}
-                  unoptimized
+                  width={20}
+                  height={20}
                   className="pl-1"
                 />
               </div>
             ))}
           </div>
+          <div className="  lg:hidden md:pt-0 pt-3">
+            <div className="flex justify-between items-center">
+              <button
+                className="font-quick-bold-700 text-[16px] text-regalblue flex items-center gap-3"
+                onClick={toogleMenu}
+              >
+                Menu
+                <Image src={drop} alt="drop" width={20} height={20} />
+              </button>
+              <div className="sm:hidden">
+                <Image src={head} alt="head" width={36} height={38} />
+              </div>
+            </div>
 
-          <div className="flex items-center">
+            {isMenuOpen && (
+              <div
+                className=" absolute md:top-[60px] top-[107px] md:left-1/2 left-3 w-[105px] bg-white
+               border border-bordercolor p-3 z-50  lg:hidden"
+              >
+                <div
+                  className="lg:hidden flex flex-col 
+                   gap-4 text-[14px] sm:text-[15px] md:text-[16px] 
+             font-quick-semibold-600 text-regalblue"
+                >
+                  <p>Deals</p>
+                  <p>Shop</p>
+                  <p>Vendores</p>
+                  <p>Blog</p>
+                  <p>Contact</p>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="md:flex items-center hidden ">
             <div>
               <Image src={head} alt="head" width={36} height={38} />
             </div>

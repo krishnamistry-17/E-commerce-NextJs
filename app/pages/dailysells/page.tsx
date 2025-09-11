@@ -5,10 +5,11 @@ import bestbanner from "../../../public/images/bestbanner.png";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../slice/cartSlice";
-import { toast } from "react-toast";
 import axiosInstance from "@/lib/axios";
 import { showDetails } from "../slice/productDetailSlice";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { IoCheckmarkOutline } from "react-icons/io5";
 
 const DailySells = () => {
   const [data, setData] = useState([]);
@@ -17,6 +18,7 @@ const DailySells = () => {
   const [activeTab, setActiveTab] = useState<string>("All");
   const dispatch = useDispatch();
   const router = useRouter();
+  const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,6 +62,9 @@ const DailySells = () => {
         image: item?.image,
       })
     );
+
+    // Add this item ID to clicked cart IDs
+    setClickedCartIds((prev) => new Set(prev).add(item?.id));
     toast.success("Item added to cart");
   };
 
@@ -91,7 +96,7 @@ const DailySells = () => {
             </div>
             <div>
               <p
-                className="lg:text-[16px] xs375:text-[13px] text-[16px] pt-[18px]
+                className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] pt-[18px]
               font-quick-semibold-600 text-regalblue 
               md:flex items-center justify-between gap-[19.63px]
               "
@@ -134,7 +139,7 @@ const DailySells = () => {
                     return (
                       <div
                         key={index}
-                        className="rounded-[15px] border border-productborder relative max-w-[298px] w-full gap-[24px]"
+                        className="rounded-[15px] border border-productborder relative  gap-[24px]"
                         onClick={() => handleDetails(item)}
                       >
                         <div className=" absolute top-0">
@@ -202,14 +207,18 @@ const DailySells = () => {
                               handleCart(item);
                             }}
                           >
-                            <Image
-                              src={item?.cartimage}
-                              alt="cart"
-                              width={25}
-                              height={25}
-                              unoptimized
-                              className="  w-5"
-                            />
+                            {clickedCartIds.has(item?.id) ? (
+                              <IoCheckmarkOutline className="text-shopbtn" />
+                            ) : (
+                              <Image
+                                src={item?.cartimage}
+                                alt="cart"
+                                width={25}
+                                height={25}
+                                unoptimized
+                                className="w-5"
+                              />
+                            )}
                             <button className="text-[14px] font-lato-bold-700 text-shopbtn ">
                               {item?.cart}
                             </button>

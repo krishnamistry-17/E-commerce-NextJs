@@ -4,6 +4,7 @@ import { RootState } from "@reduxjs/toolkit/query";
 import home from "../../../public/svgs/home.svg";
 import cart from "../../../public/svgs/whitecart.svg";
 import whishlist from "../../../public/svgs/whishlist.svg";
+import fillwish from "../../../public/svgs/fillwish.svg";
 import repeat from "../../../public/svgs/repeat.svg";
 import Image from "next/image";
 import right from "../../../public/svgs/right.svg";
@@ -23,7 +24,12 @@ import axiosInstance from "@/lib/axios";
 import Description from "../description";
 import Relatedproducts from "../relatedproducts";
 import Banner from "@/app/pages/banner/page";
-
+import { FaMinus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
+import { addToWishList } from "@/app/pages/slice/wishListSlice";
+import { MdOutlineFavorite } from "react-icons/md";
+import { IoCheckmarkOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 type Props = {
   params: {
     id: string;
@@ -35,22 +41,21 @@ const ProductDetailPage = ({ params }: Props) => {
   const [value, setValue] = useState(150);
   const [allproduct, setAllProduct] = useState<AllProducts[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<AllProducts[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("Pet Foods");
+  const [selectedCategory, setSelectedCategory] =
+    useState<string[]>("Pet Foods");
+  const [quantity, setQuantity] = useState(1);
+  const [isWishClick, setIsWishClick] = useState(false);
+  const [isCartClick, setIsCartClick] = useState(false);
 
   const product = useSelector((state: RootState) =>
     state.productDetails.items.find((item) => item?.id === params.id)
   );
+  console.log("product :", product);
 
   const handleChange = (e) => {
     setValue(e.target.value);
   };
   const dispatch = useDispatch();
-
-  const handleQuantityChange = (id: string, quantity: number) => {
-    if (quantity > 0) {
-      dispatch(updateQuantity({ id, quantity }));
-    }
-  };
 
   const handleCart = (item: Products) => {
     dispatch(
@@ -58,10 +63,28 @@ const ProductDetailPage = ({ params }: Props) => {
         id: item?.id,
         title: item?.title,
         newPrice: item?.newPrice,
-        quantity: 1,
+        quantity: quantity,
         image: item?.image,
       })
     );
+    // To Reset to 1 after adding
+    // setQuantity(0);+
+    setIsCartClick(true);
+    toast.success("Item added to cart");
+  };
+
+  const handleWishList = (item: Products) => {
+    dispatch(
+      addToWishList({
+        id: item?.id,
+        title: item?.title,
+        newPrice: item?.newPrice,
+        quantity: quantity,
+        image: item?.image,
+      })
+    );
+    setIsWishClick(true);
+    toast.success("Item added to wishlist");
   };
 
   useEffect(() => {
@@ -84,41 +107,29 @@ const ProductDetailPage = ({ params }: Props) => {
     );
   };
 
-  // const togglecategory = (category: string) => {
-  //   setSelectedCategory((prev) => (prev === category ? null : category));
-  // };
-
-  // const filtered = allproduct.filter(
-  //   (product) =>
-  //     product.category &&
-  //     selectedCategory &&
-  //     product.category.trim().toLowerCase() ===
-  //       selectedCategory.trim().toLowerCase()
+  // const filteredProducts = allproduct?.filter((newproduct) =>
+  //   selectedCategory.includes(newproduct?.category)
   // );
-
-  const filteredProducts = allproduct?.filter((newproduct) =>
-    selectedCategory.includes(newproduct?.category)
-  );
 
   const handleFiltered = () => {
     const filtered = allproduct.filter((product) =>
-      selectedCategory.includes((cat) => cat.toLowerCase() === product.category)
+      selectedCategory.includes(product?.category)
     );
     setSelectedProduct(filtered);
   };
 
-  console.log(
-    "All Categories:",
-    allproduct.map((p) => p.category)
-  );
+  // console.log(
+  //   "All Categories:",
+  //   allproduct.map((p) => p.category)
+  // );
 
   return (
     <div>
-      <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5">
+      <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5 px-2">
         <div className="flex items-center gap-[12px]">
           <div className="flex items-center gap-[8px]">
             <Image src={home} alt="home" width={14} height={14} />
-            <p className="text-[14px] text-shopbtn font-quick-semibold-600">
+            <p className="text-[14px] text-shopbtn font-quick-semibold-600 md:block hidden">
               Home
             </p>
             <Image src={right} alt="right" width={19} height={24} />
@@ -205,14 +216,14 @@ const ProductDetailPage = ({ params }: Props) => {
                 {/* Pricing */}
                 <div className="flex items-center gap-4 pt-2">
                   <p className="text-[36px] sm:text-[48px] font-quick-bold-700 text-shopbtn">
-                    {product?.newPrice}
+                    ${product?.newPrice}
                   </p>
                   <div>
                     <p className="text-[12px] font-quick-semibold-600 text-offertext">
                       26% Off
                     </p>
                     <p className="text-[20px] sm:text-[28px] text-bgbrown line-through">
-                      {product?.oldPrice}
+                      ${product?.oldPrice}
                     </p>
                   </div>
                 </div>
@@ -247,24 +258,63 @@ const ProductDetailPage = ({ params }: Props) => {
 
                 {/* Quantity & Actions */}
                 <div className="flex flex-wrap gap-3 items-center pt-4">
-                  <input
-                    type="number"
-                    value={product?.quantity ?? 1}
-                    min={1}
-                    className="w-[90px] p-1 border-2 border-shopbtn rounded-[5px]"
-                    onChange={(e) =>
-                      handleQuantityChange(product.id, Number(e.target.value))
-                    }
-                  />
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const newQty = quantity - 1;
+                        if (newQty >= 1) {
+                          setQuantity(newQty);
+                          dispatch(
+                            updateQuantity({ id: product.id, quantity: newQty })
+                          );
+                        }
+                      }}
+                    >
+                      <FaMinus className="text-shopbtn" />
+                    </button>
+
+                    <span className="px-2 text-[16px] text-bgbrown font-quick-semibold-600">
+                      {quantity}
+                    </span>
+
+                    <button
+                      onClick={() => {
+                        const newQty = quantity + 1;
+                        setQuantity(newQty);
+                        dispatch(
+                          updateQuantity({ id: product.id, quantity: newQty })
+                        );
+                      }}
+                    >
+                      <FaPlus className="text-shopbtn" />
+                    </button>
+                  </div>
+
                   <button
                     className="bg-shopbtn py-3 px-6 flex items-center gap-2 text-white text-[16px] font-quick-bold-700 rounded-[5px]"
                     onClick={() => handleCart(product)}
                   >
-                    <Image src={cart} alt="cart" width={20} height={20} />
+                    {isCartClick ? (
+                      <IoCheckmarkOutline className="text-white" />
+                    ) : (
+                      <Image src={cart} alt="cart" width={20} height={20} />
+                    )}
                     Add to cart
                   </button>
-                  <div className="p-[16px] bg-white border border-bordercolor rounded-[5px]">
-                    <Image src={whishlist} alt="wish" width={18} height={18} />
+                  <div
+                    className="p-[16px] bg-white border border-bordercolor rounded-[5px]"
+                    onClick={() => handleWishList(product)}
+                  >
+                    {isWishClick ? (
+                      <MdOutlineFavorite />
+                    ) : (
+                      <Image
+                        src={whishlist}
+                        alt="wish"
+                        width={18}
+                        height={18}
+                      />
+                    )}
                   </div>
                   <div className="p-[16px] bg-white border border-bordercolor rounded-[5px]">
                     <Image src={repeat} alt="repeat" width={18} height={18} />
@@ -454,7 +504,7 @@ const ProductDetailPage = ({ params }: Props) => {
                     <div>
                       <input
                         type="checkbox"
-                        checked={selectedCategory === "Pet Foods"}
+                        checked={selectedCategory.includes("Pet Foods")}
                         onChange={() => togglecategory("Pet Foods")}
                       />
                     </div>
@@ -468,7 +518,7 @@ const ProductDetailPage = ({ params }: Props) => {
                     <div>
                       <input
                         type="checkbox"
-                        checked={selectedCategory === "Fruits"}
+                        checked={selectedCategory.includes("Fruits")}
                         onChange={() => togglecategory("Fruits")}
                       />
                     </div>
@@ -482,7 +532,7 @@ const ProductDetailPage = ({ params }: Props) => {
                     <div>
                       <input
                         type="checkbox"
-                        checked={selectedCategory === "Vegetables"}
+                        checked={selectedCategory.includes("Vegetables")}
                         onChange={() => togglecategory("Vegetables")}
                       />
                     </div>
@@ -498,7 +548,7 @@ const ProductDetailPage = ({ params }: Props) => {
                     <div>
                       <input
                         type="checkbox"
-                        checked={selectedCategory === "Coffes & Teas"}
+                        checked={selectedCategory.includes("Coffes & Teas")}
                         onChange={() => togglecategory("Coffes & Teas")}
                       />
                     </div>
@@ -512,7 +562,7 @@ const ProductDetailPage = ({ params }: Props) => {
                     <div>
                       <input
                         type="checkbox"
-                        checked={selectedCategory === "Snack"}
+                        checked={selectedCategory.includes("Snack")}
                         onChange={() => togglecategory("Snack")}
                       />
                     </div>
@@ -526,7 +576,7 @@ const ProductDetailPage = ({ params }: Props) => {
                     <div>
                       <input
                         type="checkbox"
-                        checked={selectedCategory === "Featured"}
+                        checked={selectedCategory.includes("Featured")}
                         onChange={() => togglecategory("Featured")}
                       />
                     </div>
@@ -554,7 +604,9 @@ const ProductDetailPage = ({ params }: Props) => {
                 <button
                   className="ml-2 text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px]
    py-[12px] px-[16px]"
-                  onClick={() => setSelectedProduct([])}
+                  onClick={() => {
+                    setSelectedProduct([]);
+                  }}
                 >
                   Reset
                 </button>
@@ -571,7 +623,7 @@ const ProductDetailPage = ({ params }: Props) => {
               <div className="bg-progessbtn h-[3px] rounded-full dark:bg-shopbtn w-[23%]"></div>
             </div>
             <div>
-              {filteredProducts?.map((item, index) => (
+              {selectedProduct?.map((item, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-[15px] pt-[10px]"
@@ -580,10 +632,9 @@ const ProductDetailPage = ({ params }: Props) => {
                     <Image
                       src={item?.image}
                       alt="image"
-                      width={80}
-                      height={80}
-                      unoptimized
-                      className=" h-[40px] object-cover w-full"
+                      width={50}
+                      height={50}
+                      className="  object-cover w-full"
                     />
                   </div>
                   <div className="flex flex-col">

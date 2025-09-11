@@ -56,7 +56,7 @@ const Description = () => {
         {heading?.map((item, index) => (
           <div key={index}>
             <button
-              className={`px-[24px] py-[12px] border border-productborder rounded-[45px] shadow-md
+              className={`px-[24px] py-[12px] border border-productborder rounded-[45px] shadow-md md:mt-0 mt-5 
             text-[17px] font-quick-bold-700 cursor-pointer
             ${activeTab === item?.title ? "text-shopbtn" : "text-bgbrown"}
             `}

@@ -126,7 +126,7 @@ export const Categories = () => {
               </div>
               <div>
                 <p
-                  className="lg:text-[16px] xs375:text-[13px] text-[16px] pl-[29px] pt-[20px] font-quicksand-600 
+                  className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] pl-[29px] pt-[20px] font-quicksand-600 
                   text-regal-blue
                   xs375:flex items-center gap-[27.5px]"
                 >
@@ -148,7 +148,7 @@ export const Categories = () => {
                 </p>
               </div>
             </div>
-            <div className="md:flex items-center justify-between gap-2.5 hidden">
+            <div className="lg:flex items-center justify-between gap-2.5 hidden">
               <span className="bg-bggray w-[40px] h-[40px] rounded-full">
                 <Image
                   src={previous}
