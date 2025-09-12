@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import drop from "../../public/svgs/drop.svg";
 
@@ -9,20 +9,58 @@ const TopbarDropdowns = () => {
   const [selectedLang, setSelectedLang] = useState("English");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
+  const languageRef = useRef(null);
+  const currencyRef = useRef(null);
+
   const languages = ["Hindi", "Spanish", "French"];
   const currencies = ["₹", "EUR", "INR"];
 
-  const language = localStorage.getItem("lang");
-  console.log('language :', language);
+  // const language = localStorage.getItem("lang");
+  // console.log('language :', language);
+
+  useEffect(() => {
+    const storedLang = localStorage.getItem("lang");
+    const storedCurrency = localStorage.getItem("currency");
+
+    if (storedLang) setSelectedLang(storedLang);
+    if (storedCurrency) setSelectedCurrency(storedCurrency);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("lang", selectedLang);
+  }, [selectedLang]);
+
+  useEffect(() => {
+    localStorage.setItem("currency", selectedCurrency);
+  }, [selectedCurrency]);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        languageRef.current &&
+        !languageRef.current?.contains(e.target as Node)
+      ) {
+        setShowLangDropdown(false);
+      }
+      if (
+        currencyRef.current &&
+        !currencyRef.current?.contains(e.target as Node)
+      ) {
+        setShowCurrencyDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
     <div className="relative flex items-center py-[11.5px] space-x-3 text-[13px] font-lato-regular-400 text-bgbrown">
       {/* Language Dropdown */}
-      <div className="relative">
+      <div className="relative" ref={languageRef}>
         <button
           onClick={() => setShowLangDropdown(!showLangDropdown)}
           className="flex items-center"
@@ -57,7 +95,7 @@ const TopbarDropdowns = () => {
       <span className="text-black">|</span>
 
       {/* Currency Dropdown */}
-      <div className="relative">
+      <div className="relative" ref={currencyRef}>
         <button
           onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
           className="flex items-center"

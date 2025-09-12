@@ -28,9 +28,6 @@ const BrowseCategories = ({ browseheading }: Props) => {
     Shop: drop,
     Vendores: drop,
     "Mega menu": drop,
-    Blog: drop,
-    Pages: drop,
-    Contact: drop,
   };
 
   useEffect(() => {
@@ -125,18 +122,13 @@ const BrowseCategories = ({ browseheading }: Props) => {
                 <Image src={head} alt="head" width={36} height={38} />
               </div>
             </div>
-            <div>
+            <div className="px-2 mt-1">
               {isClicked && (
-                <div
-                  className="absolute top-[110px]  w-full my-1 
-                bg-white border border-gray-200 rounded-md  p-4 z-50 md:hidden"
-                >
-                  <input
-                    type="search"
-                    placeholder="Search for items.."
-                    className="flex-grow bg-transparent outline-none text-inputtext"
-                  />
-                </div>
+                <input
+                  type="search"
+                  placeholder="Search for items.."
+                  className=" outline-none text-inputtext w-full border p-4 border-gray-200 rounded-md md:hidden"
+                />
               )}
             </div>
 
@@ -154,8 +146,6 @@ const BrowseCategories = ({ browseheading }: Props) => {
                   <p>Deals</p>
                   <p>Shop</p>
                   <p>Vendores</p>
-                  <p>Blog</p>
-                  <p>Contact</p>
                 </div>
               </div>
             )}

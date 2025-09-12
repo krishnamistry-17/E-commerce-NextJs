@@ -2,7 +2,7 @@
 import { BannerHeading, Heading, Product } from "@/types/product";
 import Image from "next/image";
 import next from "../../../public/svgs/next.svg";
-import previous from "../../../public/svgs/next.svg";
+import previous from "../../../public/svgs/previous.svg";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import food from "../../../public/images/food.png";
@@ -17,6 +17,7 @@ export const Categories = () => {
   const [activeTab, setActiveTab] = useState<string>("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+  const [visiblecount, setVisibleCount] = useState(5);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,11 +61,27 @@ export const Categories = () => {
     (products) => products?.category === activeTab
   );
 
-  useEffect(() => {
-    fetch("http://localhost:4000/products")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:4000/products")
+  //     .then((res) => res.json())
+  //     .then((data) => setData(data));
+  // }, []);
+
+  // useEffect(() => {
+  //   const updateCount = () => {
+  //     const width = window.innerWidth;
+  //     if (width >= 1200) setVisibleCount(5);
+  //     else if (width >= 1024) setVisibleCount(2);
+  //     else if (width >= 768) setVisibleCount(3);
+  //     else setVisibleCount(2);
+  //   };
+
+  //   updateCount();
+  //   window.addEventListener("resize", updateCount);
+  //   return () => window.removeEventListener("resize", updateCount);
+  // }, []);
+
+  //  {(isOpen ? songList : songList?.slice(0, visibleCount))?.map(
 
   return (
     <>

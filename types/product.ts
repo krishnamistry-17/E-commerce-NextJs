@@ -208,3 +208,60 @@ export type AllProducts = {
   price: number;
   category: string;
 };
+
+export type AboutWelcome = {
+  image: StaticImageData;
+  head: string;
+  para1: string;
+  para2: string;
+  subimages: {
+    image1: StaticImageData;
+    image2: StaticImageData;
+    image3: StaticImageData;
+  };
+  provideimages: {
+    image4: StaticImageData;
+    image5: StaticImageData;
+    image6: StaticImageData;
+    image7: StaticImageData;
+    image8: StaticImageData;
+    image9: StaticImageData;
+  };
+  provide: {
+    head: string;
+    para: string;
+    btn: string;
+  };
+  performance: {
+    image: StaticImageData;
+    subheading: string;
+    heading: string;
+    para1: string;
+    para2: string;
+  };
+  ad: {
+    title: string;
+    desc: string;
+  };
+  team: {
+    title: string;
+    heading: string;
+    para1: string;
+    btn: string;
+    image1: StaticImageData;
+    image2: StaticImageData;
+  };
+};
+
+export type Contact = {
+  head: string;
+  title: string;
+  para1: string;
+  questions: {
+    que1: string;
+    que2: string;
+    que3: string;
+    que4: string;
+  };
+  ans: string;
+};

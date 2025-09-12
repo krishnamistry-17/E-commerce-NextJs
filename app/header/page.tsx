@@ -19,8 +19,10 @@ import logo from "../../public/svgs/logo.svg";
 import HeaderTop from "../headertop/page";
 import { FaSearch } from "react-icons/fa";
 import drop from "../../public/svgs/drop.svg";
+import fillwish from "../../public/svgs/fillwish.svg";
 import BrowseCategories from "../browsecategory/page";
 import { browseheading } from "@/data/product";
+import WishListIcon from "../pages/wishlisticon/page";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
@@ -51,10 +53,10 @@ export default function Navbar() {
         </div>
 
         <div className="hidden lg:flex items-center gap-6 text-sm">
-          <Link href="/contact" className="">
+          <Link href="/pages/contact" className="">
             Contact
           </Link>
-          <Link href="/blog" className="">
+          <Link href="/pages/blog" className="">
             Blog
           </Link>
           <Link href="/pages/cart">
@@ -93,7 +95,7 @@ export default function Navbar() {
           </SignedIn>
         </div>
 
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-[13px]">
           <SignedIn>
             <SignOutButton>
               <button className="text-sm px-3 py-1 rounded border border-black lg:block hidden">
@@ -115,6 +117,11 @@ export default function Navbar() {
             </SignUpButton>
           </SignedOut>
 
+          <Link href={"/page/wishlist"}>
+            <Image src={fillwish} alt="fillwish" className="w-6 h-6" />
+            <WishListIcon />
+          </Link>
+
           <Link href="/pages/cart">
             <Image src={cart} alt="cart" className="w-6 h-6" />
             <CartIcon />
@@ -126,16 +133,19 @@ export default function Navbar() {
         </div>
 
         {isMenuOpen && (
-          <div className="absolute top-[60px] md:right-4 right-1 w-[105px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
-            <nav className="flex flex-col gap-3 text-sm">
+          <div className="absolute top-[60px] md:right-4 right-1 w-[120px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
+            <nav className="flex flex-col gap-3 text-sm text-start">
+              <Link href={"/pages/aboutus"}>About us</Link>
+              <Link href={"/pages/blog"}>Blog</Link>
+              <Link href={"/pages/contact"}>Contact</Link>
               <SignedIn>
-                <Link href="/user-profile" className="pl-[9px]">
+                <Link href="/user-profile" className="">
                   Profile
                 </Link>
               </SignedIn>
               <SignedIn>
                 <SignOutButton>
-                  <button>Sign Out</button>
+                  <button className="text-start">Sign Out</button>
                 </SignOutButton>
               </SignedIn>
             </nav>

@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@reduxjs/toolkit/query";
 import home from "../../../public/svgs/home.svg";
@@ -30,6 +30,7 @@ import { addToWishList } from "@/app/pages/slice/wishListSlice";
 import { MdOutlineFavorite } from "react-icons/md";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 type Props = {
   params: {
     id: string;
@@ -46,6 +47,7 @@ const ProductDetailPage = ({ params }: Props) => {
   const [quantity, setQuantity] = useState(1);
   const [isWishClick, setIsWishClick] = useState(false);
   const [isCartClick, setIsCartClick] = useState(false);
+  const router = useRouter();
 
   const product = useSelector((state: RootState) =>
     state.productDetails.items.find((item) => item?.id === params.id)
@@ -126,15 +128,21 @@ const ProductDetailPage = ({ params }: Props) => {
     <div>
       <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5 px-2">
         <div className="flex items-center gap-[12px]">
-          <div className="flex items-center gap-[8px]">
+          <div
+            className="flex items-center gap-[8px]"
+            onClick={() => router.push("/")}
+          >
             <Image src={home} alt="home" width={14} height={14} />
-            <p className="text-[14px] text-shopbtn font-quick-semibold-600 md:block hidden">
+            <p className="text-[14px] text-shopbtn font-quick-semibold-600 md:block hidden cursor-pointer">
               Home
             </p>
             <Image src={right} alt="right" width={19} height={24} />
           </div>
-          <div className="flex items-center gap-[8px]">
-            <p className="text-[14px] text-shopbtn font-quick-semibold-600">
+          <div
+            className="flex items-center gap-[8px]"
+            onClick={() => router.push("/")}
+          >
+            <p className="text-[14px] text-shopbtn font-quick-semibold-600 cursor-pointer">
               {product?.category}
             </p>
             <Image src={right} alt="right" width={19} height={24} />

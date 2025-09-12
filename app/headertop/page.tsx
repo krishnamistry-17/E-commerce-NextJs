@@ -10,7 +10,7 @@ const HeaderTop = () => {
         <div className="md:flex items-center justify-around ">
           <div className=" xs375:flex hidden items-center py-[11.5px] ">
             <Link
-              href="/about"
+              href="/pages/aboutus"
               className="text-[13px] font-lato-regular-400 text-bgbrown"
             >
               About Us <span className=" text-black pl-[8.5px]">|</span>
@@ -22,7 +22,7 @@ const HeaderTop = () => {
               My Account <span className=" text-black pl-[8.5px]">|</span>
             </Link>
             <Link
-              className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px]"
+              className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px] lg:block hidden"
               href={"/pages/wishlist"}
             >
               Wishlist <span className=" text-black pl-[8.5px]">|</span>

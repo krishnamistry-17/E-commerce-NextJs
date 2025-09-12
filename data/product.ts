@@ -557,22 +557,6 @@ export const browseheading: BrowseHeading[] = [
     title: "Vendores",
     image: drop,
   },
-
-  {
-    id: 5,
-    title: "Blog",
-    image: drop,
-  },
-  {
-    id: 6,
-    title: "Pages",
-    image: drop,
-  },
-  {
-    id: 7,
-    title: "Contact",
-    image: "",
-  },
 ];
 
 export const footerfirst: FooterMain[] = [

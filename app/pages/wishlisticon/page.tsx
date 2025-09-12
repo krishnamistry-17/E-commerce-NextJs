@@ -12,7 +12,7 @@ const WishListIcon = () => {
       <Link href="/pages/wishlist">
         <div className="relative cursor-pointer">
           {totalQuantity > 0 && (
-            <span className="absolute top-[-32px] -right-0 bg-shopbtn text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="absolute top-[-32px] lg:-right-0 -right-[12px] bg-shopbtn text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {totalQuantity}
             </span>
           )}
