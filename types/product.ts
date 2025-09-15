@@ -263,5 +263,18 @@ export type Contact = {
     que3: string;
     que4: string;
   };
-  ans: string;
+  answers: {
+    ans: string;
+  };
+  lat?: number;
+  lng?: number;
+  location: {
+    headone: string;
+    headtwo: string;
+    headthree: string;
+  };
+  locationdetail: {
+    address: string;
+    btn: string;
+  };
 };

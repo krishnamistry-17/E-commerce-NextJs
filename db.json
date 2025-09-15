@@ -637,17 +637,28 @@
       "head":"How can help you ?",
       "title":"Let us know how we can help you",
       "para1":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,",
-      "questions":[
-        {"que1":"01. Visit Feedback",
+      "questions":{
+          "que1":"01. Visit Feedback",
         "que2":"02. Employer Services",
         "que3":"03. Billing Inquiries",
-         "que4":"04.General Inquiries"}
-      ],
-      "ans":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,"
-    
+         "que4":"04.General Inquiries"
+        },
+      "answers": {
+          "ans":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,"
+        },
+          "location":{
+              "headone":"Office",
+              "headtwo":"Studio",
+              "headthree":"Shop"
+          },
+          "locationdetail":{
+            "address":"205 North Michigan Avenue, Suite 810 Chicago, 60601, USA Phone: (123) 456-7890Email: contact@Evara.com",
+            "btn":"view map"
+          }
     }
   ]
-
+  
+  
 
    
 }

@@ -5,6 +5,8 @@ import home from "../../../public/svgs/home.svg";
 import right from "../../../public/svgs/right.svg";
 import React from "react";
 import Help from "./help";
+import ContactForm from "./contactform";
+import Banner from "../banner/page";
 
 const Contact = () => {
   const router = useRouter();
@@ -31,6 +33,12 @@ const Contact = () => {
       </div>
       <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[55px]">
         <Help />
+      </div>
+      <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[55px]">
+        <ContactForm />
+      </div>
+      <div>
+        <Banner />
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ module.exports = {
         ratingtext: "#B6B6B6",
         inputtext: "#838383",
         advertistext: "#242424",
+        recipetext:"#777777",
         regalblue: "#253D4E",
         bgbrown: "#7E7E7E",
         bgfruit1: "#F4F6FA",

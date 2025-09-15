@@ -162,7 +162,7 @@ const PopularProduct = () => {
           <div
             key={index}
             className="rounded-[15px] border border-productborder relative cursor-pointer"
-            onClick={() => handleDetails(item)}
+            onClick={() =>  handleDetails(item)}
           >
             <div className="absolute top-0">
               <p
