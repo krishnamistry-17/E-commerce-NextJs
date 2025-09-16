@@ -6,12 +6,17 @@ import Image from "next/image";
 import { clearCart, removeFromCart, updateQuantity } from "../slice/cartSlice";
 import { MdDelete } from "react-icons/md";
 import { FaMinus, FaPlus } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import right from "../../../public/svgs/right.svg";
+import home from "../../../public/svgs/home.svg";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   // Get all cart items from redux
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  console.log("cartItems?? :", cartItems);
 
   //  Total price calculation
   const totalPrice = cartItems.reduce(
@@ -30,16 +35,38 @@ const Cart = () => {
     }
   };
 
+  const handleNavigation = () => {
+    router.push("/pages/checkout");
+  };
+
   return (
-    <div className="max-w-[1640px] mx-auto xl:px-[103px] px-2 pt-[55px]">
+    <div className="max-w-[1640px] mx-auto xl:px-[103px] px-2 pt-[20px]">
+      <div className="flex items-center gap-[3px]">
+        <div
+          className="flex items-center gap-[8px]"
+          onClick={() => router.push("/")}
+        >
+          <Image src={home} alt="home" width={14} height={14} />
+          <p className="text-[14px] text-shopbtn font-quick-semibold-600 md:block hidden cursor-pointer">
+            Home
+          </p>
+          <Image src={right} alt="right" width={19} height={24} />
+        </div>
+        <div className="flex items-center gap-[8px]">
+          <p className="text-[14px] text-bgbrown font-quick-semibold-600">
+            Cart
+          </p>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Shopping Cart</h2>
-        <button
+        {/* <button
           onClick={() => dispatch(clearCart())}
           className="text-2xl font-bold"
         >
           Clear cart
-        </button>
+        </button> */}
       </div>
 
       <div className="flex flex-col md:flex-row gap-3 py-10">
@@ -51,7 +78,7 @@ const Cart = () => {
               {cartItems.map((item) => (
                 <div
                   key={item?.id}
-                  className="border border-gray-300 shadow-md p-4 rounded-md flex justify-between items-center"
+                  className="border border-gray-300 shadow-md p-4 rounded-md lg:flex justify-between items-center"
                 >
                   <div className="flex gap-4">
                     <Image
@@ -63,7 +90,9 @@ const Cart = () => {
                       unoptimized
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">{item?.title}</h3>
+                      <h3 className="lg:text-[18px] text-[16px] font-quick-bold-700 text-regalblue">
+                        {item?.title}
+                      </h3>
 
                       {/*  Quantity Controls */}
                       <div className="flex items-center gap-2 mt-2">
@@ -92,13 +121,23 @@ const Cart = () => {
                     </div>
                   </div>
 
-                  <div className="text-right">
+                  <div className="lg:text-right hidden">
                     <p className="text-sm font-bold mb-2">
                       Total: ${(item?.newPrice * item?.quantity).toFixed(2)}
                     </p>
                     <MdDelete
                       onClick={() => dispatch(removeFromCart(item?.id))}
-                      className="cursor-pointer w-6 h-6 text-red-500"
+                      className="cursor-pointer w-6 h-6 text-red-500  "
+                    />
+                  </div>
+
+                  <div className="lg:hidden flex items-center gap-2 pt-4">
+                    <p className="text-sm font-bold mb-2 pt-2">
+                      Total: ${(item?.newPrice * item?.quantity).toFixed(2)}
+                    </p>
+                    <MdDelete
+                      onClick={() => dispatch(removeFromCart(item?.id))}
+                      className="cursor-pointer w-6 h-6 text-red-500  "
                     />
                   </div>
                 </div>
@@ -108,9 +147,20 @@ const Cart = () => {
         </div>
 
         {/*  Cart Summary */}
-        <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full h-fit bg-productborder p-5 rounded-[20px]">
-          <div className="text-xl font-bold pt-4">
+        <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full h-fit border border-gray-300 shadow-md p-5 rounded-[20px]">
+          <h2 className="text-[32px] text-regalblue font-quick-bold-700">
+            Total
+          </h2>
+          <div className="text-[22px] text-regalblue font-quick-semibold-600 pt-4">
             Cart Total: ${totalPrice?.toFixed(2)}
+          </div>
+          <div className="pt-4">
+            <button
+              className="text-white font-quick-medium-500 text-[16px] bg-shopbtn px-[12px] py-[6px] rounded-[5px]"
+              onClick={handleNavigation}
+            >
+              CheckOut
+            </button>
           </div>
         </aside>
       </div>

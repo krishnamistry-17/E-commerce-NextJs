@@ -96,27 +96,6 @@ export default function Navbar() {
         </div>
 
         <div className="lg:hidden flex items-center gap-[13px]">
-          <SignedIn>
-            <SignOutButton>
-              <button className="text-sm px-3 py-1 rounded border border-black lg:block hidden">
-                Sign Out
-              </button>
-            </SignOutButton>
-          </SignedIn>
-
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button className="text-sm px-3 py-1 rounded border border-black ">
-                Sign In
-              </button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <button className="text-sm px-3 py-1 rounded border border-black ">
-                Sign Up
-              </button>
-            </SignUpButton>
-          </SignedOut>
-
           <Link href={"/page/wishlist"}>
             <Image src={fillwish} alt="fillwish" className="w-6 h-6" />
             <WishListIcon />
@@ -148,6 +127,14 @@ export default function Navbar() {
                   <button className="text-start">Sign Out</button>
                 </SignOutButton>
               </SignedIn>
+              <SignedOut>
+                <SignInButton>
+                  <button className="text-start  ">Sign In</button>
+                </SignInButton>
+                <SignUpButton>
+                  <button className="text-start  ">Sign Up</button>
+                </SignUpButton>
+              </SignedOut>
             </nav>
           </div>
         )}

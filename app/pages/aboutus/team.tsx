@@ -9,8 +9,7 @@ import youtube from "../../../public/svgs/youtube.svg";
 
 const Team = () => {
   const [product, setProduct] = useState<AboutWelcome[]>([]);
-  console.log("product :", product);
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {

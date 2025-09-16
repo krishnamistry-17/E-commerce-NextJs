@@ -7,22 +7,36 @@ import right from "../../../public/svgs/right.svg";
 import recipe from "../../../public/svgs/recipe.svg";
 import show from "../../../public/svgs/show.svg";
 import sort from "../../../public/svgs/sort.svg";
-import drop from "../../../public/svgs/drop.svg";
 import dot from "../../../public/svgs/dot.svg";
-import category1 from "../../../public/svgs/category1.svg";
-import category2 from "../../../public/svgs/category2.svg";
-import category3 from "../../../public/svgs/category3.svg";
-import category4 from "../../../public/svgs/category4.svg";
-import category5 from "../../../public/svgs/category5.svg";
+import filter from "../../../public/svgs/filter.svg";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { setProductDetails } from "../slice/blogDetailSlice";
+import Pagination from "./pagination";
 
 const Blog = () => {
   const [product, setProduct] = useState<any[]>([]);
-  console.log("product????? :", product);
+  const [allcategories, setAllCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState<any[]>([]);
+  const [sortOption, setSortOption] = useState("Featured");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage, setPostPerPage] = useState(6);
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+
+  const totalPages = Math.ceil(product.length / postPerPage);
+
+  const currentPosts = product?.slice(indexOfFirstPost, indexOfLastPost);
+
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -31,18 +45,70 @@ const Blog = () => {
           "https://dummyjson.com/recipes"
         );
         setProduct(response?.data?.recipes);
+        const allRecipes = response.data.recipes;
+
+        const uniqueCategories = [
+          ...new Set(allRecipes.map((recipe: any) => recipe.cuisine)),
+        ];
+        setAllCategories(uniqueCategories);
       } catch (error) {
         console.error("Error fetching in products", error);
       }
     };
+
     fetchProduct();
   }, []);
 
+  useEffect(() => {
+    if (allcategories.length > 0 && !selectedCategory) {
+      setSelectedCategory(allcategories[0]); // Set default first
+    }
+  }, [allcategories]);
+
   const handleDeatils = (item: any) => {
-    console.log("item :", item);
+  
     dispatch(setProductDetails(item));
 
     router.push(`/pages/blogproduct/${item.id}`);
+  };
+
+  const handleFiltered = async () => {
+    try {
+      const response = await axiosInstance.get(`https://dummyjson.com/recipes`);
+      const allRecipes = response.data.recipes;
+
+      const filtered = allRecipes.filter((recipe: any) =>
+        selectedCategory.includes(recipe?.cuisine)
+      );
+      setSelectedProduct(filtered);
+    } catch (error) {
+      console.error("Error filtering recipes", error);
+    }
+  };
+
+  const handleNavigation = (id: string) => {
+    router.push(`/pages/blogproduct/${id}`);
+  };
+
+  const sortProducts = (type: string) => {
+    const sorted = [...product];
+    switch (type) {
+      case "Category":
+        sorted.sort((a, b) => a.cuisine.localeCompare(b.cuisine));
+        break;
+      case "MealType":
+        sorted.sort((a, b) => a.mealType?.localeCompare(b.mealType));
+        break;
+      case "Difficulty":
+        sorted.sort((a, b) => a.difficulty?.localeCompare(b.difficulty));
+        break;
+      case "Featured":
+      default:
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+    }
+    setProduct(sorted);
+    setCurrentPage(1);
   };
 
   return (
@@ -90,20 +156,23 @@ const Blog = () => {
                   <p className="text-[13px] font-lato-regular-400 text-recipetext">
                     Show:
                   </p>
-                  <p className="text-[13px] font-lato-regular-400 text-recipetext pl-[5px]">
-                    50
-                  </p>
-                </div>
-                <div>
-                  <Image
-                    src={drop}
-                    alt="drop"
-                    className="pl-[10px]"
-                    width={30}
-                    height={30}
-                  />
+                  <select
+                    className="text-[13px] font-lato-regular-400 text-recipetext pl-[5px] gap-1
+                     focus:outline-none focus:right-0"
+                    value={postPerPage}
+                    onChange={(e) => {
+                      setPostPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value="6">6</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                  </select>
                 </div>
               </div>
+
               <div className="flex items-center border border-bordercolor rounded-[10px] py-[14px] px-[14px] cursor-pointer">
                 <div>
                   <Image src={sort} alt="sort" width={14} height={14} />
@@ -112,18 +181,21 @@ const Blog = () => {
                   <p className="text-[13px] font-lato-regular-400 text-recipetext">
                     Sort:
                   </p>
-                  <p className="text-[13px] font-lato-regular-400 text-recipetext pl-[5px]">
-                    Featured
-                  </p>
-                </div>
-                <div>
-                  <Image
-                    src={drop}
-                    alt="drop"
-                    className="pl-[10px]"
-                    width={30}
-                    height={30}
-                  />
+                  <select
+                    value={sortOption}
+                    onChange={(e) => {
+                      const selected = e.target.value;
+                      setSortOption(selected);
+                      sortProducts(selected);
+                    }}
+                    className="text-[13px] font-lato-regular-400 text-recipetext pl-[5px] gap-1
+                     focus:outline-none focus:right-0"
+                  >
+                    <option value="Featured">Featured</option>
+                    <option value="Category">Category</option>
+                    <option value="MealType">MealType</option>
+                    <option value="Difficulty">Difficulty</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -131,7 +203,7 @@ const Blog = () => {
 
           {/**Main div */}
           <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-[12px] pt-[50px]">
-            {product.map((item, index) => (
+            {currentPosts.map((item, index) => (
               <div
                 key={index}
                 className="pt-[30px]"
@@ -173,6 +245,16 @@ const Blog = () => {
               </div>
             ))}
           </div>
+
+          <div className="py-[45px] px-2">
+            <Pagination
+              postPerPage={postPerPage}
+              totalPosts={product.length}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+              handlePageChange={handlePageChange}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-6 md:max-w-[344.95px] w-full">
@@ -186,53 +268,83 @@ const Blog = () => {
               <div className="bg-progessbtn h-1.5 rounded-full dark:bg-shopbtn w-[23%]"></div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              {[
-                {
-                  img: category1,
-                  name: "Milks & Dairies",
-                  qty: "5",
-                },
-                {
-                  img: category2,
-                  name: "Clothing",
-                  qty: "6",
-                },
-                {
-                  img: category3,
-                  name: "Pet Foods",
-                  qty: "7",
-                },
-                {
-                  img: category4,
-                  name: "Baking material",
-                  qty: "12",
-                },
-                {
-                  img: category5,
-                  name: "Fresh Fruit",
-                  qty: "16",
-                },
-              ].map((item, index) => (
+            <div className="flex flex-wrap gap-2">
+              {allcategories.map((category, index) => {
+                const selected = selectedCategory === category;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setSelectedCategory(category);
+                    }}
+                    className={`px-3 py-1 text-sm rounded-full border transition-all duration-200 ${
+                      selected
+                        ? "bg-shopbtn text-white border-shopbtn"
+                        : "bg-white text-bgbrown border-gray-300 hover:bg-gray-100"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="pt-[19px]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <button
+                    className="text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px]
+                                         py-[12px] px-[26px] flex items-center gap-[9px]"
+                    onClick={handleFiltered}
+                  >
+                    <Image src={filter} alt="filter" width={20} height={20} />
+                    Fillter
+                  </button>
+                </div>
+                <button
+                  className="ml-2 text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px]
+                         py-[12px] px-[16px]"
+                  onClick={() => {
+                    setSelectedProduct([]);
+                  }}
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/*Selected Product section */}
+          <div className="w-full h-fit p-5 border border-productborder shadow-md rounded-[15px]">
+            <p className="text-[24px] font-quick-bold-700 text-regalblue pb-3">
+              Selected products
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-[3px] mb-4 dark:bg-gray-700">
+              <div className="bg-progessbtn h-[3px] rounded-full dark:bg-shopbtn w-[23%]"></div>
+            </div>
+            <div>
+              {selectedProduct?.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between border border-bggray rounded-[5px] p-3"
+                  className="flex items-center gap-[15px] pt-[10px] cursor-pointer"
+                  onClick={() => handleNavigation(item?.id)}
                 >
-                  <div className="flex items-center gap-3">
+                  <div>
                     <Image
-                      src={item.img}
-                      alt={item.name}
-                      width={30}
-                      height={30}
+                      src={item.image}
+                      alt="image"
+                      width={50}
+                      height={50}
+                      unoptimized
+                      className="  object-contain w-[50px] h-[50px]"
                     />
-                    <p className="text-[14px] font-lato-regular-400 text-bgbrown">
-                      {item.name}
-                    </p>
                   </div>
-
-                  <div className="w-[24px] h-[24px] rounded-full bg-cartbtn flex items-center justify-center">
-                    <p className="text-[12px] text-regalblue font-lato-regular-400">
-                      {item.qty}
+                  <div className="flex flex-col">
+                    <p className="text-[20px] font-quick-bold-700 text-shopbtn">
+                      {item?.name}
+                    </p>
+                    <p className="text-[16px] font-lato-regular-400 text-bgbrown">
+                      {item?.cuisine}
                     </p>
                   </div>
                 </div>

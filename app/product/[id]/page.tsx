@@ -1,15 +1,14 @@
-  "use client";
+"use client";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@reduxjs/toolkit/query";
 import home from "../../../public/svgs/home.svg";
 import cart from "../../../public/svgs/whitecart.svg";
 import whishlist from "../../../public/svgs/whishlist.svg";
-import fillwish from "../../../public/svgs/fillwish.svg";
 import repeat from "../../../public/svgs/repeat.svg";
 import Image from "next/image";
 import right from "../../../public/svgs/right.svg";
 import p1 from "../../../public/images/p1.png";
-import p2 from "../../../public/images/p2.png";
+import p2 from "../../../public/images/p2.png"; 
 import p3 from "../../../public/images/p3.png";
 import category1 from "../../../public/svgs/category1.svg";
 import category2 from "../../../public/svgs/category2.svg";
@@ -31,6 +30,7 @@ import { MdOutlineFavorite } from "react-icons/md";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+
 type Props = {
   params: {
     id: string;
@@ -42,8 +42,7 @@ const ProductDetailPage = ({ params }: Props) => {
   const [value, setValue] = useState(150);
   const [allproduct, setAllProduct] = useState<AllProducts[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<AllProducts[]>([]);
-  const [selectedCategory, setSelectedCategory] =
-    useState<string[]>("Pet Foods");
+  const [selectedCategory, setSelectedCategory] = useState("Pet Foods");
   const [quantity, setQuantity] = useState(1);
   const [isWishClick, setIsWishClick] = useState(false);
   const [isCartClick, setIsCartClick] = useState(false);
@@ -91,7 +90,9 @@ const ProductDetailPage = ({ params }: Props) => {
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
-        const res = await axiosInstance.get<AllProducts[]>("/allProducts");
+        const res = await axiosInstance.get<AllProducts[]>(
+          `/allProducts/${params.id}`
+        );
         setAllProduct(res.data);
       } catch (error) {
         console.error("Error fetching products", error);
