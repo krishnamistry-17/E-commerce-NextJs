@@ -2,30 +2,35 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-  SignInButton,
-  SignUpButton,
-  SignOutButton,
-  SignedIn,
-  SignedOut,
-} from "@clerk/nextjs";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useState } from "react";
-import ThemeToggle from "../theme/page";
-// import ThemeToggle from "../theme/page";
 import cart from "../../public/svgs/cart.svg";
 import CartIcon from "../pages/carticon/page";
 import logo from "../../public/svgs/logo.svg";
 import HeaderTop from "../headertop/page";
 import { FaSearch } from "react-icons/fa";
-import drop from "../../public/svgs/drop.svg";
 import fillwish from "../../public/svgs/fillwish.svg";
 import BrowseCategories from "../browsecategory/page";
 import { browseheading } from "@/data/product";
 import WishListIcon from "../pages/wishlisticon/page";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../pages/store";
+import { logout } from "../pages/slice/authSlice";
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log("user ????:", user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/");
+  };
 
   return (
     <>
@@ -40,7 +45,10 @@ export default function Navbar() {
           <Image src={logo} alt="logo" width={140} height={45} priority />
         </Link>
 
-        <div className="md:flex hidden xl:w-[450px] lg:w-[401px] md:w-[350px] w-[250px] h-fit px-3 py-4 items-center border border-progessbtn rounded-[4px]">
+        <div
+          className="md:flex hidden xl:w-[450px] lg:w-[401px] md:w-[350px] w-[250px] h-fit 
+        px-3 py-4 items-center border border-progessbtn rounded-[4px]"
+        >
           <div className="flex items-center w-full bg-white rounded-[50px] ">
             <input
               type="search"
@@ -63,36 +71,37 @@ export default function Navbar() {
             <Image src={cart} alt="cart" className="w-6 h-6" />
             <CartIcon />
           </Link>
-          {/* <div>
-            <ThemeToggle />
-          </div> */}
 
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button className="px-4 py-1 rounded border border-black ">
-                Sign In
-              </button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <button className="px-4 py-1 rounded border border-black ">
-                Sign Up
-              </button>
-            </SignUpButton>
-          </SignedOut>
-
-          <SignedIn>
-            <Link
-              href="/user-profile"
-              className="px-4 py-1 rounded border border-black lg:block hidden"
-            >
-              User Profile
-            </Link>
-            <SignOutButton>
-              <button className="px-4 py-1 rounded border border-black lg:block hidden">
-                Sign Out
-              </button>
-            </SignOutButton>
-          </SignedIn>
+          {!user ? (
+            <>
+              <div onClick={() => router.push("/signin")}>
+                <button className="px-4 py-1 rounded border border-black ">
+                  Sign In
+                </button>
+              </div>
+              <div onClick={() => router.push("/signup")}>
+                <button className="px-4 py-1 rounded border border-black ">
+                  Sign Up
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div onClick={() => router.push("/user-profile")}>
+                <button className="px-4 py-1 rounded border border-black ">
+                  User Profile
+                </button>
+              </div>
+              <div onClick={() => router.push("/")}>
+                <button
+                  className="px-4 py-1 rounded border border-black "
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="lg:hidden flex items-center gap-[13px]">
@@ -117,24 +126,31 @@ export default function Navbar() {
               <Link href={"/pages/aboutus"}>About us</Link>
               <Link href={"/pages/blog"}>Blog</Link>
               <Link href={"/pages/contact"}>Contact</Link>
-              <SignedIn>
-                <Link href="/user-profile" className="">
-                  Profile
-                </Link>
-              </SignedIn>
-              <SignedIn>
-                <SignOutButton>
-                  <button className="text-start">Sign Out</button>
-                </SignOutButton>
-              </SignedIn>
-              <SignedOut>
-                <SignInButton>
-                  <button className="text-start  ">Sign In</button>
-                </SignInButton>
-                <SignUpButton>
-                  <button className="text-start  ">Sign Up</button>
-                </SignUpButton>
-              </SignedOut>
+              {!user ? (
+                <>
+                  <div onClick={() => router.push("/signin")}>
+                    <button className="">Sign In</button>
+                  </div>
+                  <div onClick={() => router.push("/signup")}>
+                    <button className="">Sign Up</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link href="/user-profile" className="">
+                    Profile
+                  </Link>
+                  <button
+                    className="text-start"
+                    onClick={() => {
+                      dispatch(logout());
+                      router.push("/");
+                    }}
+                  >
+                    Sign Out
+                  </button>
+                </>
+              )}
             </nav>
           </div>
         )}

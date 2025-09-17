@@ -278,3 +278,14 @@ export type Contact = {
     btn: string;
   };
 };
+
+export type SignIn = {
+  email: string;
+  password: number;
+};
+
+export type SignUp = {
+  username: string;
+  email: string;
+  password: number;
+};

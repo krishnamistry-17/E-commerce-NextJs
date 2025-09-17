@@ -16,7 +16,7 @@ const Cart = () => {
 
   // Get all cart items from redux
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  console.log("cartItems?? :", cartItems);
+  
 
   //  Total price calculation
   const totalPrice = cartItems.reduce(
