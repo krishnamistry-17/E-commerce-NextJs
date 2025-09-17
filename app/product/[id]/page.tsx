@@ -8,7 +8,7 @@ import repeat from "../../../public/svgs/repeat.svg";
 import Image from "next/image";
 import right from "../../../public/svgs/right.svg";
 import p1 from "../../../public/images/p1.png";
-import p2 from "../../../public/images/p2.png"; 
+import p2 from "../../../public/images/p2.png";
 import p3 from "../../../public/images/p3.png";
 import category1 from "../../../public/svgs/category1.svg";
 import category2 from "../../../public/svgs/category2.svg";
@@ -52,7 +52,7 @@ const ProductDetailPage = ({ params }: Props) => {
     state.productDetails.items.find((item) => item?.id === params.id)
   );
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setValue(e.target.value);
   };
   const dispatch = useDispatch();

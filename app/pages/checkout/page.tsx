@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import coupen from "../../../public/svgs/coupen.svg";
@@ -9,14 +9,78 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { toast } from "react-toastify";
+import { chekoutaction } from "./checkout-action";
 
 const CheckOut = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  console.log("cartItems?? :", cartItems);
-
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [agreed, setAgreed] = useState(false);
   const router = useRouter();
+  const [fname, setFName] = useState<string>("");
+  const [lname, setLName] = useState<string>("");
+  const [company, setCompany] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [street, setStreet] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [state, setState] = useState<string>("");
+  const [zipcode, setZipCode] = useState<string>("");
+  const [phone, setphone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+
+  const handlePaymentChange = (method: string) => {
+    setPaymentMethod(method);
+  };
+
+  const handleDetails = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (
+      !fname ||
+      !lname ||
+      !company ||
+      !country ||
+      !street ||
+      !city ||
+      !state ||
+      !zipcode ||
+      !phone ||
+      !email
+    ) {
+      toast.info("Please filled all details");
+    }
+    if (!paymentMethod) {
+      toast.error("Please select a payment method.");
+      return;
+    }
+
+    if (!agreed) {
+      toast.error("You must agree to the terms and conditions.");
+      return;
+    }
+
+    try {
+      //  Call server action manually
+      const formData = new FormData();
+      formData.append("item", JSON.stringify(cartItems));
+      formData.append("paymentMethod", paymentMethod);
+      formData.append("firstName", fname);
+      formData.append("lastName", lname);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("country", country);
+      formData.append("street", street);
+      formData.append("city", city);
+      formData.append("state", state);
+      formData.append("zipcode", zipcode);
+
+      await chekoutaction(formData); //  Stripe will redirect here
+    } catch (err) {
+      toast.error("Something went wrong during checkout.");
+      console.error(err);
+    }
+  };
+
   return (
-    <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[20px]">
+    <div className="max-w-[1540px] mx-auto xl:px-[143px] px-2 pt-[20px]">
       <div className="flex items-center gap-[3px]">
         <div
           className="flex items-center gap-[8px]"
@@ -70,128 +134,150 @@ const CheckOut = () => {
 
           <div className="pt-[15px]">
             <form>
-              <p className="text-[15px] font-quick-bold-700  text-regalblue">
+              <p className="text-[15px] lg:text-[18px] xl:text-[22px] font-quick-bold-700  text-regalblue">
                 Billing details
               </p>
               <div className="w-full">
                 <div className="flex items-center gap-[20px] w-full">
                   <div className="flex flex-col w-full">
-                    <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                      First Name
+                    <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                      First Name<span className="text-red-600">*</span>
                     </label>
                     <input
                       type="text"
-                      className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                      value={fname}
+                      onChange={(e) => setFName(e.target.value)}
+                      className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
                     />
                   </div>
                   <div className="flex flex-col w-full">
-                    <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                      Last Name
+                    <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                      Last Name<span className="text-red-600">*</span>
                     </label>
                     <input
                       type="text"
-                      className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                      value={lname}
+                      onChange={(e) => setLName(e.target.value)}
+                      className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
                     />
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Company Name
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    Company Name<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Country / Region 
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    Country / Region<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Street address 
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    Street address<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
                     placeholder="House number and street name"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] pl-2 focus:outline-none 
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                   <div className="pt-[8px]">
                     <input
                       type="text"
+                      value={street}
+                      onChange={(e) => setStreet(e.target.value)}
                       placeholder="Apartment, suite, unit, etc. (optional)"
-                      className="w-full border border-gray-300 rounded-[8px] py-[8px] pl-2 focus:outline-none 
+                      className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
                     />
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Town / City 
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    Town / City<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    State 
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    State<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    ZIP Code 
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    ZIP Code<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="number"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={zipcode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Phone
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    Phone<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="tel"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={phone}
+                    onChange={(e) => setphone(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Email address
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                    Email address<span className="text-red-600">*</span>
                   </label>
                   <input
                     type="email"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] focus:outline-none 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
                   />
@@ -209,7 +295,7 @@ const CheckOut = () => {
                   </p>
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[13px] font-quick-bold-700 text-regalblue py-[8px]">
+                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                     Order notes (optional)
                   </label>
                   <input
@@ -224,12 +310,15 @@ const CheckOut = () => {
             </form>
           </div>
         </div>
+
         <div className="max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50">
           <div className="flex flex-col px-[21px]">
             <p className="text-[15px] font-quick-bold-700 text-regalblue py-[21px] ">
               Your Order
             </p>
-            <div className="flex flex-col">
+
+            <form onSubmit={handleDetails}>
+              {/* Header */}
               <div className="flex items-center justify-between py-[15px] border-b border-bordercolor1">
                 <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
                   Product
@@ -238,43 +327,135 @@ const CheckOut = () => {
                   Subtotal
                 </p>
               </div>
-              <div>
+
+              {/* Items */}
+              <div className="py-[12px]">
                 {cartItems.map((item, index) => (
-                  <div key={index} className="py-[12px]">
+                  <div key={index} className="mb-[12px]">
                     <div className="flex items-center justify-between">
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        {item?.title}
+                        {item.title} x{item.quantity}
                       </p>
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        ${item?.newPrice}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between py-[18px] border-b border-bordercolor1">
-                      <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                        Subtotal
-                      </p>
-                      <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                        ${item?.newPrice}
-                      </p>
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <input type="checkbox" />
-                      </div>
-                      <p>Shipping</p>
-                    </div>
-                    <div className="flex items-center justify-between py-[18px] border-b border-bordercolor1">
-                      <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                        Total
-                      </p>
-                      <p className="text-[16px] font-quick-bold-700 text-regalblue">
-                        ${item?.newPrice}
+                        ${item.newPrice * item.quantity}
                       </p>
                     </div>
                   </div>
                 ))}
+
+                {/* Subtotal */}
+                <div className="flex items-center justify-between py-[10px] border-t border-bordercolor1">
+                  <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
+                    Subtotal
+                  </p>
+                  <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
+                    $
+                    {cartItems.reduce(
+                      (acc, item) => acc + item.newPrice * item.quantity,
+                      0
+                    )}
+                  </p>
+                </div>
+
+                {/* Total */}
+                <div className="flex items-center justify-between py-[10px] border-t border-bordercolor1">
+                  <p className="text-[14px] font-quick-bold-700 text-bgbrown">
+                    Total
+                  </p>
+                  <p className="text-[16px] font-quick-bold-700 text-regalblue">
+                    $
+                    {cartItems.reduce(
+                      (acc, item) => acc + item.newPrice * item.quantity,
+                      0
+                    )}
+                  </p>
+                </div>
               </div>
-            </div>
+
+              {/* Payment Methods */}
+              <div className="flex flex-col py-[12px]">
+                {/* Bank Transfer */}
+                <div className="flex items-start gap-[5px]">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="bank"
+                    checked={paymentMethod === "bank"}
+                    onChange={() => handlePaymentChange("bank")}
+                    className="mt-1"
+                  />
+                  <div>
+                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
+                      Direct bank transfer
+                    </p>
+                    {paymentMethod === "bank" && (
+                      <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
+                        Make your payment directly into our bank account. Please
+                        use your Order ID as the payment reference. Your order
+                        will not be shipped until the funds have cleared in our
+                        account.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Cash on Delivery */}
+                <div className="flex items-start gap-[5px] mt-3">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === "cod"}
+                    onChange={() => handlePaymentChange("cod")}
+                    className="mt-1"
+                  />
+                  <div>
+                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
+                      Cash on delivery
+                    </p>
+                    {paymentMethod === "cod" && (
+                      <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
+                        Your personal data will be used to process your order,
+                        support your experience throughout this website, and for
+                        other purposes described in our privacy policy.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Agreement */}
+                <div className="flex items-start gap-[5px] mt-3">
+                  <input
+                    type="checkbox"
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                    className="mt-1"
+                  />
+                  <p className="text-[15px] font-quick-semibold-600 text-regalblue">
+                    I have read and agree to the website
+                    <span className="text-purple block">
+                      terms and conditions
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Hidden Input & Submit */}
+              <input
+                type="hidden"
+                name="item"
+                value={JSON.stringify(cartItems)}
+              />
+              <div className="flex items-center justify-center px-[12px] py-[12px]">
+                <button
+                  type="submit"
+                  className="text-white text-[16px] font-quick-bold-700 bg-purple rounded-[5px] w-full py-[6px]"
+                  disabled={!agreed || !paymentMethod}
+                >
+                  Place Order
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

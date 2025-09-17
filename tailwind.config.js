@@ -39,6 +39,7 @@ module.exports = {
         bluetag: "#67BCEE",
         offertext: "#FDC040",
         orangetag: "#F59758",
+        purple:"#634C9F"
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
