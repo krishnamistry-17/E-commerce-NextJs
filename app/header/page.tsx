@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { logout } from "../store/authSlice";
+import Search from "../pages/search/page";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function Navbar() {
           <Image src={logo} alt="logo" width={140} height={45} priority />
         </Link>
 
-        <div
+        {/* <div
           className="md:flex hidden xl:w-[450px] lg:w-[401px] md:w-[350px] w-[250px] h-fit 
         px-3 py-4 items-center border border-progessbtn rounded-[4px]"
         >
@@ -58,6 +59,9 @@ export default function Navbar() {
 
             <FaSearch className="text-gray-500 mr-2 ml-3" />
           </div>
+        </div> */}
+        <div>
+          <Search />
         </div>
 
         <div className="hidden lg:flex items-center gap-6 text-sm">
@@ -162,9 +166,8 @@ export default function Navbar() {
   );
 }
 
-
-
-{/*
+{
+  /*
   
   "use server";
   
@@ -678,4 +681,5 @@ export default function Navbar() {
   
   export default CheckOut;
   
-  */}
+  */
+}

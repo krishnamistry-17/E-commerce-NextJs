@@ -7,6 +7,7 @@ export interface CartItem {
   newPrice: number;
   quantity: number;
   image: StaticImageData;
+  size: string;
 }
 interface CartState {
   items: CartItem[];
@@ -27,6 +28,7 @@ const cartSlice = createSlice({
       if (itemIndex >= 0) {
         //if item is already in cart, incarese quantiity
         state.items[itemIndex].quantity += action?.payload?.quantity; //add the quantity if already in cart
+        state.items[itemIndex].size += action?.payload?.size;
       } else {
         //add new item
         state?.items?.push(action?.payload);

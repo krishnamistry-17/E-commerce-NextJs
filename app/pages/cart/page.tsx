@@ -16,6 +16,7 @@ const Cart = () => {
 
   // Get all cart items from redux
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  console.log("cartItems :", cartItems);
 
   //  Total price calculation
   const totalPrice = cartItems.reduce(
@@ -114,9 +115,14 @@ const Cart = () => {
                         </button>
                       </div>
 
-                      <p className="text-sm text-gray-600 mt-1">
-                        Price: ${item?.newPrice.toFixed(2)}
-                      </p>
+                      <div className="md:flex items-center gap-[12px]">
+                        <p className="text-sm text-gray-600 mt-1">
+                          Price: ${item?.newPrice.toFixed(2)}
+                        </p>
+                        <button className="bg-green-200 px-[8px] md:mt-0 mt-3 py-[6px] rounded-md">
+                          {item?.size}
+                        </button>
+                      </div>
                     </div>
                   </div>
 

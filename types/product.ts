@@ -209,6 +209,14 @@ export type AllProducts = {
   category: string;
 };
 
+export type AllMergedProducts = {
+  id: number;
+  title: string;
+  image: StaticImageData;
+  price: number;
+  category: string;
+};
+
 export type AboutWelcome = {
   image: StaticImageData;
   head: string;

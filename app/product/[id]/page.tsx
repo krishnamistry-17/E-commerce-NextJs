@@ -65,6 +65,7 @@ const ProductDetailPage = ({ params }: Props) => {
         newPrice: item?.newPrice,
         quantity: quantity,
         image: item?.image,
+        size: selectedSize,
       })
     );
     // To Reset to 1 after adding

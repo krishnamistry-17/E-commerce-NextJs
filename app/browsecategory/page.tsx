@@ -7,6 +7,7 @@ import { BrowseHeading, Heading } from "@/types/product";
 import deals from "../../public/svgs/deals.svg";
 import axiosInstance from "@/lib/axios";
 import { FaSearch } from "react-icons/fa";
+import Search from "../pages/search/page";
 
 type Props = {
   browseheading: BrowseHeading[];
@@ -122,15 +123,7 @@ const BrowseCategories = ({ browseheading }: Props) => {
                 <Image src={head} alt="head" width={36} height={38} />
               </div>
             </div>
-            <div className="px-2 mt-1">
-              {isClicked && (
-                <input
-                  type="search"
-                  placeholder="Search for items.."
-                  className=" outline-none text-inputtext w-full border p-4 border-gray-200 rounded-md md:hidden"
-                />
-              )}
-            </div>
+            <div className="px-2 mt-1">{isClicked && <Search />}</div>
 
             {isMenuOpen && (
               <div

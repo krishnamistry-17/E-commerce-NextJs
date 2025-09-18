@@ -576,6 +576,114 @@
     { "id": 26, "image": "/images/p2.png", "title": "Chen Sweater", "price": "$89.50","ratingimage": "/svgs/rating.svg", "rating": "4.0" },
     { "id": 27, "image": "/images/p4.png", "title": "Colorful Jacket", "price": "$25","ratingimage": "/svgs/rating.svg", "rating": "4.0" }
   ],
+    "allMergedProducts": [
+    {
+      "id": 1,
+      "title": "Cake & Milk",
+      "image": "/svgs/image8.svg",
+      "price": 26,
+      "category": "Pet Foods"
+    },
+    {
+      "id": 2,
+      "title": "Oganic Kiwi",
+      "image": "/svgs/image9.svg",
+      "price": 28,
+      "category": "Fruits"
+    },
+    {
+      "id": 3,
+      "title": "Peach",
+      "image": "/svgs/image8.svg",
+      "price": 14,
+      "category": "Fruits"
+    },
+    {
+      "id": 4,
+      "title": "Red Apple",
+      "image": "/svgs/image7.svg",
+      "price": 54,
+      "category": "Fruits"
+    },
+    {
+      "id": 5,
+      "title": "Coffes & Tea",
+      "image": "/svgs/image7.svg",
+      "price": 89,
+      "category": "Coffes & Teas"
+    },
+    {
+      "id": 6,
+      "title": "Vegetables",
+      "image": "/svgs/image7.svg",
+      "price": 72,
+      "category": "Vegetables"
+    },
+    {
+      "id": 7,
+      "title": "Strawberry",
+      "image": "/svgs/image8.svg",
+      "price": 36,
+      "category": "Fruits"
+    },
+    {
+      "id": 8,
+      "title": "Black plum",
+      "image": "/svgs/image9.svg",
+      "price": 123,
+      "category": "Fruits"
+    },
+    {
+      "id": 9,
+      "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
+      "image": "/images/product1.png",
+      "price": 28.85,
+      "category": "Snack"
+    },
+    {
+      "id": 10,
+      "title": "All Natural Italian-Style Chicken Meatballs",
+      "image": "/images/product2.png",
+      "price": 52.85,
+      "category": "Hodo Foods"
+    },
+    {
+      "id": 11,
+      "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
+      "image": "/images/product3.png",
+      "price": 48.85,
+      "category": "Snack"
+    },
+    {
+      "id": 12,
+      "title": "Nestle Original Coffee-Mate Coffee Creamer",
+      "image": "/images/sell1.png",
+      "price": 28.85,
+      "category": "Top Selling"
+    },
+    {
+      "id": 13,
+      "title": "Chen Cardigan",
+      "image": "/images/p1.png",
+      "price": 99.5,
+      "category": "Clothing"
+    },
+    {
+      "id": 14,
+      "title": "Chen Sweater",
+      "image": "/images/p2.png",
+      "price": 89.5,
+      "category": "Clothing"
+    },
+    {
+      "id": 15,
+      "title": "Colorful Jacket",
+      "image": "/images/p4.png",
+      "price": 25,
+      "category": "Clothing"
+    }
+    ],
+
   "aboutuswelcome": [
     {
       "image":"/images/aboutus.png",
