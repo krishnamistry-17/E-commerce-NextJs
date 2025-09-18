@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn, clearError } from "../pages/slice/authSlice";
-import { RootState } from "../pages/store";
+import { login } from "../store/authSlice";
+import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
@@ -16,7 +16,7 @@ const Signin = () => {
     setIsShown(!isShown);
   };
 
-  const { user, error } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -24,15 +24,18 @@ const Signin = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(clearError());
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(signIn(formData));
-    router.push("/");
+    dispatch(login({ email: formData.email, password: formData.password }));
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <div className="flex items-center justify-center ">

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { RootState } from "../../store/store";
 import Link from "next/link";
 import Image from "next/image";
 

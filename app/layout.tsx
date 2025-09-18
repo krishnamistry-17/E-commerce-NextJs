@@ -8,13 +8,15 @@ import { ToastContainer } from "react-toastify";
 import Header from "../app/header/page";
 import Footer from "./footer/page";
 import { Provider } from "react-redux";
-import { store } from "./pages/store";
+import { store } from "./store/store";
 import {
   footerfirst,
   footerheadings,
   footersecond,
   footerthird,
 } from "@/data/product";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,18 +28,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <Provider store={store}>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Provider store={store}>
+          <Elements stripe={stripePromise}>
             <Header />
             {children}
             <ToastContainer />
@@ -47,9 +53,9 @@ export default function RootLayout({
               footerthird={footerthird}
               footerheadings={footerheadings}
             />
-          </Provider>
-        </body>
-      </html>
- 
+          </Elements>
+        </Provider>
+      </body>
+    </html>
   );
 }

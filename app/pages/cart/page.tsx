@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+import { RootState } from "../../store/store";
 import Image from "next/image";
 import { clearCart, removeFromCart, updateQuantity } from "../slice/cartSlice";
 import { MdDelete } from "react-icons/md";
@@ -16,7 +16,6 @@ const Cart = () => {
 
   // Get all cart items from redux
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  
 
   //  Total price calculation
   const totalPrice = cartItems.reduce(

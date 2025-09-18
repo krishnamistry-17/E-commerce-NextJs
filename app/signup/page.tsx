@@ -1,16 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../pages/store";
-import { clearError, signUp } from "../pages/slice/authSlice";
+import { RootState } from "../store/store";
+import { signup } from "../store/authSlice";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 
 export default function SignUpPage() {
   const dispatch = useDispatch();
-  const { user, error } = useSelector((state: RootState) => state.auth);
+  const router = useRouter();
+
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  console.log("isAuthenticated :", isAuthenticated);
+
   const [isShown, setIsShown] = useState(false);
 
   const togglePassword = () => {
@@ -23,20 +27,21 @@ export default function SignUpPage() {
     password: "",
   });
 
-  const [isSignUp, setIsSignUp] = useState(false);
-
-  const router = useRouter();
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(clearError());
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Signup page
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(signUp(formData));
-    router.push("/signin");
+    dispatch(signup(formData));
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/signin");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <div className="flex items-center justify-center ">

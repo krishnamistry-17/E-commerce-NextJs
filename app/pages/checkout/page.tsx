@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
@@ -8,9 +7,11 @@ import shipping from "../../../public/svgs/shipping.svg";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
 import { toast } from "react-toastify";
 import { chekoutaction } from "./checkout-action";
+import { RootState } from "@/app/store/store";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import CheckoutForm from "./chekoutForm";
 
 const CheckOut = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -28,59 +29,40 @@ const CheckOut = () => {
   const [phone, setphone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
+  const stripe = useStripe();
+  const elements = useElements();
+
   const handlePaymentChange = (method: string) => {
     setPaymentMethod(method);
   };
 
-  const handleDetails = async (e: React.FormEvent<HTMLFormElement>) => {
-    if (
-      !fname ||
-      !lname ||
-      !company ||
-      !country ||
-      !street ||
-      !city ||
-      !state ||
-      !zipcode ||
-      !phone ||
-      !email
-    ) {
-      toast.info("Please filled all details");
-    }
-    if (!paymentMethod) {
-      toast.error("Please select a payment method.");
-      return;
-    }
+  if (paymentMethod === "card") {
+    const queryParams = new URLSearchParams({
+      fname,
+      lname,
+      email,
+      phone,
+      city,
+      state,
+      zipcode,
+      country,
+    });
 
-    if (!agreed) {
-      toast.error("You must agree to the terms and conditions.");
-      return;
-    }
+    const targetUrl = `/payment?${queryParams.toString()}`;
+    console.log("📦 Navigating to payment page:", targetUrl); // ✅
 
-    try {
-      //  Call server action manually
-      const formData = new FormData();
-      formData.append("item", JSON.stringify(cartItems));
-      formData.append("paymentMethod", paymentMethod);
-      formData.append("firstName", fname);
-      formData.append("lastName", lname);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("country", country);
-      formData.append("street", street);
-      formData.append("city", city);
-      formData.append("state", state);
-      formData.append("zipcode", zipcode);
+    router.push(targetUrl);
 
-      await chekoutaction(formData); //  Stripe will redirect here
-    } catch (err) {
-      toast.error("Something went wrong during checkout.");
-      console.error(err);
-    }
-  };
+    console.log("✅ Push complete"); // If this runs, push was triggered
+    return;
+  }
 
   return (
     <div className="max-w-[1540px] mx-auto xl:px-[143px] px-2 pt-[20px]">
+      <button onClick={() => router.push("/payment?test=true")}>
+        Test Push
+      </button>
+
       <div className="flex items-center gap-[3px]">
         <div
           className="flex items-center gap-[8px]"
@@ -317,7 +299,7 @@ const CheckOut = () => {
               Your Order
             </p>
 
-            <form onSubmit={handleDetails}>
+            <form>
               {/* Header */}
               <div className="flex items-center justify-between py-[15px] border-b border-bordercolor1">
                 <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
@@ -398,6 +380,22 @@ const CheckOut = () => {
                     )}
                   </div>
                 </div>
+                {/*Card Payment */}
+                <div className="flex items-start gap-[5px] mt-3">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="card"
+                    checked={paymentMethod === "card"}
+                    onChange={() => handlePaymentChange("card")}
+                    className="mt-1"
+                  />
+                  <div>
+                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
+                      Card Payment
+                    </p>
+                  </div>
+                </div>
 
                 {/* Cash on Delivery */}
                 <div className="flex items-start gap-[5px] mt-3">
@@ -441,11 +439,11 @@ const CheckOut = () => {
               </div>
 
               {/* Hidden Input & Submit */}
-              <input
+              {/* <input
                 type="hidden"
                 name="item"
                 value={JSON.stringify(cartItems)}
-              />
+              /> */}
               <div className="flex items-center justify-center px-[12px] py-[12px]">
                 <button
                   type="submit"
