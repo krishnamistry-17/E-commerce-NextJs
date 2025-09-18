@@ -20,7 +20,6 @@ const PaymentPage = () => {
 
   return (
     <div>
-      <h2>Payment Page</h2>
       <CheckoutForm
         customerName={`${fname}${lname}`}
         customerEmail={email}

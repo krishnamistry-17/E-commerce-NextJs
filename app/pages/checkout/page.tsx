@@ -7,11 +7,8 @@ import shipping from "../../../public/svgs/shipping.svg";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { chekoutaction } from "./checkout-action";
 import { RootState } from "@/app/store/store";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import CheckoutForm from "./chekoutForm";
+import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 const CheckOut = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -36,33 +33,42 @@ const CheckOut = () => {
     setPaymentMethod(method);
   };
 
-  if (paymentMethod === "card") {
-    const queryParams = new URLSearchParams({
-      fname,
-      lname,
-      email,
-      phone,
-      city,
-      state,
-      zipcode,
-      country,
-    });
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // prevent default form submit reload
 
-    const targetUrl = `/payment?${queryParams.toString()}`;
-    console.log("📦 Navigating to payment page:", targetUrl); // ✅
+    if (!paymentMethod) {
+      alert("Please select a payment method");
+      return;
+    }
+    if (!agreed) {
+      alert("Please agree to terms");
+      return;
+    }
 
-    router.push(targetUrl);
+    if (paymentMethod === "card") {
+      const queryParams = new URLSearchParams({
+        fname,
+        lname,
+        email,
+        phone,
+        city,
+        state,
+        zipcode,
+        country,
+      });
 
-    console.log("✅ Push complete"); // If this runs, push was triggered
-    return;
-  }
+      const targetUrl = `/payment?${queryParams.toString()}`;
+      console.log("Navigating to payment page:", targetUrl);
+
+      router.push(targetUrl);
+    } else {
+      // Handle other payment methods here or show confirmation
+      console.log("Order placed with payment method:", paymentMethod);
+    }
+  };
 
   return (
-    <div className="max-w-[1540px] mx-auto xl:px-[143px] px-2 pt-[20px]">
-      <button onClick={() => router.push("/payment?test=true")}>
-        Test Push
-      </button>
-
+    <div className="max-w-[1540px] mx-auto xl:px-[243px] px-2 pt-[20px]">
       <div className="flex items-center gap-[3px]">
         <div
           className="flex items-center gap-[8px]"
@@ -99,23 +105,23 @@ const CheckOut = () => {
           </div>
         </div>
       </div>
-      <div className="flex  gap-[15px] pt-[30px]">
-        <div className="max-w-[980px] w-full ">
-          <div className="bg-bgpink px-[15px] py-[19px] rounded-[5px] border border-pinkbg">
-            <div className="flex items-center gap-[5px] pb-[19px]">
-              <Image src={shipping} alt="image" width={20} height={20} />
-              <p className="text-[13px] font-quick-bold-700 text-regalblue">
-                Add<span className="text-red-700">$299.11</span> to cart and get
-                free shipping!
-              </p>
+      <form onSubmit={handleSubmit}>
+        <div className="flex  gap-[15px] pt-[30px]">
+          <div className="max-w-[980px] w-full ">
+            <div className="bg-bgpink px-[15px] py-[19px] rounded-[5px] border border-pinkbg">
+              <div className="flex items-center gap-[5px] pb-[19px]">
+                <Image src={shipping} alt="image" width={20} height={20} />
+                <p className="text-[13px] font-quick-bold-700 text-regalblue">
+                  Add<span className="text-red-700">$299.11</span> to cart and
+                  get free shipping!
+                </p>
+              </div>
+              <div className="w-full border border-pinkbg rounded-sm">
+                <div className="w-full bg-pinkbg h-[5px]"></div>
+              </div>
             </div>
-            <div className="w-full border border-pinkbg rounded-sm">
-              <div className="w-full bg-pinkbg h-[5px]"></div>
-            </div>
-          </div>
 
-          <div className="pt-[15px]">
-            <form>
+            <div className="pt-[15px]">
               <p className="text-[15px] lg:text-[18px] xl:text-[22px] font-quick-bold-700  text-regalblue">
                 Billing details
               </p>
@@ -289,17 +295,15 @@ const CheckOut = () => {
                   />
                 </div>
               </div>
-            </form>
+            </div>
           </div>
-        </div>
 
-        <div className="max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50">
-          <div className="flex flex-col px-[21px]">
-            <p className="text-[15px] font-quick-bold-700 text-regalblue py-[21px] ">
-              Your Order
-            </p>
+          <div className="max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50">
+            <div className="flex flex-col px-[21px]">
+              <p className="text-[15px] font-quick-bold-700 text-regalblue py-[21px] ">
+                Your Order
+              </p>
 
-            <form>
               {/* Header */}
               <div className="flex items-center justify-between py-[15px] border-b border-bordercolor1">
                 <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
@@ -431,7 +435,7 @@ const CheckOut = () => {
                   />
                   <p className="text-[15px] font-quick-semibold-600 text-regalblue">
                     I have read and agree to the website
-                    <span className="text-purple block">
+                    <span className="text-shopbtn block">
                       terms and conditions
                     </span>
                   </p>
@@ -447,16 +451,16 @@ const CheckOut = () => {
               <div className="flex items-center justify-center px-[12px] py-[12px]">
                 <button
                   type="submit"
-                  className="text-white text-[16px] font-quick-bold-700 bg-purple rounded-[5px] w-full py-[6px]"
+                  className="text-white text-[16px] font-quick-bold-700 bg-shopbtn rounded-[5px] w-full py-[6px]"
                   disabled={!agreed || !paymentMethod}
                 >
                   Place Order
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
