@@ -320,10 +320,10 @@ const CheckOut = () => {
                   <div key={index} className="mb-[12px]">
                     <div className="flex items-center justify-between">
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        {item.title} x{item.quantity}
+                        {item?.title} x{item?.quantity}
                       </p>
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        ${item.newPrice * item.quantity}
+                        ${item?.newPrice * item?.quantity}
                       </p>
                     </div>
                   </div>
@@ -337,7 +337,7 @@ const CheckOut = () => {
                   <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
                     $
                     {cartItems.reduce(
-                      (acc, item) => acc + item.newPrice * item.quantity,
+                      (acc, item) => acc + item?.newPrice * item?.quantity,
                       0
                     )}
                   </p>
@@ -351,7 +351,7 @@ const CheckOut = () => {
                   <p className="text-[16px] font-quick-bold-700 text-regalblue">
                     $
                     {cartItems.reduce(
-                      (acc, item) => acc + item.newPrice * item.quantity,
+                      (acc, item) => acc + item?.newPrice * item?.quantity,
                       0
                     )}
                   </p>

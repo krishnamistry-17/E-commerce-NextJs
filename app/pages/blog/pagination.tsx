@@ -69,7 +69,7 @@ const Pagination = ({ totalPages = 5, currentPage, setCurrentPage }) => {
         <MdArrowBackIos className="pl-[4px]" />
       </button>
 
-      <div className="md:flex sm:gap-4 xs:gap-2">
+      <div className="flex sm:gap-4 xs:gap-2">
         {paginationRange.map((number, index) =>
           typeof number === "number" ? (
             <button

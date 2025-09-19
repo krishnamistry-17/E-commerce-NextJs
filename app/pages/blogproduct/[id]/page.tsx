@@ -18,14 +18,16 @@ type Props = {
 
 const BlogDetail = ({ params }: Props) => {
   const [data, setData] = useState<any>(null);
+
   const [allcategories, setAllCategories] = useState<string[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState<any[]>([]);
+
   const router = useRouter();
 
   useEffect(() => {
     if (allcategories.length > 0 && !selectedCategory) {
-      setSelectedCategory(allcategories[0]); // Set default first
+      setSelectedCategory(allcategories[0]); // Italian or whatever is first
     }
   }, [allcategories]);
 
@@ -71,13 +73,13 @@ const BlogDetail = ({ params }: Props) => {
 
   // const [data, setData] = useState<Recipe | null>(null);
 
-  const handleFiltered = async () => {
+  const handleFiltered = async (category: string) => {
     try {
       const response = await axiosInstance.get(`https://dummyjson.com/recipes`);
       const allRecipes = response.data.recipes;
 
-      const filtered = allRecipes.filter((recipe: any) =>
-        selectedCategory.includes(recipe?.cuisine)
+      const filtered = allRecipes.filter(
+        (recipe: any) => recipe?.cuisine === category
       );
       setSelectedProduct(filtered);
     } catch (error) {
@@ -85,13 +87,19 @@ const BlogDetail = ({ params }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (selectedCategory) {
+      handleFiltered(selectedCategory);
+    }
+  }, [selectedCategory]);
+
   const handleNavigation = (id: string) => {
     router.push(`/pages/blogproduct/${id}`);
   };
 
   return (
     <>
-      <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5 px-2">
+      <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5 px-3">
         <div className="flex items-center gap-[12px]">
           <div
             className="flex items-center gap-[8px]"
@@ -122,7 +130,7 @@ const BlogDetail = ({ params }: Props) => {
 
       <div className="max-w-[1640px] mx-auto xl:px-[143px] px-4 sm:px-6 py-6 flex flex-col lg:flex-row gap-[30px] pt-[50px]">
         <div>
-          <div className="flex flex-col xl:pl-[311px] pl-4  max-w-[897px] pb-[30px]">
+          <div className="flex flex-col  pl-4  max-w-[897px] pb-[30px]">
             <p className="text-[16px] font-quick-bold-700 text-shopbtn">
               Recpies
             </p>
@@ -211,9 +219,7 @@ const BlogDetail = ({ params }: Props) => {
                 return (
                   <button
                     key={index}
-                    onClick={() => {
-                      setSelectedCategory(category);
-                    }}
+                    onClick={() => setSelectedCategory(category)} // triggers the filtering useEffect
                     className={`px-3 py-1 text-sm rounded-full border transition-all duration-200 ${
                       selected
                         ? "bg-shopbtn text-white border-shopbtn"
@@ -232,7 +238,7 @@ const BlogDetail = ({ params }: Props) => {
                   <button
                     className="text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px]
                              py-[12px] px-[26px] flex items-center gap-[9px]"
-                    onClick={handleFiltered}
+                    onClick={() => handleFiltered(selectedCategory)}
                   >
                     <Image src={filter} alt="filter" width={20} height={20} />
                     Fillter

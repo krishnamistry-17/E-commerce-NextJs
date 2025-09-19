@@ -105,12 +105,12 @@ const PopularProduct = () => {
           {heading?.map((item, index) => (
             <div
               key={index}
-              onClick={() => setActiveTab(item.title)}
+              onClick={() => setActiveTab(item?.title)}
               className={`cursor-pointer pt-2 xs375:pt-0  pl-[29px] xs375:pl-0 ${
-                activeTab === item.title ? "text-shopbtn" : "text-regalblue"
+                activeTab === item?.title ? "text-shopbtn" : "text-regalblue"
               }`}
             >
-              {item.title}
+              {item?.title}
             </div>
           ))}
         </div>
@@ -144,16 +144,16 @@ const PopularProduct = () => {
               <div
                 key={index}
                 onClick={() => {
-                  setActiveTab(item.title);
+                  setActiveTab(item?.title);
                   setCategoryMenu(false);
                 }}
                 className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                  activeTab === item.title
+                  activeTab === item?.title
                     ? "text-shopbtn font-bold"
                     : "text-regalblue"
                 } hover:bg-gray-100`}
               >
-                {item.title}
+                {item?.title}
               </div>
             ))}
           </div>
@@ -180,8 +180,8 @@ const PopularProduct = () => {
 
             {/* Image */}
             <Image
-              src={item.image}
-              alt={item.category}
+              src={item?.image}
+              alt={item?.category}
               className="pt-6 px-6 w-full"
               width={25}
               height={25}
@@ -197,7 +197,7 @@ const PopularProduct = () => {
 
               <div className="flex items-center gap-2 pt-2">
                 <Image
-                  src={item.ratingimage}
+                  src={item?.ratingimage}
                   alt="rating"
                   width={25}
                   height={25}
@@ -259,7 +259,7 @@ const PopularProduct = () => {
                     />
                   )}
                   <button className="text-sm font-bold text-shopbtn ml-1">
-                    {item.cart}
+                    {item?.cart}
                   </button>
                 </div>
               </div>

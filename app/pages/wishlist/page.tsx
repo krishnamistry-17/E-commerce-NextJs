@@ -13,11 +13,11 @@ const WhishList = () => {
 
   return (
     <div className="max-w-[1640px] mx-auto xl:px-[103px] px-2 pt-[55px]">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between ">
         <h2 className="text-2xl font-bold">Shopping WishList</h2>
         <button
           onClick={() => dispatch(clearWishList())}
-          className="text-2xl font-bold"
+          className="text-2xl font-bold md:block hidden"
         >
           Clear WishList
         </button>
@@ -36,28 +36,28 @@ const WhishList = () => {
                 >
                   <div className="flex gap-4">
                     <Image
-                      src={item.image}
-                      alt={item.title}
+                      src={item?.image}
+                      alt={item?.title}
                       width={64}
                       height={64}
                       className="w-16 h-16 object-cover"
                       unoptimized
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">{item.title}</h3>
+                      <h3 className="text-lg font-semibold">{item?.title}</h3>
 
                       <p className="text-sm text-gray-600 mt-1">
-                        Price: ${item.newPrice.toFixed(2)}
+                        Price: ${item?.newPrice.toFixed(2)}
                       </p>
                     </div>
                   </div>
 
                   <div className="text-right">
                     <p className="text-sm font-bold mb-2">
-                      Total: ${(item.newPrice * item.quantity).toFixed(2)}
+                      Total: ${(item?.newPrice * item?.quantity).toFixed(2)}
                     </p>
                     <MdDelete
-                      onClick={() => dispatch(removeFromWishList(item.id))}
+                      onClick={() => dispatch(removeFromWishList(item?.id))}
                       className="cursor-pointer w-6 h-6 text-red-500"
                     />
                   </div>

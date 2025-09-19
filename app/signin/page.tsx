@@ -5,41 +5,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/authSlice";
 import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import type { AppDispatch } from "../store/store";
 
 const Signin = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
   const router = useRouter();
   const [isShown, setIsShown] = useState(false);
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const togglePassword = () => {
-    setIsShown(!isShown);
-  };
+  const { isAuthenticated, loading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
 
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const togglePassword = () => setIsShown(!isShown);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(login({ email: formData.email, password: formData.password }));
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
+    if (isAuthenticated) router.push("/");
   }, [isAuthenticated, router]);
 
   return (
-    <div className="flex items-center justify-center ">
+    <div className="flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-full max-w-md"
@@ -47,6 +43,7 @@ const Signin = () => {
         <h2 className="text-[24px] font-quick-bold-700 text-regalblue mb-6 text-center">
           Sign In
         </h2>
+        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
         <div className="mb-4">
           <label className="block text-regalblue text-[16px] font-quick-semibold-600">
             Email
@@ -57,7 +54,7 @@ const Signin = () => {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded mt-1 focus:outline-none focus:right-0"
+            className="w-full px-4 py-2 border rounded mt-1 focus:outline-none"
             required
           />
         </div>
@@ -70,30 +67,20 @@ const Signin = () => {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className=" focus:outline-none focus:right-0 w-full"
+              className="focus:outline-none w-full"
               required
             />
-            <div onClick={togglePassword}>
+            <div onClick={togglePassword} className="cursor-pointer">
               {isShown ? <FaEye /> : <FaEyeSlash />}
             </div>
           </div>
         </div>
-        <div className="mb-6 flex items-center gap-[6px]">
-          <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-            don't have an account?
-          </p>
-          <a
-            href="/signup"
-            className="text-[14px] font-quick-semibold-600 text-regalblue underline hover:text-blue-600"
-          >
-            SignUp
-          </a>
-        </div>
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </button>
       </form>
     </div>

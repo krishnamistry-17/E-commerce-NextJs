@@ -1,8 +1,7 @@
-
 {
   "products": [
     {
-      "id": 1,
+      "id": "1",
       "image": "/svgs/image8.svg",
       "title": "Cake & Milk",
       "price": 26,
@@ -11,7 +10,7 @@
       "size": 10
     },
     {
-      "id": 2,
+      "id": "2",
       "image": "/svgs/image9.svg",
       "title": "Oganic Kiwi",
       "price": 28,
@@ -20,7 +19,7 @@
       "size": 5
     },
     {
-      "id": 3,
+      "id": "3",
       "image": "/svgs/image8.svg",
       "title": "Peach",
       "price": 14,
@@ -29,7 +28,7 @@
       "size": 6
     },
     {
-      "id": 4,
+      "id": "4",
       "image": "/svgs/image7.svg",
       "title": "Red Apple",
       "price": 54,
@@ -38,7 +37,7 @@
       "size": 7
     },
     {
-      "id": 5,
+      "id": "5",
       "image": "/svgs/image7.svg",
       "title": "Coffes & Tea",
       "price": 89,
@@ -47,7 +46,7 @@
       "size": 8
     },
     {
-      "id": 6,
+      "id": "6",
       "image": "/svgs/image7.svg",
       "title": "Vegetables",
       "price": 72,
@@ -56,7 +55,7 @@
       "size": 12
     },
     {
-      "id": 7,
+      "id": "7",
       "image": "/svgs/image8.svg",
       "title": "Strawberry",
       "price": 36,
@@ -65,7 +64,7 @@
       "size": 9
     },
     {
-      "id": 8,
+      "id": "8",
       "image": "/svgs/image9.svg",
       "title": "Black plum",
       "price": 123,
@@ -75,40 +74,76 @@
     }
   ],
   "headings": [
-    { "id": 1, "title": "All" },
-    { "id": 2, "title": "Fruits" },
-    { "id": 3, "title": "Coffes & Teas" },
-    { "id": 4, "title": "Pet Foods" },
-    { "id": 5, "title": "Vegetables" }
+    {
+      "id": "1",
+      "title": "All"
+    },
+    {
+      "id": "2",
+      "title": "Fruits"
+    },
+    {
+      "id": "3",
+      "title": "Coffes & Teas"
+    },
+    {
+      "id": "4",
+      "title": "Pet Foods"
+    },
+    {
+      "id": "5",
+      "title": "Vegetables"
+    }
   ],
   "bannerheadings": [
     {
-      "id": 1,
+      "id": "1",
       "banner": "Everyday Fresh & Clean with Our Products",
       "btn": "Shop Now",
       "image": "/images/banner-1.png"
     },
     {
-      "id": 2,
+      "id": "2",
       "banner": "Make your Breakfast Healthy and Easy",
       "btn": "Shop Now",
       "image": "/images/banner-2.png"
     },
     {
-      "id": 3,
+      "id": "3",
       "banner": "The best Organic & Clean Products Online",
       "btn": "Shop Now",
       "image": "/images/banner-3.png"
     }
   ],
   "popularproductheadings": [
-    { "id": 1, "title": "All" },
-    { "id": 2, "title": "Snack" },
-    { "id": 3, "title": "Hodo Foods" },
-    { "id": 4, "title": "Pet Foods" },
-    { "id": 5, "title": "Meats" },
-    { "id": 6, "title": "Vegetables" },
-    { "id": 7, "title": "Fruits" }
+    {
+      "id": "1",
+      "title": "All"
+    },
+    {
+      "id": "2",
+      "title": "Snack"
+    },
+    {
+      "id": "3",
+      "title": "Hodo Foods"
+    },
+    {
+      "id": "4",
+      "title": "Pet Foods"
+    },
+    {
+      "id": "5",
+      "title": "Meats"
+    },
+    {
+      "id": "6",
+      "title": "Vegetables"
+    },
+    {
+      "id": "7",
+      "title": "Fruits"
+    }
   ],
   "popluarproducts": [
     {
@@ -262,13 +297,25 @@
       "size": 8
     }
   ],
-   "dailysells": [
-     { "id": 0, "title": "All" },
-     { "id": 1, "title": "Featured" },
-     { "id": 2, "title": "Popular" },
-     { "id": 3, "title": "New added" }
-   ],
-   "dailydatas": [
+  "dailysells": [
+    {
+      "id": "0",
+      "title": "All"
+    },
+    {
+      "id": "1",
+      "title": "Featured"
+    },
+    {
+      "id": "2",
+      "title": "Popular"
+    },
+    {
+      "id": "3",
+      "title": "New added"
+    }
+  ],
+  "dailydatas": [
     {
       "id": "1",
       "tag": "Save 35%",
@@ -325,8 +372,8 @@
       "title": "Organic Baby Carrots",
       "ratingimage": "/svgs/rating.svg",
       "rating": "(4.2)",
-      "newPrice": 30.00,
-      "oldPrice": 35.00,
+      "newPrice": 30,
+      "oldPrice": 35,
       "cartimage": "/svgs/cart.svg",
       "cart": "Add",
       "sold": "Sold:",
@@ -334,7 +381,12 @@
       "size": 9
     }
   ],
-   "dealsheading": [{ "id": 0, "title": "All Deals" }],
+  "dealsheading": [
+    {
+      "id": "0",
+      "title": "All Deals"
+    }
+  ],
   "dailydeals": [
     {
       "id": "1",
@@ -393,17 +445,18 @@
       "size": 10
     }
   ],
-   "mainheading": [
-     {
-       "productheadings": [
-         "Top Selling",
-         "Trending Products",
-         "Recently added",
-         "Top Rated"
-       ]
-     }
-   ],
-   "newproducts": [
+  "mainheading": [
+    {
+      "productheadings": [
+        "Top Selling",
+        "Trending Products",
+        "Recently added",
+        "Top Rated"
+      ],
+      "id": "07d0"
+    }
+  ],
+  "newproducts": [
     {
       "id": "1",
       "image": "/images/sell1.png",
@@ -441,35 +494,35 @@
       "size": 9
     }
   ],
-   "advertise": [
-     {
-       "id": 1,
-       "image": "/svgs/ad1.svg",
-       "title": "Best prices & offers",
-       "order": "Orders $50 or more"
-     },
-     {
-       "id": 2,
-       "image": "/svgs/ad2.svg",
-       "title": "Best prices & offers",
-       "order": "Orders $50 or more"
-     },
-     {
-       "id": 3,
-       "image": "/svgs/ad3.svg",
-       "title": "Best prices & offers",
-       "order": "Orders $50 or more"
-     },
-     {
-       "id": 4,
-       "image": "/svgs/ad4.svg",
-       "title": "Best prices & offers",
-       "order": "Orders $50 or more"
-     }
-   ],
+  "advertise": [
+    {
+      "id": "1",
+      "image": "/svgs/ad1.svg",
+      "title": "Best prices & offers",
+      "order": "Orders $50 or more"
+    },
+    {
+      "id": "2",
+      "image": "/svgs/ad2.svg",
+      "title": "Best prices & offers",
+      "order": "Orders $50 or more"
+    },
+    {
+      "id": "3",
+      "image": "/svgs/ad3.svg",
+      "title": "Best prices & offers",
+      "order": "Orders $50 or more"
+    },
+    {
+      "id": "4",
+      "image": "/svgs/ad4.svg",
+      "title": "Best prices & offers",
+      "order": "Orders $50 or more"
+    }
+  ],
   "filterednewproducts": [
     {
-      "id": 1,
+      "id": "1",
       "image": "/images/p1.png",
       "title": "Chen Cardigan",
       "price": "$99.50",
@@ -477,7 +530,7 @@
       "size": 10
     },
     {
-      "id": 2,
+      "id": "2",
       "image": "/images/p2.png",
       "title": "Chen Sweater",
       "price": "$89.50",
@@ -485,7 +538,7 @@
       "size": 8
     },
     {
-      "id": 3,
+      "id": "3",
       "image": "/images/p4.png",
       "title": "Colorful Jacket",
       "price": "$25",
@@ -493,32 +546,32 @@
       "size": 7
     }
   ],
-   "informationbutton": [
+  "informationbutton": [
     {
-      "id":1,
-      "title":"Description"
+      "id": "1",
+      "title": "Description"
     },
     {
-      "id":2,
-      "title":"Additional info"
+      "id": "2",
+      "title": "Additional info"
     },
     {
-      "id":1,
-      "title":"Vendor"
+      "id": "1",
+      "title": "Vendor"
     },
     {
-      "id":1,
-      "title":"Reviews (3)"
+      "id": "1",
+      "title": "Reviews (3)"
     }
-   ],
-   "InformationContent":[
+  ],
+  "InformationContent": [
     {
-      "para1":"Uninhibited carnally hired played in whimpered dear gorilla koala depending and much yikes off far quetzal goodness and from for grimaced goodness unaccountably and meadowlark near unblushingly crucial scallop tightly neurotic hungrily some and dear furiously this apart.",
-      "para2":"Spluttered narrowly yikes left moth in yikes bowed this that grizzly much hello on spoon-fed that alas rethought much decently richly and wow against the frequent fluidly at formidable acceptably flapped besides and much circa far over the bucolically hey precarious goldfinch mastodon goodness gnashed a jellyfish and one however because.",
-      "para3":"Laconic overheard dear woodchuck wow this outrageously taut beaver hey hello far meadowlark imitatively egregiously hugged that yikes minimally unanimous pouted flirtatiously as beaver beheld above forward energetic across this jeepers beneficently cockily less a the raucously that magic upheld far so the this where crud then below after jeez enchanting drunkenly more much wow callously irrespective limpet.",
-      "para4":"Less lion goodness that euphemistically robin expeditiously bluebird smugly scratched far while thus cackled sheepishly rigid after due one assenting regarding censorious while occasional or this more crane went more as this less much amid overhung anathematic because much held one exuberantly sheep goodness so where rat wry well concomitantly.",
-      "para5":"Scallop or far crud plain remarkably far by thus far iguana lewd precociously and and less rattlesnake contrary caustic wow this near alas and next and pled the yikes articulate about as less cackled dalmatian in much less well jeering for the thanks blindly sentimental whimpered less across objectively fanciful grimaced wildly some wow and rose jeepers outgrew lugubrious luridly irrationally attractively dachshund.",
-       "title1": "Suggested Use",
+      "para1": "Uninhibited carnally hired played in whimpered dear gorilla koala depending and much yikes off far quetzal goodness and from for grimaced goodness unaccountably and meadowlark near unblushingly crucial scallop tightly neurotic hungrily some and dear furiously this apart.",
+      "para2": "Spluttered narrowly yikes left moth in yikes bowed this that grizzly much hello on spoon-fed that alas rethought much decently richly and wow against the frequent fluidly at formidable acceptably flapped besides and much circa far over the bucolically hey precarious goldfinch mastodon goodness gnashed a jellyfish and one however because.",
+      "para3": "Laconic overheard dear woodchuck wow this outrageously taut beaver hey hello far meadowlark imitatively egregiously hugged that yikes minimally unanimous pouted flirtatiously as beaver beheld above forward energetic across this jeepers beneficently cockily less a the raucously that magic upheld far so the this where crud then below after jeez enchanting drunkenly more much wow callously irrespective limpet.",
+      "para4": "Less lion goodness that euphemistically robin expeditiously bluebird smugly scratched far while thus cackled sheepishly rigid after due one assenting regarding censorious while occasional or this more crane went more as this less much amid overhung anathematic because much held one exuberantly sheep goodness so where rat wry well concomitantly.",
+      "para5": "Scallop or far crud plain remarkably far by thus far iguana lewd precociously and and less rattlesnake contrary caustic wow this near alas and next and pled the yikes articulate about as less cackled dalmatian in much less well jeering for the thanks blindly sentimental whimpered less across objectively fanciful grimaced wildly some wow and rose jeepers outgrew lugubrious luridly irrationally attractively dachshund.",
+      "title1": "Suggested Use",
       "content1": "Refrigeration not necessary.",
       "content2": "Stir before serving",
       "title2": "Other Ingredients",
@@ -526,31 +579,37 @@
       "content4": "This butter was produced using a LTG (Low Temperature Grinding) process",
       "content5": "Made in machinery that processes tree nuts but does not process peanuts, gluten, dairy or soy",
       "title3": "Warnings",
-      "content6": "Oil separation occurs naturally. May contain pieces of shell."
+      "content6": "Oil separation occurs naturally. May contain pieces of shell.",
+      "id": "7f3b"
     }
-   ],
-   "InformationList": [
-     {
-     "title":"Type Of Packing",
-     "content":"Bottle"
+  ],
+  "InformationList": [
+    {
+      "title": "Type Of Packing",
+      "content": "Bottle",
+      "id": "d4f9"
     },
     {
-      "title":"Color",
-      "content":"Green, Pink, Powder Blue, Purple"
+      "title": "Color",
+      "content": "Green, Pink, Powder Blue, Purple",
+      "id": "488c"
     },
     {
-      "title":"Quantity Per Case",
-      "content":"100ml"
+      "title": "Quantity Per Case",
+      "content": "100ml",
+      "id": "e16c"
     },
     {
-      "title":"Ethyl Alcohol",
-      "content":"70%"
+      "title": "Ethyl Alcohol",
+      "content": "70%",
+      "id": "6345"
     },
-     {
-      "title":"Piece In One",
-      "content":"Carton"
+    {
+      "title": "Piece In One",
+      "content": "Carton",
+      "id": "281f"
     }
-   ],
+  ],
   "PopularProducts": [
     {
       "id": "1",
@@ -600,7 +659,7 @@
   ],
   "allProducts": [
     {
-      "id": 1,
+      "id": "1",
       "image": "/svgs/image8.svg",
       "title": "Cake & Milk",
       "price": 26,
@@ -610,7 +669,7 @@
       "size": 10
     },
     {
-      "id": 2,
+      "id": "2",
       "image": "/svgs/image9.svg",
       "title": "Oganic Kiwi",
       "price": 28,
@@ -620,7 +679,7 @@
       "size": 9
     },
     {
-      "id": 3,
+      "id": "3",
       "image": "/svgs/image8.svg",
       "title": "Peach",
       "price": 14,
@@ -630,7 +689,7 @@
       "size": 7
     },
     {
-      "id": 4,
+      "id": "4",
       "image": "/svgs/image7.svg",
       "title": "Cabbage",
       "price": 54,
@@ -640,7 +699,7 @@
       "size": 8
     },
     {
-      "id": 5,
+      "id": "5",
       "image": "/svgs/image7.svg",
       "title": "Coffes & Tea",
       "price": 89,
@@ -650,7 +709,7 @@
       "size": 9
     },
     {
-      "id": 6,
+      "id": "6",
       "image": "/svgs/image7.svg",
       "title": "Vegetables",
       "price": 72,
@@ -660,7 +719,7 @@
       "size": 8
     },
     {
-      "id": 7,
+      "id": "7",
       "image": "/svgs/image8.svg",
       "title": "Strawberry",
       "price": 36,
@@ -670,7 +729,7 @@
       "size": 7
     },
     {
-      "id": 8,
+      "id": "8",
       "image": "/svgs/image9.svg",
       "title": "Black plum",
       "price": 123,
@@ -680,7 +739,7 @@
       "size": 10
     },
     {
-      "id": 25,
+      "id": "25",
       "image": "/images/p1.png",
       "title": "Chen Cardigan",
       "price": "$99.50",
@@ -689,7 +748,7 @@
       "size": 10
     },
     {
-      "id": 26,
+      "id": "26",
       "image": "/images/p2.png",
       "title": "Chen Sweater",
       "price": "$89.50",
@@ -698,7 +757,7 @@
       "size": 8
     },
     {
-      "id": 27,
+      "id": "27",
       "image": "/images/p4.png",
       "title": "Colorful Jacket",
       "price": "$25",
@@ -709,7 +768,7 @@
   ],
   "allMergedProducts": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Cake & Milk",
       "image": "/svgs/image8.svg",
       "newprice": 26,
@@ -717,7 +776,7 @@
       "size": 10
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Oganic Kiwi",
       "image": "/svgs/image9.svg",
       "newprice": 28,
@@ -725,7 +784,7 @@
       "size": 9
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Peach",
       "image": "/svgs/image8.svg",
       "newprice": 14,
@@ -733,7 +792,7 @@
       "size": 7
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Red Apple",
       "image": "/svgs/image7.svg",
       "newprice": 54,
@@ -741,7 +800,7 @@
       "size": 8
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Coffes & Tea",
       "image": "/svgs/image7.svg",
       "newprice": 89,
@@ -749,7 +808,7 @@
       "size": 9
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Vegetables",
       "image": "/svgs/image7.svg",
       "newprice": 72,
@@ -757,7 +816,7 @@
       "size": 8
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "Strawberry",
       "image": "/svgs/image8.svg",
       "newprice": 36,
@@ -765,7 +824,7 @@
       "size": 7
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Black plum",
       "image": "/svgs/image9.svg",
       "newprice": 123,
@@ -773,7 +832,7 @@
       "size": 10
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "Seeds of Change Organic Quinoa, Brown, & Red Rice",
       "image": "/images/product1.png",
       "newprice": 28.85,
@@ -781,7 +840,7 @@
       "size": 9
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "All Natural Italian-Style Chicken Meatballs",
       "image": "/images/product2.png",
       "newprice": 52.85,
@@ -789,7 +848,7 @@
       "size": 8
     },
     {
-      "id": 11,
+      "id": "11",
       "title": "Angie’s Boomchickapop Sweet & Salty Kettle Corn",
       "image": "/images/product3.png",
       "newprice": 48.85,
@@ -797,7 +856,7 @@
       "size": 7
     },
     {
-      "id": 12,
+      "id": "12",
       "title": "Nestle Original Coffee-Mate Coffee Creamer",
       "image": "/images/sell1.png",
       "newprice": 28.85,
@@ -805,7 +864,7 @@
       "size": 8
     },
     {
-      "id": 13,
+      "id": "13",
       "title": "Chen Cardigan",
       "image": "/images/p1.png",
       "newprice": 99.5,
@@ -813,7 +872,7 @@
       "size": 10
     },
     {
-      "id": 14,
+      "id": "14",
       "title": "Chen Sweater",
       "image": "/images/p2.png",
       "newprice": 89.5,
@@ -821,7 +880,7 @@
       "size": 8
     },
     {
-      "id": 15,
+      "id": "15",
       "title": "Colorful Jacket",
       "image": "/images/p4.png",
       "newprice": 25,
@@ -831,83 +890,104 @@
   ],
   "aboutuswelcome": [
     {
-      "image":"/images/aboutus.png",
-      "head":"Welcome to Nest",
-      "para1":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate id est laborum.",
-      "para2":"Ius ferri velit sanctus cu, sed at soleat accusata. Dictas prompta et Ut placerat legendos interpre.Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante Etiam sit amet orci eget. Quis commodo odio aenean sed adipiscing. Turpis massa tincidunt dui ut ornare lectus. Auctor elit sed vulputate mi sit amet. Commodo consequat. Duis aute irure dolor in reprehenderit in voluptate id est laborum.",
+      "image": "/images/aboutus.png",
+      "head": "Welcome to Nest",
+      "para1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate id est laborum.",
+      "para2": "Ius ferri velit sanctus cu, sed at soleat accusata. Dictas prompta et Ut placerat legendos interpre.Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante Etiam sit amet orci eget. Quis commodo odio aenean sed adipiscing. Turpis massa tincidunt dui ut ornare lectus. Auctor elit sed vulputate mi sit amet. Commodo consequat. Duis aute irure dolor in reprehenderit in voluptate id est laborum.",
       "subimages": {
-        "image1":"/images/sub1.png",
-         "image2":"/images/sub2.png",
-          "image3":"/images/sub3.png"
+        "image1": "/images/sub1.png",
+        "image2": "/images/sub2.png",
+        "image3": "/images/sub3.png"
       },
-      "provideimages":{
-         "image4": "/svgs/ad1.svg",
-            "image5": "/svgs/ad2.svg",
-              "image6": "/svgs/ad3.svg",
-                "image7": "/svgs/ad4.svg",
-                  "image8": "/svgs/ad5.svg", 
-                   "image9": "/svgs/ad6.svg"
+      "provideimages": {
+        "image4": "/svgs/ad1.svg",
+        "image5": "/svgs/ad2.svg",
+        "image6": "/svgs/ad3.svg",
+        "image7": "/svgs/ad4.svg",
+        "image8": "/svgs/ad5.svg",
+        "image9": "/svgs/ad6.svg"
       },
       "provide": {
-        "head":"Best Prices & Offers",
-        "para":"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
-        "btn":"Read more"
+        "head": "Best Prices & Offers",
+        "para": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+        "btn": "Read more"
       },
       "performance": {
-        "image":"/images/about.png",
-        "subheading":"Our performance",
-        "heading":"Your Partner for e-commerce grocery solution",
-        "para1":"Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto",
-        "para2":"Pitatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia"
+        "image": "/images/about.png",
+        "subheading": "Our performance",
+        "heading": "Your Partner for e-commerce grocery solution",
+        "para1": "Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto",
+        "para2": "Pitatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia"
       },
       "ad": [
         {
-          "title":"Who we are",
-          "desc":"Volutpat diam ut venenatis tellus in metus. Nec dui nunc mattis enim ut tellus eros donec ac odio orci ultrices in. ellus eros donec ac odio orci ultrices in."
+          "title": "Who we are",
+          "desc": "Volutpat diam ut venenatis tellus in metus. Nec dui nunc mattis enim ut tellus eros donec ac odio orci ultrices in. ellus eros donec ac odio orci ultrices in."
         },
-         {
-          "title":"Our history",
-          "desc":"Volutpat diam ut venenatis tellus in metus. Nec dui nunc mattis enim ut tellus eros donec ac odio orci ultrices in. ellus eros donec ac odio orci ultrices in."
+        {
+          "title": "Our history",
+          "desc": "Volutpat diam ut venenatis tellus in metus. Nec dui nunc mattis enim ut tellus eros donec ac odio orci ultrices in. ellus eros donec ac odio orci ultrices in."
         },
-         {
-          "title":"Our mission",
-          "desc":"Volutpat diam ut venenatis tellus in metus. Nec dui nunc mattis enim ut tellus eros donec ac odio orci ultrices in. ellus eros donec ac odio orci ultrices in."
+        {
+          "title": "Our mission",
+          "desc": "Volutpat diam ut venenatis tellus in metus. Nec dui nunc mattis enim ut tellus eros donec ac odio orci ultrices in. ellus eros donec ac odio orci ultrices in."
         }
       ],
       "team": {
-        "title":"Our Team",
-        "heading":"Meet Our Expert Team",
-        "para1":"Proin ullamcorper pretium orci. Donec necscele risque leo. Nam massa dolor imperdiet neccon sequata congue idsem. Maecenas malesuada faucibus finibus.",
-        "btn":"View All Members",
-        "image1":"/images/main1.png",
-        "image2":"/images/main2.png"
-      }
-      
+        "title": "Our Team",
+        "heading": "Meet Our Expert Team",
+        "para1": "Proin ullamcorper pretium orci. Donec necscele risque leo. Nam massa dolor imperdiet neccon sequata congue idsem. Maecenas malesuada faucibus finibus.",
+        "btn": "View All Members",
+        "image1": "/images/main1.png",
+        "image2": "/images/main2.png"
+      },
+      "id": "4100"
     }
   ],
   "contact": [
     {
-      "head":"How can help you ?",
-      "title":"Let us know how we can help you",
-      "para1":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,",
-      "questions":{
-          "que1":"01. Visit Feedback",
-        "que2":"02. Employer Services",
-        "que3":"03. Billing Inquiries",
-         "que4":"04.General Inquiries"
-        },
+      "head": "How can help you ?",
+      "title": "Let us know how we can help you",
+      "para1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,",
+      "questions": {
+        "que1": "01. Visit Feedback",
+        "que2": "02. Employer Services",
+        "que3": "03. Billing Inquiries",
+        "que4": "04.General Inquiries"
+      },
       "answers": {
-          "ans":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,"
-        },
-          "location":{
-              "headone":"Office",
-              "headtwo":"Studio",
-              "headthree":"Shop"
-          },
-          "locationdetail":{
-            "address":"205 North Michigan Avenue, Suite 810 Chicago, 60601, USA Phone: (123) 456-7890Email: contact@Evara.com",
-            "btn":"view map"
-          }
+        "ans": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,"
+      },
+      "location": {
+        "headone": "Office",
+        "headtwo": "Studio",
+        "headthree": "Shop"
+      },
+      "locationdetail": {
+        "address": "205 North Michigan Avenue, Suite 810 Chicago, 60601, USA Phone: (123) 456-7890Email: contact@Evara.com",
+        "btn": "view map"
+      },
+      "id": "774d"
     }
-  ]  
+  ],
+  "users": [
+    {
+      "id": "f946",
+      "name": "krishna",
+      "email": "k1@gmail.com",
+      "password": "1234"
+    },
+    {
+      "id": "650c",
+      "name": "test",
+      "email": "test@gmail.com",
+      "password": "1234"
+    },
+    {
+      "id": "ac27",
+      "name": "test",
+      "email": "test1@gmail.com",
+      "password": "1234"
+    }
+  ]
 }

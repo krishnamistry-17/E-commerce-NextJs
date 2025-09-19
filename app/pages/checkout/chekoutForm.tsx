@@ -174,7 +174,7 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
           </p>
 
           {cartItems.map((item, index) => {
-            const itemTotalUSD = item.newPrice * item.quantity;
+            const itemTotalUSD = item?.newPrice * item?.quantity;
             const itemTotalINR = itemTotalUSD * USD_TO_INR_RATE;
 
             return (
@@ -182,7 +182,7 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
                 className="flex items-center justify-between py-[16px]"
                 key={index}
               >
-                <p className="text-regalblue text-[16px]">{item.title}</p>
+                <p className="text-regalblue text-[16px]">{item?.title}</p>
                 <p className="text-regalblue text-[16px] font-medium">
                   {selectedCurrency === "USD"
                     ? `$${itemTotalUSD.toFixed(2)}`

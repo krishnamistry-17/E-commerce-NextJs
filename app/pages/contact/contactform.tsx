@@ -75,7 +75,7 @@ const ContactForm = () => {
                 <input
                   type="text"
                   placeholder="First Name"
-                  className=" py-[22px] pl-[21px] w-full"
+                  className=" py-[22px] pl-[21px] w-full focus:outline-none focus:right-0"
                 />
               </div>
               <div
@@ -85,7 +85,7 @@ const ContactForm = () => {
                 <input
                   type="email"
                   placeholder="Your Email"
-                  className=" py-[22px] pl-[21px] w-full"
+                  className=" py-[22px] pl-[21px] w-full focus:outline-none focus:right-0"
                 />
               </div>
             </div>
@@ -98,7 +98,7 @@ const ContactForm = () => {
                 <input
                   type="tel"
                   placeholder="Your Phone"
-                  className=" py-[22px] pl-[21px] w-full"
+                  className=" py-[22px] pl-[21px] w-full focus:outline-none focus:right-0"
                 />
               </div>
               <div
@@ -108,7 +108,7 @@ const ContactForm = () => {
                 <input
                   type="text"
                   placeholder="Subject"
-                  className=" py-[22px] pl-[21px] w-full"
+                  className=" py-[22px] pl-[21px] w-full focus:outline-none focus:right-0"
                 />
               </div>
             </div>
@@ -122,7 +122,10 @@ const ContactForm = () => {
               ></textarea>
             </div>
             <div className="pt-[37px]">
-              <button className="text-[17px] font-quick-medium-500 text-white bg-regalblue px-[39px] py-[21px] rounded-[10px]">
+              <button className="text-[17px] font-quick-medium-500 text-white bg-regalblue
+               lg:px-[39px] lg:py-[21px] 
+               px-[20px] py-[12px]
+               rounded-[10px]">
                 Send message
               </button>
             </div>

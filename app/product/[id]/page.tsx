@@ -412,19 +412,19 @@ const ProductDetailPage = ({ params }: Props) => {
                 >
                   <div className="flex items-center gap-3">
                     <Image
-                      src={item.img}
-                      alt={item.name}
+                      src={item?.img}
+                      alt={item?.name}
                       width={30}
                       height={30}
                     />
                     <p className="text-[14px] font-lato-regular-400 text-bgbrown">
-                      {item.name}
+                      {item?.name}
                     </p>
                   </div>
 
                   <div className="w-[24px] h-[24px] rounded-full bg-cartbtn flex items-center justify-center">
                     <p className="text-[12px] text-regalblue font-lato-regular-400">
-                      {item.qty}
+                      {item?.qty}
                     </p>
                   </div>
                 </div>
@@ -668,10 +668,10 @@ const ProductDetailPage = ({ params }: Props) => {
           </div>
         </div>
       </div>
-      <div className="pt-[60px]">
+      <div className="pt-[60px] xl:px-[80px] lg:px-4 px-2">
         <Relatedproducts />
       </div>
-      <div>
+      <div className="xl:px-[80px] px-2">
         <Banner />
       </div>
     </div>

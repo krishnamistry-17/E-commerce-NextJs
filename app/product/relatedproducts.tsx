@@ -37,9 +37,9 @@ const Relatedproducts = () => {
   const handleCart = (item: RelatedProducts) => {
     dispatch(
       addToCart({
-        id: item.id,
-        title: item.title,
-        newPrice: item.newPrice,
+        id: item?.id,
+        title: item?.title,
+        newPrice: item?.newPrice,
         quantity: 1,
         image: item?.image,
         size: item?.size,
@@ -67,7 +67,7 @@ const Relatedproducts = () => {
   return (
     <div
       className="max-w-[1082.86px] 
-     rounded-[15px] xl:py-[41px] xl:px-[50px] px-5 py-5"
+     rounded-[15px] xl:py-[41px]  py-5"
     >
       <p className="text-[32px] font-quick-bold-700 text-regalblue pb-4">
         Related Product
@@ -92,8 +92,8 @@ const Relatedproducts = () => {
               </p>
             </div>
             <Image
-              src={item.image}
-              alt={item.category}
+              src={item?.image}
+              alt={item?.category}
               className="pt-6 px-6 w-full"
               width={25}
               height={25}
@@ -106,7 +106,7 @@ const Relatedproducts = () => {
               </p>
               <div className="flex items-center gap-2 pt-2">
                 <Image
-                  src={item.ratingimage}
+                  src={item?.ratingimage}
                   alt="rating"
                   width={25}
                   height={25}
@@ -151,7 +151,7 @@ const Relatedproducts = () => {
                   }}
                 >
                   <Image
-                    src={item.cartimage}
+                    src={item?.cartimage}
                     alt="cart"
                     width={25}
                     height={25}
@@ -159,7 +159,7 @@ const Relatedproducts = () => {
                     className="  w-full"
                   />
                   <button className="text-sm font-bold text-shopbtn ml-1">
-                    {item.cart}
+                    {item?.cart}
                   </button>
                 </div>
               </div>

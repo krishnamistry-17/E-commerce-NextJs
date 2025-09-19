@@ -8,6 +8,7 @@ import axiosInstance from "@/lib/axios";
 import food from "../../../public/images/food.png";
 import { FiSend } from "react-icons/fi";
 import drop from "../../../public/svgs/drop.svg";
+import { useRouter } from "next/navigation";
 
 export const Categories = () => {
   const [data, setData] = useState([]);
@@ -18,6 +19,7 @@ export const Categories = () => {
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const [visiblecount, setVisibleCount] = useState(5);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -108,10 +110,11 @@ export const Categories = () => {
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="flex-grow bg-transparent outline-none text-inputtext"
+                  className="flex-grow bg-transparent  text-inputtext focus:outline-none focus:right-0"
                 />
 
                 <button
+                  onClick={() => router.push("/signup")}
                   className="ml-2 bg-shopbtn text-white text-[14px] md:text-[16px] 
                     px-[16px] py-[8px] md:px-[40px] md:py-[22px] rounded-[50px] font-quick-bold-700 transition"
                   type="submit"
@@ -201,16 +204,16 @@ export const Categories = () => {
                     <div
                       key={index}
                       onClick={() => {
-                        setActiveTab(item.title);
+                        setActiveTab(item?.title);
                         setCategoryMenu(false);
                       }}
                       className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                        activeTab === item.title
+                        activeTab === item?.title
                           ? "text-shopbtn "
                           : "text-regalblue"
                       } `}
                     >
-                      {item.title}
+                      {item?.title}
                     </div>
                   ))}
                 </div>
@@ -266,41 +269,27 @@ export const Categories = () => {
           </div>
         </div>
         <div className="pt-[25px] pb-[56px] pl-[12px]">
-          <div
-            className="grid md:grid-cols-3 grid-cols-1 gap-[24px]
-          rounded-[10px]
-          "
-          >
-            {bannerheading.map((item, index) => {
-              return (
-                <div key={index} className=" relative">
-                  <Image
-                    src={item?.image}
-                    alt="name"
-                    width={25}
-                    height={25}
-                    unoptimized
-                    className="  w-full"
-                  />
-                  <div className=" absolute top-8">
-                    <p
-                      className="lg:text-[24px] text-[16px] font-quick-bold-700
-                     text-regalblue lg:max-w-[235px] max-w-[209px] pl-4"
-                    >
-                      {item?.banner}
-                    </p>
-                    <div className="pt-[15px] pl-4 ">
-                      <button
-                        className="text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px]
-                        py-[8px] pl-[13px] pr-[28.11px]"
-                      >
-                        Shop Now
-                      </button>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 rounded-[10px]">
+            {bannerheading.map((item, index) => (
+              <div key={index} className="relative flex flex-col h-full">
+                <Image
+                  src={item?.image}
+                  alt={item?.banner || "Banner Image"}
+                  width={500}
+                  height={300}
+                  unoptimized
+                  className="w-full rounded-[10px] object-cover"
+                />
+                <div className="absolute top-8 left-4">
+                  <p className="text-[16px] lg:text-[24px] font-quick-bold-700 text-regalblue max-w-[209px] lg:max-w-[235px]">
+                    {item?.banner}
+                  </p>
+                  <button className="mt-4 text-[12px] font-quick-bold-700 text-white bg-shopbtn rounded-[4px] py-2 px-4">
+                    Shop Now
+                  </button>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>

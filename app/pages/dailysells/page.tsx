@@ -59,9 +59,9 @@ const DailySells = () => {
   const handleCart = (item: DailySells) => {
     dispatch(
       addToCart({
-        id: item.id,
-        title: item.title,
-        newPrice: item.newPrice,
+        id: item?.id,
+        title: item?.title,
+        newPrice: item?.newPrice,
         quantity: 1,
         image: item?.image,
         size: item?.size,
@@ -158,16 +158,16 @@ const DailySells = () => {
                   <div
                     key={index}
                     onClick={() => {
-                      setActiveTab(item.title);
+                      setActiveTab(item?.title);
                       setCategoryMenu(false);
                     }}
                     className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                      activeTab === item.title
+                      activeTab === item?.title
                         ? "text-shopbtn "
                         : "text-regalblue"
                     } `}
                   >
-                    {item.title}
+                    {item?.title}
                   </div>
                 ))}
               </div>

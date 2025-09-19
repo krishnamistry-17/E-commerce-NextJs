@@ -32,10 +32,10 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[55px]">
+      <div className="max-w-[1640px] mx-auto xl:px-[143px] px-3 pt-[55px]">
         <Welcome />
       </div>
-      <div >
+      <div>
         <Image
           src={main}
           alt="img"

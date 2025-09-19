@@ -56,7 +56,7 @@ const Products = () => {
                 <div className="pt-[10px]">
                   {product.map((item, index) => {
                     const imageToUse =
-                      colIndex % 2 === 0 ? item.image : item.image1;
+                      colIndex % 2 === 0 ? item?.image : item?.image1;
 
                     return (
                       <div
@@ -66,7 +66,7 @@ const Products = () => {
                         <div>
                           <Image
                             src={imageToUse}
-                            alt={item.category}
+                            alt={item?.category}
                             width={25}
                             height={25}
                             unoptimized
@@ -75,11 +75,11 @@ const Products = () => {
                         </div>
                         <div className="flex flex-col pl-[12px]">
                           <p className="text-[16px] text-regalblue font-quick-bold-700">
-                            {item.title}
+                            {item?.title}
                           </p>
                           <div className="text-[14px] font-lato-regular-400 text-ratingtext pt-1 flex items-center">
                             <Image
-                              src={item.ratingimage}
+                              src={item?.ratingimage}
                               alt="rating"
                               width={25}
                               height={25}
@@ -87,13 +87,13 @@ const Products = () => {
                               className="  w-[60px]"
                             />
                             <span className="text-shopbtn pl-1">
-                              {item.rating}
+                              {item?.rating}
                             </span>
                           </div>
                           <p className="text-[18px] font-quick-bold-700 text-shopbtn">
-                            ${item.newPrice}
+                            ${item?.newPrice}
                             <span className="text-[14px] text-ratingtext pl-2 line-through">
-                              ${item.oldPrice}
+                              ${item?.oldPrice}
                             </span>
                           </p>
                         </div>
