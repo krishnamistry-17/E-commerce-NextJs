@@ -10,6 +10,7 @@ export interface ProductDetails {
   rating: string;
   oldPrice: number;
   category: string;
+  size: number;
 }
 
 interface ProductDetailState {

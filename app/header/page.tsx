@@ -60,7 +60,7 @@ export default function Navbar() {
             <FaSearch className="text-gray-500 mr-2 ml-3" />
           </div>
         </div> */}
-        <div>
+        <div className="md:block hidden">
           <Search />
         </div>
 

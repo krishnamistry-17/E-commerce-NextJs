@@ -16,6 +16,7 @@ const DealsDay = () => {
   const [data, setData] = useState([]);
   const [product, setProducts] = useState<DailyDeals[]>([]);
   const [heading, setHeadings] = useState<DealsHeading[]>([]);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
   const dispatch = useDispatch();
   const router = useRouter();
@@ -49,6 +50,7 @@ const DealsDay = () => {
         newPrice: item?.newPrice,
         quantity: 1,
         image: item?.image,
+        size: item?.size,
       })
     );
     // Add this item ID to clicked cart IDs
@@ -67,6 +69,7 @@ const DealsDay = () => {
         rating: item?.rating,
         oldPrice: item?.oldPrice,
         category: item?.category,
+        size: item?.size,
       })
     );
     router.push(`/product/${item?.id}`);
@@ -169,6 +172,21 @@ const DealsDay = () => {
                             </span>
                           </p>
                         </div>
+
+                        {/* Size Selector */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedSize(item?.size);
+                          }}
+                          className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
+                            selectedSize === item?.size
+                              ? "bg-shopbtn text-white"
+                              : "bg-white border border-shopbtn text-bgbrown"
+                          }`}
+                        >
+                          {item?.size}g
+                        </button>
 
                         {/* Cart Button */}
                         <div

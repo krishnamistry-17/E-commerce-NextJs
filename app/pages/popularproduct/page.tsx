@@ -15,6 +15,7 @@ const PopularProduct = () => {
   const [data, setData] = useState([]);
   const [product, setProducts] = useState<PopularProducts[]>([]);
   const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
   const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
   const [categoryMenu, setCategoryMenu] = useState(false);
@@ -68,6 +69,7 @@ const PopularProduct = () => {
         newPrice: item.newPrice,
         quantity: 1,
         image: item?.image,
+        size: item?.size,
       })
     );
     // Add this item ID to clicked cart IDs
@@ -86,6 +88,7 @@ const PopularProduct = () => {
         rating: item?.rating,
         oldPrice: item?.oldPrice,
         category: item?.category,
+        size: item?.size,
       })
     );
 
@@ -161,9 +164,10 @@ const PopularProduct = () => {
         {filteredProduct?.map((item, index) => (
           <div
             key={index}
-            className="rounded-[15px] border border-productborder relative cursor-pointer"
-            onClick={() =>  handleDetails(item)}
+            className="flex flex-col justify-between h-full rounded-[15px] border border-productborder relative cursor-pointer"
+            onClick={() => handleDetails(item)}
           >
+            {/* Tag */}
             <div className="absolute top-0">
               <p
                 className={`w-[60px] h-[31px] text-white text-center text-xs py-[7px] rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full ${
@@ -173,6 +177,8 @@ const PopularProduct = () => {
                 {item?.tag}
               </p>
             </div>
+
+            {/* Image */}
             <Image
               src={item.image}
               alt={item.category}
@@ -181,11 +187,14 @@ const PopularProduct = () => {
               height={25}
               unoptimized
             />
-            <div className="px-6 pb-6">
+
+            {/* Product Info */}
+            <div className="px-6 pb-6 flex flex-col flex-grow">
               <p className="text-sm text-graytext">{item?.category}</p>
               <p className="text-lg font-bold text-regalblue pt-2">
                 {item?.title}
               </p>
+
               <div className="flex items-center gap-2 pt-2">
                 <Image
                   src={item.ratingimage}
@@ -193,14 +202,18 @@ const PopularProduct = () => {
                   width={25}
                   height={25}
                   unoptimized
-                  className="  w-[60px]"
+                  className="w-[60px]"
                 />
                 <p className="text-sm text-ratingtext">{item?.rating}</p>
               </div>
+
               <p className="text-sm text-ratingtext pt-2">
                 By <span className="text-shopbtn">{item?.by}</span>
               </p>
-              <div className="flex justify-between items-center pt-4">
+
+              {/*  Bottom Sticky Section */}
+              <div className="flex justify-between items-center pt-4 mt-auto">
+                {/* Price */}
                 <div>
                   <p className="text-lg font-bold text-shopbtn">
                     {item?.newPrice}
@@ -209,6 +222,23 @@ const PopularProduct = () => {
                     </span>
                   </p>
                 </div>
+
+                {/* Size Selector */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedSize(item?.size);
+                  }}
+                  className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
+                    selectedSize === item?.size
+                      ? "bg-shopbtn text-white"
+                      : "bg-white border border-shopbtn text-bgbrown"
+                  }`}
+                >
+                  {item?.size}g
+                </button>
+
+                {/* Cart */}
                 <div
                   className="flex items-center bg-cartbtn px-3 py-2 rounded"
                   onClick={(e) => {

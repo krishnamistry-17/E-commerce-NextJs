@@ -8,6 +8,7 @@ export type Product = {
   price: number;
   item: string;
   category: string;
+  size: number;
 };
 
 export type Heading = {
@@ -40,6 +41,7 @@ export type PopularProducts = {
   oldPrice: number;
   cartimage: StaticImageData;
   cart: string;
+  size: number;
 };
 
 export type DailyBestSells = {
@@ -61,6 +63,7 @@ export type DailySells = {
   cart: string;
   sold: string;
   soldnumber: string;
+  size: number;
 };
 
 export type DealsHeading = {
@@ -80,6 +83,7 @@ export type DailyDeals = {
   cartimage: StaticImageData;
   cart: string;
   category: string;
+  size: number;
 };
 
 export type ProductsHeading = {
@@ -96,6 +100,7 @@ export type Products = {
   newPrice: number;
   oldPrice: number;
   category: string;
+  size: number;
 };
 
 export type Advertise = {
@@ -156,6 +161,7 @@ export type FilteredNewProduct = {
   title: string;
   price: string;
   ratingimage: StaticImageData;
+  size: number;
 };
 
 export type InformationButton = {
@@ -198,6 +204,7 @@ export type RelatedProducts = {
   oldPrice: number;
   cartimage: StaticImageData;
   cart: string;
+  size: number;
 };
 
 export type AllProducts = {
@@ -207,14 +214,16 @@ export type AllProducts = {
   title: string;
   price: number;
   category: string;
+  size: number;
 };
 
 export type AllMergedProducts = {
   id: number;
   title: string;
   image: StaticImageData;
-  price: number;
+  newprice: number;
   category: string;
+  size: number;
 };
 
 export type AboutWelcome = {
@@ -293,6 +302,12 @@ export type SignIn = {
 };
 
 export type SignUp = {
+  username: string;
+  email: string;
+  password: number;
+};
+
+export type UserProfile = {
   username: string;
   email: string;
   password: number;

@@ -16,6 +16,7 @@ const DailySells = () => {
   const [data, setData] = useState([]);
   const [product, setProducts] = useState<DailySells[]>([]);
   const [heading, setHeadings] = useState<DailyBestSells[]>([]);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<string>("All");
   const dispatch = useDispatch();
   const router = useRouter();
@@ -63,6 +64,7 @@ const DailySells = () => {
         newPrice: item.newPrice,
         quantity: 1,
         image: item?.image,
+        size: item?.size,
       })
     );
 
@@ -82,6 +84,7 @@ const DailySells = () => {
         rating: item?.rating,
         oldPrice: item?.oldPrice,
         category: item?.category,
+        size: item?.size,
       })
     );
     router.push(`/product/${item?.id}`);
@@ -191,17 +194,20 @@ const DailySells = () => {
                         className="flex flex-col justify-between h-full min-h-[480px] rounded-[15px] border border-productborder relative"
                         onClick={() => handleDetails(item)}
                       >
-                        <div className=" absolute top-0">
+                        {/* Tag */}
+                        <div className="absolute top-0">
                           <p
                             className={`w-[90.23px] h-[31px] 
-                     rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full
-                      text-center text-[12px] text-white font-lato-regular-400 py-[7px]
-                      ${categoriesWiseTag[item?.tag]}
-                      `}
+        rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full
+        text-center text-[12px] text-white font-lato-regular-400 py-[7px]
+        ${categoriesWiseTag[item?.tag]}
+      `}
                           >
                             {item?.tag}
                           </p>
                         </div>
+
+                        {/* Image */}
                         <Image
                           src={item?.image}
                           alt={item?.category}
@@ -210,13 +216,18 @@ const DailySells = () => {
                           unoptimized
                           className="pt-[25px] px-[25px] w-full"
                         />
-                        <div className="flex flex-col px-[25px] ">
+
+                        {/* Product Content */}
+                        <div className="flex flex-col px-[25px] flex-grow">
+                          {/* Category + Title */}
                           <p className="text-[12px] text-graytext font-lato-regular-400">
                             {item?.category}
                           </p>
-                          <p className="text-[16px] font-quick-bold-700 text-regalblue pt-[8px] ">
+                          <p className="text-[16px] font-quick-bold-700 text-regalblue pt-[8px]">
                             {item?.title}
                           </p>
+
+                          {/* Rating */}
                           <div className="flex gap-[7.9px] items-center pt-[8px]">
                             <Image
                               src={item?.ratingimage}
@@ -224,10 +235,12 @@ const DailySells = () => {
                               width={25}
                               height={25}
                               unoptimized
-                              className="  w-[60px]"
+                              className="w-[60px]"
                             />
                           </div>
-                          <div className=" flex justify-between items-center pt-[22px]">
+
+                          {/* Price */}
+                          <div className="flex justify-between items-center pt-[22px]">
                             <div>
                               <p className="text-[18px] font-quick-bold-700 text-shopbtn">
                                 {item?.newPrice}
@@ -237,21 +250,42 @@ const DailySells = () => {
                               </p>
                             </div>
                           </div>
+
+                          {/* Range */}
                           <div className="pt-[8px]">
                             <input
                               type="range"
-                              className=" accent-shopbtn  rounded-[4px]"
+                              className="accent-shopbtn rounded-[4px]"
                             />
                           </div>
-                          <p className="text-[14px] font-lato-regular-400 text-ratingtext py-[8px]">
-                            {item?.sold}
-                            <span className="text-shopbtn pl-1">
-                              {item?.soldnumber}
-                            </span>
-                          </p>
-                          <div className=" mt-auto pb-4">
+
+                          {/* Size + Sold Info */}
+                          <div className="flex justify-between items-center py-[8px]">
+                            <p className="text-[14px] font-lato-regular-400 text-ratingtext">
+                              {item?.sold}
+                              <span className="text-shopbtn pl-1">
+                                {item?.soldnumber}
+                              </span>
+                            </p>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedSize(item?.size);
+                              }}
+                              className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
+                                selectedSize === item?.size
+                                  ? "bg-shopbtn text-white"
+                                  : "bg-white border border-shopbtn text-bgbrown"
+                              }`}
+                            >
+                              {item?.size}g
+                            </button>
+                          </div>
+
+                          {/* Add to Cart Button */}
+                          <div className="mt-auto pb-4">
                             <div
-                              className="flex items-center justify-center gap-2 bg-cartbtn rounded-[4px] h-[36px]"
+                              className="flex items-center justify-center gap-2 bg-cartbtn rounded-[4px] h-[36px] cursor-pointer"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleCart(item);

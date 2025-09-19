@@ -9,6 +9,7 @@ import { showDetails } from "../pages/slice/productDetailSlice";
 
 const Relatedproducts = () => {
   const [product, setProduct] = useState<RelatedProducts[]>([]);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -41,6 +42,7 @@ const Relatedproducts = () => {
         newPrice: item.newPrice,
         quantity: 1,
         image: item?.image,
+        size: item?.size,
       })
     );
   };
@@ -56,6 +58,7 @@ const Relatedproducts = () => {
         rating: item?.rating,
         oldPrice: item?.oldPrice,
         category: item?.category,
+        size: item?.size,
       })
     );
     router.push(`/product/${item?.id}`);
@@ -124,6 +127,22 @@ const Relatedproducts = () => {
                     </span>
                   </p>
                 </div>
+
+                {/* Size Selector */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedSize(item?.size);
+                  }}
+                  className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
+                    selectedSize === item?.size
+                      ? "bg-shopbtn text-white"
+                      : "bg-white border border-shopbtn text-bgbrown"
+                  }`}
+                >
+                  {item?.size}g
+                </button>
+
                 <div
                   className="flex items-center bg-cartbtn px-3 py-2 rounded"
                   onClick={(e) => {
