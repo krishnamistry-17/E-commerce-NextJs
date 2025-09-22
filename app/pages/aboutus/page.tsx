@@ -42,7 +42,7 @@ const AboutUs = () => {
           width={20}
           height={20}
           unoptimized
-          className="w-full"
+          className="w-full xl:px-[80px] px-2 py-4"
         />
       </div>
       <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[25px] md:pb-[100px] pb-[25px]">

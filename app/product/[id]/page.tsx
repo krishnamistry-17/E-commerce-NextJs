@@ -1,6 +1,6 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/app/store/store";
 import home from "../../../public/svgs/home.svg";
 import cart from "../../../public/svgs/whitecart.svg";
 import whishlist from "../../../public/svgs/whishlist.svg";
@@ -18,7 +18,7 @@ import category5 from "../../../public/svgs/category5.svg";
 import filter from "../../../public/svgs/filter.svg";
 import { useEffect, useState } from "react";
 import { addToCart, updateQuantity } from "@/app/pages/slice/cartSlice";
-import { AllProducts, FilteredNewProduct, Products } from "@/types/product";
+import { AllProducts, Products } from "@/types/product";
 import axiosInstance from "@/lib/axios";
 import Description from "../description";
 import Relatedproducts from "../relatedproducts";
@@ -29,7 +29,25 @@ import { addToWishList } from "@/app/pages/slice/wishListSlice";
 import { MdOutlineFavorite } from "react-icons/md";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import {
+  ProductDetails,
+  showDetails,
+} from "@/app/pages/slice/productDetailSlice";
+
+type ProductDetails = {
+  id: string;
+  title: string;
+  image: string;
+  ratingimage: string;
+  rating: string;
+  newPrice: number;
+  oldPrice: number;
+  category: string;
+  size: number | string;
+};
+ 
+type AllProducts = ProductDetails;
 
 type Props = {
   params: {
@@ -42,20 +60,27 @@ const ProductDetailPage = ({ params }: Props) => {
   const [value, setValue] = useState(150);
   const [allproduct, setAllProduct] = useState<AllProducts[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<AllProducts[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("Pet Foods");
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([
+    "Pet Foods",
+  ]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [quantity, setQuantity] = useState(1);
   const [isWishClick, setIsWishClick] = useState(false);
   const [isCartClick, setIsCartClick] = useState(false);
   const router = useRouter();
 
+  const dispatch = useDispatch(); 
+
   const product = useSelector((state: RootState) =>
     state.productDetails.items.find((item) => item?.id === params.id)
   );
+  console.log("product?????? :", product);
 
-  const handleChange = (e: any) => {
-    setValue(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(Number(e.target.value));
   };
-  const dispatch = useDispatch();
 
   const handleCart = (item: Products) => {
     dispatch(
@@ -68,8 +93,6 @@ const ProductDetailPage = ({ params }: Props) => {
         size: selectedSize,
       })
     );
-    // To Reset to 1 after adding
-    // setQuantity(0);+
     setIsCartClick(true);
     toast.success("Item added to cart");
   };
@@ -89,18 +112,38 @@ const ProductDetailPage = ({ params }: Props) => {
   };
 
   useEffect(() => {
-    const fetchAllProducts = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const res = await axiosInstance.get<AllProducts[]>(
+        const productRes = await axiosInstance.get<AllProducts>(
           `/allProducts/${params.id}`
         );
-        setAllProduct(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
+        const allRes = await axiosInstance.get<AllProducts[]>(`/allProducts`);
+
+        const productData: ProductDetails = {
+          id: productRes.data.id,
+          title: productRes.data.title,
+          newPrice: productRes.data.newPrice ?? 0,
+          image: productRes.data.image,
+          ratingimage: productRes.data.ratingimage,
+          rating: productRes.data.rating ?? "0",
+          oldPrice: productRes.data.oldPrice ?? 0,
+          category: productRes.data.category ?? "",
+          size: productRes.data.size ?? 0,
+        };
+
+        setAllProduct(allRes.data);
+        dispatch(showDetails(productData));
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load product details.");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchAllProducts();
-  }, []);
+
+    fetchData();
+  }, [params.id]);
 
   const togglecategory = (category: string) => {
     setSelectedCategory((prev) =>
@@ -125,6 +168,30 @@ const ProductDetailPage = ({ params }: Props) => {
   //   "All Categories:",
   //   allproduct.map((p) => p.category)
   // );
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[300px]">
+        <p>Loading product details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-[300px] text-red-500">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="flex justify-center items-center h-[300px]">
+        <p>Product not found.</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -228,9 +295,16 @@ const ProductDetailPage = ({ params }: Props) => {
                     ${product?.newPrice}
                   </p>
                   <div>
-                    <p className="text-[12px] font-quick-semibold-600 text-offertext">
-                      26% Off
-                    </p>
+                    {product.oldPrice && product.newPrice && (
+                      <p className="text-[12px] font-quick-semibold-600 text-offertext">
+                        {Math.round(
+                          ((product.oldPrice - product.newPrice) /
+                            product.oldPrice) *
+                            100
+                        )}
+                        % Off
+                      </p>
+                    )}
                     <p className="text-[20px] sm:text-[28px] text-bgbrown line-through">
                       ${product?.oldPrice}
                     </p>
@@ -651,7 +725,7 @@ const ProductDetailPage = ({ params }: Props) => {
                       {item?.title}
                     </p>
                     <p className="text-[16px] font-lato-regular-400 text-bgbrown">
-                      ${item?.price}
+                      ${item?.newPrice}
                     </p>
                     <Image
                       src={item?.ratingimage}

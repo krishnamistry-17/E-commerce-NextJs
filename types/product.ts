@@ -92,15 +92,15 @@ export type ProductsHeading = {
 
 export type Products = {
   id: string;
-  image: StaticImageData;
-  image1: StaticImageData;
   title: string;
-  ratingimage: StaticImageData;
+  image: string | StaticImageData;
+  image1: string | StaticImageData;
+  ratingimage: string | StaticImageData;
   rating: string;
   newPrice: number;
   oldPrice: number;
   category: string;
-  size: number;
+  size: number | string;
 };
 
 export type Advertise = {
@@ -208,12 +208,14 @@ export type RelatedProducts = {
 };
 
 export type AllProducts = {
-  id: number;
-  image: StaticImageData;
-  ratingimage: StaticImageData;
+  id: string;
   title: string;
-  price: number;
+  image: StaticImageData;
+  newPrice: number;
+  oldPrice: number;
   category: string;
+  ratingimage: StaticImageData;
+  rating: string;
   size: number;
 };
 

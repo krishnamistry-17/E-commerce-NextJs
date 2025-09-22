@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import Header from "../app/header/page";
 import Footer from "./footer/page";
 import { Provider } from "react-redux";
-import { store } from "./store/store";
+import { persistor, store } from "./store/store";
 import {
   footerfirst,
   footerheadings,
@@ -17,6 +17,7 @@ import {
 } from "@/data/product";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { PersistGate } from "redux-persist/integration/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,17 +44,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Provider store={store}>
-          <Elements stripe={stripePromise}>
-            <Header />
-            {children}
-            <ToastContainer />
-            <Footer
-              footerfirst={footerfirst}
-              footersecond={footersecond}
-              footerthird={footerthird}
-              footerheadings={footerheadings}
-            />
-          </Elements>
+          <PersistGate loading={null} persistor={persistor}>
+            <Elements stripe={stripePromise}>
+              <Header />
+              {children}
+              <ToastContainer />
+              <Footer
+                footerfirst={footerfirst}
+                footersecond={footersecond}
+                footerthird={footerthird}
+                footerheadings={footerheadings}
+              />
+            </Elements>
+          </PersistGate>
         </Provider>
       </body>
     </html>

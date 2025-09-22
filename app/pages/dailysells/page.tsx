@@ -74,6 +74,7 @@ const DailySells = () => {
   };
 
   const handleDetails = (item: DailySells) => {
+    console.log("item????dailysellss??????? :", item);
     dispatch(
       showDetails({
         id: item?.id,
