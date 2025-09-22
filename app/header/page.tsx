@@ -14,10 +14,14 @@ import WishListIcon from "../pages/wishlisticon/page";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { logout } from "../store/authSlice";
+import { login, logout } from "../store/authSlice";
 import Search from "../pages/search/page";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
+  const { data: session } = useSession();
+  console.log("session :", session?.user);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -26,12 +30,20 @@ export default function Navbar() {
     (state: RootState) => state.auth
   );
 
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const isLoggedIn = !!session || isAuthenticated;
+  console.log("isLoggedIn :", isLoggedIn);
 
   const handleLogout = () => {
-    dispatch(logout());
-    router.push("/");
+    if (session) {
+      // OAuth logout via NextAuth
+      signOut({ callbackUrl: "/" });
+    } else {
+      // Email/password logout via Redux
+      dispatch(logout());
+      router.push("/");
+    }
   };
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -66,34 +78,34 @@ export default function Navbar() {
             <CartIcon />
           </Link>
 
-          {!isAuthenticated ? (
-            <>
-              <div onClick={() => router.push("/signin")}>
-                <button className="px-4 py-1 rounded border border-black ">
-                  Sign In
-                </button>
-              </div>
-              <div onClick={() => router.push("/signup")}>
-                <button className="px-4 py-1 rounded border border-black ">
-                  Sign Up
-                </button>
-              </div>
-            </>
-          ) : (
+          {isLoggedIn ? (
             <>
               <div onClick={() => router.push("/user-profile")}>
                 <button className="px-4 py-1 rounded border border-black ">
                   User Profile
                 </button>
               </div>
-              <div onClick={() => router.push("/")}>
-                <button
-                  className="px-4 py-1 rounded border border-black "
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-1 rounded border border-black "
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => router.push("/signin")}
+                className="px-4 py-1 rounded border border-black "
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => router.push("/signup")}
+                className="px-4 py-1 rounded border border-black "
+              >
+                Sign Up
+              </button>
             </>
           )}
         </div>
@@ -127,47 +139,34 @@ export default function Navbar() {
                 Contact
               </Link>
 
-              {!isAuthenticated ? (
+              {isLoggedIn ? (
                 <>
+                  <div onClick={() => router.push("/user-profile")}>
+                    <button className="px-4 py-1 rounded border border-black ">
+                      User Profile
+                    </button>
+                  </div>
                   <button
-                    onClick={() => {
-                      router.push("/signin");
-                      setIsMenuOpen(false);
-                    }}
-                    className=" text-start"
+                    onClick={handleLogout}
+                    className="px-4 py-1 rounded border border-black "
                   >
-                    Sign In
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push("/signup");
-                      setIsMenuOpen(false);
-                    }}
-                    className=" text-start"
-                  >
-                    Sign Up
+                    Logout{" "}
+                    {session ? `(via ${session.provider || "OAuth"})` : ""}
                   </button>
                 </>
               ) : (
                 <>
                   <button
-                    onClick={() => {
-                      router.push("/user-profile");
-                      setIsMenuOpen(false);
-                    }}
-                    className=" text-start"
+                    onClick={() => router.push("/signin")}
+                    className="px-4 py-1 rounded border border-black "
                   >
-                    Profile
+                    Sign In
                   </button>
                   <button
-                    onClick={() => {
-                      dispatch(logout());
-                      router.push("/");
-                      setIsMenuOpen(false);
-                    }}
-                    className=" text-start"
+                    onClick={() => router.push("/signup")}
+                    className="px-4 py-1 rounded border border-black "
                   >
-                    Sign Out
+                    Sign Up
                   </button>
                 </>
               )}

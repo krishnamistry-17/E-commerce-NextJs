@@ -10,8 +10,10 @@ import { useRouter } from "next/navigation";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import cartimage from "../../../public/images/cart.png";
+import { useSession } from "next-auth/react";
 
 const Cart = () => {
+  const { data: session } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -88,15 +90,27 @@ const Cart = () => {
                   <p className=" text-[24px] text-regalblue font-semibold py-[20px]">
                     Missing Cart Items?
                   </p>
+
                   <p className=" text-[20px] text-regalblue">
-                    Signin to add items
+                    {session
+                      ? "Continue shooping Go to Home"
+                      : "Signin to add items"}
                   </p>
-                  <button
-                    onClick={() => router.push("/signin")}
-                    className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
-                  >
-                    Signin
-                  </button>
+                  {session ? (
+                    <button
+                      onClick={() => router.push("/")}
+                      className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
+                    >
+                      Go to Home
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => router.push("/signin")}
+                      className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
+                    >
+                      Signin
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (

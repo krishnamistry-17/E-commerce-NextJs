@@ -7,6 +7,7 @@ import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import type { AppDispatch } from "../store/store";
+import SignInButton from "../component/SignInButton";
 
 const Signin = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -75,13 +76,18 @@ const Signin = () => {
             </div>
           </div>
         </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
-        >
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
+        <div className="flex flex-col space-y-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700  "
+          >
+            {loading ? "Signing in..." : "Submit"}
+          </button>
+          <p className=" text-center ">or</p>
+
+          <SignInButton />
+        </div>
       </form>
     </div>
   );
