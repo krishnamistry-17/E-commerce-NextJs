@@ -750,7 +750,7 @@
       "id": "25",
       "image": "/images/p1.png",
       "title": "Chen Cardigan",
-      "newPrice": 99.50,
+      "newPrice": 99.5,
       "oldPrice": 25,
       "ratingimage": "/svgs/rating.svg",
       "rating": "4.0",
@@ -760,7 +760,7 @@
       "id": "26",
       "image": "/images/p2.png",
       "title": "Chen Sweater",
-      "newPrice": 89.50,
+      "newPrice": 89.5,
       "oldPrice": 25,
       "ratingimage": "/svgs/rating.svg",
       "rating": "4.0",
@@ -1005,6 +1005,18 @@
       "name": "test",
       "email": "test2@gmail.com",
       "password": "1234"
+    },
+    {
+      "id": "58f8",
+      "name": "k2",
+      "email": "k2@gmail.com",
+      "password": "1234"
+    },
+    {
+      "id": "765e",
+      "name": "krishna",
+      "email": "krishna@mailinator.com",
+      "password": "12345"
     }
   ]
 }

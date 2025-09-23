@@ -1,24 +1,16 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../store/authSlice";
-import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import type { AppDispatch } from "../store/store";
+import { login } from "./action";
 import SignInButton from "../component/SignInButton";
 
 const Signin = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const router = useRouter();
   const [isShown, setIsShown] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
-
-  const { isAuthenticated, loading, error } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const togglePassword = () => setIsShown(!isShown);
 
@@ -28,12 +20,16 @@ const Signin = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({ email: formData.email, password: formData.password }));
-  };
+    setError(null);
 
-  useEffect(() => {
-    if (isAuthenticated) router.push("/");
-  }, [isAuthenticated, router]);
+    const form = new FormData();
+    form.append("email", formData.email);
+    form.append("password", formData.password);
+
+    startTransition(() => {
+      login(form); //  call Supabase login server action
+    });
+  };
 
   return (
     <div className="flex items-center justify-center">
@@ -45,6 +41,7 @@ const Signin = () => {
           Sign In
         </h2>
         {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+
         <div className="mb-4">
           <label className="block text-regalblue text-[16px] font-quick-semibold-600">
             Email
@@ -52,23 +49,24 @@ const Signin = () => {
           <input
             type="email"
             name="email"
-            placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded mt-1 focus:outline-none"
+            placeholder="abc@gmail.com"
+            className="w-full px-4 py-2 border rounded mt-1 focus:outline-none focus:ring-0"
             required
           />
         </div>
+
         <div className="mb-6">
           <label className="block text-gray-700">Password</label>
           <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1">
             <input
               type={isShown ? "text" : "password"}
               name="password"
-              placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className="focus:outline-none w-full"
+              placeholder="123456789"
+              className="focus:outline-none focus:ring-0 w-full"
               required
             />
             <div onClick={togglePassword} className="cursor-pointer">
@@ -76,18 +74,17 @@ const Signin = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col space-y-2">
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700  "
-          >
-            {loading ? "Signing in..." : "Submit"}
-          </button>
-          <p className=" text-center ">or</p>
 
-          <SignInButton />
-        </div>
+        <button
+          type="submit"
+          disabled={isPending}
+          className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
+        >
+          {isPending ? "Signing in..." : "Submit"}
+        </button>
+
+        <p className="text-center py-[10px]">or</p>
+        <SignInButton />
       </form>
     </div>
   );

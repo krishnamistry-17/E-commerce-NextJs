@@ -17,6 +17,7 @@ import { RootState } from "../store/store";
 import { login, logout } from "../store/authSlice";
 import Search from "../pages/search/page";
 import { signOut, useSession } from "next-auth/react";
+import { createClient } from "@/utils/supabase/server";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -33,16 +34,20 @@ export default function Navbar() {
   const isLoggedIn = !!session || isAuthenticated;
   console.log("isLoggedIn :", isLoggedIn);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (session) {
-      // OAuth logout via NextAuth
-      signOut({ callbackUrl: "/" });
+      // OAuth (NextAuth)
+      await signOut({ callbackUrl: "/" });
     } else {
-      // Email/password logout via Redux
+      // Supabase logout
+      const supabase = createClient();
+      await supabase.auth.signOut();
+
       dispatch(logout());
       router.push("/");
     }
   };
+
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   useEffect(() => {
