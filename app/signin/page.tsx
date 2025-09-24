@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { login } from "./action";
+import { signin } from "../../actions/auth";
 import SignInButton from "../component/SignInButton";
 
 const Signin = () => {
@@ -10,7 +10,7 @@ const Signin = () => {
   const [isShown, setIsShown] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const togglePassword = () => setIsShown(!isShown);
 
@@ -18,17 +18,19 @@ const Signin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
-    const form = new FormData();
-    form.append("email", formData.email);
-    form.append("password", formData.password);
+    const form = new FormData(e.currentTarget);
 
-    startTransition(() => {
-      login(form); //  call Supabase login server action
-    });
+    const result = await signin(form);
+
+    if (result.status === "success") {
+      router.push("/");
+    } else {
+      setError(result.message || "Error in signin");
+    }
   };
 
   return (
@@ -49,6 +51,7 @@ const Signin = () => {
           <input
             type="email"
             name="email"
+            id="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="abc@gmail.com"
@@ -63,6 +66,7 @@ const Signin = () => {
             <input
               type={isShown ? "text" : "password"}
               name="password"
+              id="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="123456789"

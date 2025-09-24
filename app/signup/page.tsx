@@ -1,16 +1,17 @@
+//app/pages/signup/page.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { signup } from "../signin/action";
+import { signup } from "../../actions/auth";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const [isShown, setIsShown] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -22,19 +23,19 @@ export default function SignUpPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    // Supabase auth only uses email/password, name is optional (store later in profile if needed)
-    const form = new FormData();
+    const form = new FormData(e.currentTarget);
 
-    form.append("email", formData.email);
-    form.append("password", formData.password);
+    const result = await signup(form);
 
-    startTransition(() => {
-      signup(form); //  call server action
-    });
+    if (result.status === "success") {
+      router.push("/signin");
+    } else {
+      setError(result.message || "Error in signup");
+    }
   };
 
   return (
@@ -50,15 +51,15 @@ export default function SignUpPage() {
           <p className="text-red-500 mb-4 text-center font-semibold">{error}</p>
         )}
 
-        {/* ... username input */}
         <div className="mb-4">
           <label className="block text-regalblue text-[16px] font-quick-semibold-600">
             Username
           </label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="username"
+            id="username"
+            value={formData.username}
             onChange={handleChange}
             placeholder="username"
             className="w-full px-4 py-2 border rounded mt-1 focus:outline-none focus:ring-0"
@@ -66,7 +67,6 @@ export default function SignUpPage() {
           />
         </div>
 
-        {/* ... email input */}
         <div className="mb-4">
           <label className="block text-regalblue text-[16px] font-quick-semibold-600">
             Email
@@ -74,6 +74,7 @@ export default function SignUpPage() {
           <input
             type="email"
             name="email"
+            id="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="abc@gmail.com"
@@ -82,13 +83,13 @@ export default function SignUpPage() {
           />
         </div>
 
-        {/* ... password input */}
         <div className="mb-6">
           <label className="block text-gray-700">Password</label>
           <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1">
             <input
               type={isShown ? "text" : "password"}
               name="password"
+              id="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="123456789"

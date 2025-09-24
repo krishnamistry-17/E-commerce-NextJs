@@ -12,47 +12,38 @@ import fillwish from "../../public/svgs/fillwish.svg";
 import BrowseCategories from "../browsecategory/page";
 import WishListIcon from "../pages/wishlisticon/page";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { login, logout } from "../store/authSlice";
 import Search from "../pages/search/page";
-import { signOut, useSession } from "next-auth/react";
-import { createClient } from "@/utils/supabase/server";
+import Logout from "../logout/page";
+import { createClient } from "@/utils/supabase/client";
 
-export default function Navbar() {
-  const { data: session } = useSession();
-  console.log("session :", session?.user);
-
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  console.log("user :", user);
   const router = useRouter();
-  const dispatch = useDispatch();
-
-  const { isAuthenticated, user } = useSelector(
-    (state: RootState) => state.auth
-  );
-
-  const isLoggedIn = !!session || isAuthenticated;
-  console.log("isLoggedIn :", isLoggedIn);
-
-  const handleLogout = async () => {
-    if (session) {
-      // OAuth (NextAuth)
-      await signOut({ callbackUrl: "/" });
-    } else {
-      // Supabase logout
-      const supabase = createClient();
-      await supabase.auth.signOut();
-
-      dispatch(logout());
-      router.push("/");
-    }
-  };
-
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [isAuthenticated]);
+    const supabase = createClient();
+
+    // Get current user on mount
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    // // Subscribe to auth changes
+    // const { data: authListener } = supabase.auth.onAuthStateChange(
+    //   (event, session) => {
+    //     setUser(session?.user);
+    //   }
+    // );
+
+    // // Cleanup subscription on unmount
+    // return () => {
+    //   authListener.subscription.unsubscribe();
+    // };
+  }, []);
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
     <>
@@ -83,19 +74,16 @@ export default function Navbar() {
             <CartIcon />
           </Link>
 
-          {isLoggedIn ? (
+          {user ? (
             <>
               <div onClick={() => router.push("/user-profile")}>
                 <button className="px-4 py-1 rounded border border-black ">
                   User Profile
                 </button>
               </div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-1 rounded border border-black "
-              >
-                Logout
-              </button>
+              <div>
+                <Logout />
+              </div>
             </>
           ) : (
             <>
@@ -144,20 +132,16 @@ export default function Navbar() {
                 Contact
               </Link>
 
-              {isLoggedIn ? (
+              {user ? (
                 <>
                   <div onClick={() => router.push("/user-profile")}>
                     <button className="px-4 py-1 rounded border border-black ">
                       User Profile
                     </button>
                   </div>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-1 rounded border border-black "
-                  >
-                    Logout{" "}
-                    {session ? `(via ${session.provider || "OAuth"})` : ""}
-                  </button>
+                  <div>
+                    <Logout />
+                  </div>
                 </>
               ) : (
                 <>
@@ -184,7 +168,9 @@ export default function Navbar() {
       </div>
     </>
   );
-}
+};
+
+export default Navbar;
 
 {
   /*
