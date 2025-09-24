@@ -79,6 +79,15 @@ const Signin = () => {
           </div>
         </div>
 
+        <div>
+          <p className="pb-2">
+            don't have an account?
+            <span className="pl-2 underline hover:text-blue-700">
+              <a href="/signup">Signup</a>
+            </span>
+          </p>
+        </div>
+
         <button
           type="submit"
           disabled={isPending}
@@ -89,6 +98,15 @@ const Signin = () => {
 
         <p className="text-center py-[10px]">or</p>
         <SignInButton />
+
+        <div className="py-[10px]">
+          <p>
+            Forgot Password?
+            <span className="pl-2 underline hover:text-blue">
+              <a href="/forgot-password">Reset Password</a>
+            </span>
+          </p>
+        </div>
       </form>
     </div>
   );

@@ -12,7 +12,12 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Add auth token if available
-    const token = localStorage.getItem("token"); // be careful with SSR
+    let token = null;
+
+    if (typeof window !== "undefined") {
+      token = localStorage.getItem("token");
+    }
+    // be careful with SSR
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

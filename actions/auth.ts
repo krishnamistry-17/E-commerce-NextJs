@@ -4,6 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import axiosInstance from "@/lib/axios";
 
 export async function signin(formData: FormData) {
   const supabase = await createClient();
@@ -117,4 +118,81 @@ export async function signOut() {
 
   revalidatePath("/", "layout");
   redirect("/signin");
+}
+
+export async function signInWithGitHub() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: `${process.env.NEXT_URL}/auth/callback`,
+    },
+  });
+
+  if (error || !data?.url) {
+    return { error: true };
+  }
+
+  //  Do NOT call `redirect()` here
+  return { url: data.url };
+}
+
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+  const origin = await axiosInstance.get("origin");
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_URL}/auth/callback`,
+    },
+  });
+  if (error || !data?.url) {
+    return { error: true };
+  }
+
+  //  Do NOT call `redirect()` here
+  return { url: data.url };
+}
+
+export async function forgotPassword(formData: FormData) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    formData.get("email") as string,
+    { redirectTo: `${process.env.NEXT_URL}/reset-password` }
+  );
+
+  if (error) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return { status: "success" };
+}
+
+export async function resetPassword(formData: FormData, code: string) {
+  const supabase = await createClient();
+
+  const { error: codeError } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (codeError) {
+    return {
+      status: codeError.message,
+    };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: formData.get("password") as string,
+  });
+
+  if (error) {
+    return {
+      status: error.message,
+    };
+  }
+
+  return { status: "success" };
 }
