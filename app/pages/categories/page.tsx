@@ -1,5 +1,5 @@
 "use client";
-import { BannerHeading, Heading, Product } from "@/types/product";
+import { BannerHeading, Heading } from "@/types/product";
 import Image from "next/image";
 import next from "../../../public/svgs/next.svg";
 import previous from "../../../public/svgs/previous.svg";
@@ -9,13 +9,29 @@ import food from "../../../public/images/food.png";
 import { FiSend } from "react-icons/fi";
 import drop from "../../../public/svgs/drop.svg";
 import { useRouter } from "next/navigation";
+import { apiRoutes } from "@/app/api/apiRoutes";
+
+interface Product {
+  _id: string;
+  productName: string;
+  image: string;
+  price: number;
+  stock: number;
+}
+
+interface Category {
+  _id: string;
+  category: string;
+  categoryProduct: Product[];
+  image: string;
+}
 
 export const Categories = () => {
-  const [data, setData] = useState([]);
-  const [product, setProducts] = useState<Product[]>([]);
+  const [product, setProducts] = useState<Category[]>([]);
+
   const [heading, setHeadings] = useState<Heading[]>([]);
   const [bannerheading, setBannerHeading] = useState<BannerHeading[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("All");
+  const [activeTab, setActiveTab] = useState<string>("Beverages");
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const [visiblecount, setVisibleCount] = useState(5);
@@ -23,32 +39,23 @@ export const Categories = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        console.error("No access token found, user is not authenticated.");
+        return;
+      }
+
       try {
-        const res = await axiosInstance.get<Product[]>("/products");
-        setProducts(res.data);
+        const res = await axiosInstance.get(apiRoutes.GET_ALL_CATEGORY);
+        setProducts(res.data.data);
+
       } catch (error) {
         console.error("Error fetching products", error);
       }
     };
-    const fetchHeadings = async () => {
-      try {
-        const res = await axiosInstance.get<Heading[]>("/headings");
-        setHeadings(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
-    const fetchbannerHeading = async () => {
-      try {
-        const res = await axiosInstance.get<BannerHeading[]>("/bannerheadings");
-        setBannerHeading(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
-    fetchbannerHeading();
+
     fetchProducts();
-    fetchHeadings();
   }, []);
 
   const categoryBgColors: Record<string, string> = {
@@ -62,12 +69,6 @@ export const Categories = () => {
   const filteredProduct = product.filter(
     (products) => products?.category === activeTab
   );
-
-  // useEffect(() => {
-  //   fetch("http://localhost:4000/products")
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data));
-  // }, []);
 
   // useEffect(() => {
   //   const updateCount = () => {
@@ -153,18 +154,18 @@ export const Categories = () => {
                   text-regalblue
                   xs375:flex items-center gap-[27.5px]"
                 >
-                  {heading?.map((item, index) => {
+                  {product?.map((item) => {
                     return (
                       <div
-                        key={index}
-                        onClick={() => setActiveTab(item?.title)}
+                        key={item._id}
+                        onClick={() => setActiveTab(item?.category)}
                         className={` cursor-pointer  pt-2 xs375:pt-0  ${
-                          activeTab === item?.title
+                          activeTab === item?.category
                             ? " text-shopbtn"
                             : "text-regalblue"
                         }`}
                       >
-                        {item?.title}
+                        {item?.category}
                       </div>
                     );
                   })}
@@ -200,20 +201,20 @@ export const Categories = () => {
               {/* Dropdown menu */}
               {categoryMenu && (
                 <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
-                  {heading?.map((item, index) => (
+                  {product?.map((item) => (
                     <div
-                      key={index}
+                      key={item._id}
                       onClick={() => {
-                        setActiveTab(item?.title);
+                        setActiveTab(item?.category);
                         setCategoryMenu(false);
                       }}
                       className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                        activeTab === item?.title
+                        activeTab === item?.category
                           ? "text-shopbtn "
                           : "text-regalblue"
                       } `}
                     >
-                      {item?.title}
+                      {item?.category}
                     </div>
                   ))}
                 </div>
@@ -238,37 +239,39 @@ export const Categories = () => {
             className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-[24px] 
           rounded-[10px] p-4 text-center items-center"
           >
-            {(activeTab === "All" ? product : filteredProduct)?.map(
-              (item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={`py-[22px]
+            {filteredProduct?.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`py-[22px]
                   ${categoryBgColors[item?.category]}
                   `}
-                  >
-                    <div>
-                      <Image
-                        src={item?.image}
-                        alt={item?.title}
-                        width={25}
-                        height={25}
-                        unoptimized
-                        className=" items-center justify-center w-full"
-                      />
-                      <p>{item?.title}</p>
-                      <p>
-                        {item?.price}
-                        <span className="pl-1">{item?.item}</span>
-                      </p>
-                    </div>
+                >
+                  <div>
+                    {item.categoryProduct.map((aproduct) => (
+                      <div key={aproduct._id}>
+                        <Image
+                          src={aproduct?.image}
+                          alt={aproduct?.productName}
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className=" items-center justify-center w-full"
+                        />
+                        <p>{aproduct?.productName}</p>
+                        <p>
+                          ₹{aproduct?.price}
+                          <span className="pl-1">{aproduct?.stock}</span>
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                );
-              }
-            )}
+                </div>
+              );
+            })}
           </div>
         </div>
-        <div className="pt-[25px] pb-[56px] pl-[12px]">
+        {/* <div className="pt-[25px] pb-[56px] pl-[12px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 rounded-[10px]">
             {bannerheading.map((item, index) => (
               <div key={index} className="relative flex flex-col h-full">
@@ -291,7 +294,7 @@ export const Categories = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

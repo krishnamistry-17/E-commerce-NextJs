@@ -25,7 +25,7 @@ const ResetPassword = () => {
 
     if (result.status === "success") {
       toast.success("Successfully updated");
-      router.push("/login");
+      router.push("/");
     } else {
       setError(result.status || "Error in resetting password");
     }

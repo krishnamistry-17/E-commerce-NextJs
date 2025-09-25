@@ -86,7 +86,7 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
     }
 
     setLoading(true);
-    console.log("Client Secret???:", clientSecret);
+  
 
     const { error, paymentIntent } = await stripe.confirmCardPayment(
       clientSecret,

@@ -2,9 +2,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_SITE_URL,
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
@@ -12,11 +13,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Add auth token if available
-    let token = null;
+    const token = localStorage.getItem("accessToken");
 
-    if (typeof window !== "undefined") {
-      token = localStorage.getItem("token");
-    }
     // be careful with SSR
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -48,6 +48,6 @@ export default function SignInButton() {
           </span>
         </button>
       </div>
-    </>
+    
   );
 }

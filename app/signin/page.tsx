@@ -2,15 +2,19 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { signin } from "../../actions/auth";
 import SignInButton from "../component/SignInButton";
+import axiosInstance from "@/lib/axios";
+import { apiRoutes } from "../api/apiRoutes";
+import { useDispatch } from "react-redux";
+import { setAccessToken, setUser } from "../store/authSlice";
 
 const Signin = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const [isShown, setIsShown] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState<string | null>(null);
-  const [isPending] = useTransition();
+  const [error, setError] = useState("");
 
   const togglePassword = () => setIsShown(!isShown);
 
@@ -20,16 +24,35 @@ const Signin = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
+    setError("");
 
-    const form = new FormData(e.currentTarget);
+    const { email, password } = formData;
 
-    const result = await signin(form);
+    try {
+      const response = await axiosInstance.post(apiRoutes.GET_SIGNIN, {
+        email,
+        password,
+      });
+      console.log("response:", response);
 
-    if (result.status === "success") {
-      router.push("/");
-    } else {
-      setError(result.message || "Error in signin");
+      if (response.status === 200 || response.status === 201) {
+        const { accessToken, _id, email, role } = response.data.data;
+
+        // Dispatch user info as an object, not just email
+        dispatch(setAccessToken(accessToken));
+        dispatch(setUser({ _id, email, role }));
+
+        // Store token in localStorage if you want persistence (optional)
+        localStorage.setItem("accessToken", accessToken);
+
+        router.push("/");
+      } else {
+        setError("Signin failed");
+      }
+    } catch (error: any) {
+      setError(
+        error.response?.data?.message || error.message || "Signin error"
+      );
     }
   };
 
@@ -90,10 +113,9 @@ const Signin = () => {
 
         <button
           type="submit"
-          disabled={isPending}
           className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
         >
-          {isPending ? "Signing in..." : "Submit"}
+          Submit
         </button>
 
         <p className="text-center py-[10px]">or</p>

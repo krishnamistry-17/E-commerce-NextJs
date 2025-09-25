@@ -17,12 +17,12 @@ const Page = () => {
   return (
     <div className="max-w-[1640px] mx-auto xl:px-[143px] px-2 pt-[55px]">
       <Categories />
-      <PopularProduct />
-      <DailySells />
+       <PopularProduct />
+     {/* <DailySells />
       <DealsDay />
       <Products />
       <Banner />
-      <Advertise />
+      <Advertise /> */}
     </div>
   );
 };

@@ -158,11 +158,16 @@ export async function signInWithGoogle() {
 
 export async function forgotPassword(formData: FormData) {
   const supabase = await createClient();
-
+ 
   const { error } = await supabase.auth.resetPasswordForEmail(
     formData.get("email") as string,
     { redirectTo: `${process.env.NEXT_URL}/reset-password` }
   );
+
+
+  if (error) {
+    console.log("Supabase reset password error:", error.message);
+  }
 
   if (error) {
     return {
@@ -173,16 +178,8 @@ export async function forgotPassword(formData: FormData) {
   return { status: "success" };
 }
 
-export async function resetPassword(formData: FormData, code: string) {
+export async function resetPassword(formData: FormData) {
   const supabase = await createClient();
-
-  const { error: codeError } = await supabase.auth.exchangeCodeForSession(code);
-
-  if (codeError) {
-    return {
-      status: codeError.message,
-    };
-  }
 
   const { error } = await supabase.auth.updateUser({
     password: formData.get("password") as string,

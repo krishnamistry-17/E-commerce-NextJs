@@ -17,6 +17,8 @@ import {
   footersecond,
   footerthird,
 } from "@/data/product";
+import { AuthProvider } from "./context/AuthContext";
+import RehydrateAuth from "./component/RehydrateAuth";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const robotoMono = Roboto_Mono({
@@ -38,8 +40,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${robotoMono.variable} antialiased`}>
         <SessionProvider>
           <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <Elements stripe={stripePromise}>
+            <Elements stripe={stripePromise}>
+              <AuthProvider>
+                <RehydrateAuth />
                 <Header />
                 {children}
                 <ToastContainer />
@@ -49,8 +52,8 @@ export default function RootLayout({
                   footerthird={footerthird}
                   footerheadings={footerheadings}
                 />
-              </Elements>
-            </PersistGate>
+              </AuthProvider>
+            </Elements>
           </Provider>
         </SessionProvider>
       </body>

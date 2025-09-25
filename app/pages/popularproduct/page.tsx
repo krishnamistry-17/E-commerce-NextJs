@@ -10,10 +10,20 @@ import axiosInstance from "@/lib/axios";
 import { toast } from "react-toastify";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import drop from "../../../public/svgs/drop.svg";
+import cart from "../../../public/svgs/cart.svg";
+import { apiRoutes } from "@/app/api/apiRoutes";
+
+interface Category {
+  productName: string;
+  image: string;
+  price: string;
+  stock: number;
+  id: string;
+}
 
 const PopularProduct = () => {
   const [data, setData] = useState([]);
-  const [product, setProducts] = useState<PopularProducts[]>([]);
+  const [product, setProducts] = useState<Category[]>([]);
   const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
@@ -26,27 +36,24 @@ const PopularProduct = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        console.error("No access token found, user is not authenticated.");
+        return;
+      }
+
       try {
-        const res = await axiosInstance.get<PopularProducts[]>(
-          "/popluarproducts"
-        );
-        setProducts(res.data);
+        const res = await axiosInstance.get(apiRoutes.GET_ALL_PRODUCT);
+        setProducts(res.data.data);
+        console.log("res.data.data ?????populsar:", res.data.data);
+        console.log("res???popular :", res);
       } catch (error) {
         console.error("Error fetching products", error);
       }
     };
-    const fetchProductsHeading = async () => {
-      try {
-        const res = await axiosInstance.get<PopularProductHeadings[]>(
-          "/popularproductheadings"
-        );
-        setHeadings(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
+
     fetchProducts();
-    fetchProductsHeading();
   }, []);
 
   const categoriesWiseTag: Record<string, string> = {
@@ -59,7 +66,7 @@ const PopularProduct = () => {
   const filteredProduct =
     activeTab === "All"
       ? product
-      : product?.filter((products) => products?.category === activeTab);
+      : product?.filter((products) => products?.productName === activeTab);
 
   const handleCart = (item: PopularProducts) => {
     dispatch(
@@ -102,15 +109,17 @@ const PopularProduct = () => {
           Popular Products
         </p>
         <div className="sm:flex gap-4 pt-4 md:pt-0">
-          {heading?.map((item, index) => (
+          {product?.map((item) => (
             <div
-              key={index}
-              onClick={() => setActiveTab(item?.title)}
+              key={item.id}
+              onClick={() => setActiveTab(item?.productName)}
               className={`cursor-pointer pt-2 xs375:pt-0  pl-[29px] xs375:pl-0 ${
-                activeTab === item?.title ? "text-shopbtn" : "text-regalblue"
+                activeTab === item?.productName
+                  ? "text-shopbtn"
+                  : "text-regalblue"
               }`}
             >
-              {item?.title}
+              {item?.productName}
             </div>
           ))}
         </div>
@@ -140,20 +149,20 @@ const PopularProduct = () => {
         {/* Dropdown menu */}
         {categoryMenu && (
           <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
-            {heading?.map((item, index) => (
+            {product?.map((item) => (
               <div
-                key={index}
+                key={item.id}
                 onClick={() => {
-                  setActiveTab(item?.title);
+                  setActiveTab(item?.productName);
                   setCategoryMenu(false);
                 }}
                 className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                  activeTab === item?.title
+                  activeTab === item?.productName
                     ? "text-shopbtn font-bold"
                     : "text-regalblue"
                 } hover:bg-gray-100`}
               >
-                {item?.title}
+                {item?.productName}
               </div>
             ))}
           </div>
@@ -167,78 +176,40 @@ const PopularProduct = () => {
             className="flex flex-col justify-between h-full rounded-[15px] border border-productborder relative cursor-pointer"
             onClick={() => handleDetails(item)}
           >
-            {/* Tag */}
             <div className="absolute top-0">
               <p
                 className={`w-[60px] h-[31px] text-white text-center text-xs py-[7px] rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full ${
-                  categoriesWiseTag[item?.tag]
+                  categoriesWiseTag[item?.price]
                 }`}
               >
-                {item?.tag}
+                {item?.price}
               </p>
             </div>
 
-            {/* Image */}
             <Image
               src={item?.image}
-              alt={item?.category}
+              alt={item?.productName}
               className="pt-6 px-6 w-full"
               width={25}
               height={25}
               unoptimized
             />
 
-            {/* Product Info */}
             <div className="px-6 pb-6 flex flex-col flex-grow">
-              <p className="text-sm text-graytext">{item?.category}</p>
               <p className="text-lg font-bold text-regalblue pt-2">
-                {item?.title}
+                {item?.productName}
               </p>
 
-              <div className="flex items-center gap-2 pt-2">
-                <Image
-                  src={item?.ratingimage}
-                  alt="rating"
-                  width={25}
-                  height={25}
-                  unoptimized
-                  className="w-[60px]"
-                />
-                <p className="text-sm text-ratingtext">{item?.rating}</p>
-              </div>
-
-              <p className="text-sm text-ratingtext pt-2">
-                By <span className="text-shopbtn">{item?.by}</span>
-              </p>
-
-              {/*  Bottom Sticky Section */}
               <div className="flex justify-between items-center pt-4 mt-auto">
-                {/* Price */}
                 <div>
                   <p className="text-lg font-bold text-shopbtn">
-                    {item?.newPrice}
+                    ₹{item?.price}
                     <span className="text-sm text-ratingtext pl-2 line-through">
-                      {item?.oldPrice}
+                      {item?.stock}
                     </span>
                   </p>
                 </div>
 
-                {/* Size Selector */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedSize(item?.size);
-                  }}
-                  className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
-                    selectedSize === item?.size
-                      ? "bg-shopbtn text-white"
-                      : "bg-white border border-shopbtn text-bgbrown"
-                  }`}
-                >
-                  {item?.size}g
-                </button>
-
-                {/* Cart */}
                 <div
                   className="flex items-center bg-cartbtn px-3 py-2 rounded"
                   onClick={(e) => {
@@ -250,7 +221,7 @@ const PopularProduct = () => {
                     <IoCheckmarkOutline className="text-shopbtn" />
                   ) : (
                     <Image
-                      src={item?.cartimage}
+                      src={cart}
                       alt="cart"
                       width={25}
                       height={25}
@@ -259,7 +230,7 @@ const PopularProduct = () => {
                     />
                   )}
                   <button className="text-sm font-bold text-shopbtn ml-1">
-                    {item?.cart}
+                    Add
                   </button>
                 </div>
               </div>

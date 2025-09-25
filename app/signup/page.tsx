@@ -3,15 +3,19 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { signup } from "../../actions/auth";
+import axiosInstance from "@/lib/axios";
+import { apiRoutes } from "../api/apiRoutes";
+import { useDispatch } from "react-redux";
+import { setAccessToken, setUser } from "../store/authSlice";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isPending] = useTransition();
-
   const [isShown, setIsShown] = useState(false);
+
   const [formData, setFormData] = useState({
-    username: "",
+    fullName: "",
     email: "",
     password: "",
   });
@@ -27,14 +31,34 @@ export default function SignUpPage() {
     e.preventDefault();
     setError("");
 
-    const form = new FormData(e.currentTarget);
+    const { fullName, email, password } = formData;
 
-    const result = await signup(form);
+    try {
+      // Make the API call
+      const response = await axiosInstance.post(apiRoutes.GET_SIGNUP, {
+        fullName,
+        email,
+        password,
+      });
 
-    if (result.status === "success") {
-      router.push("/signin");
-    } else {
-      setError(result.message || "Error in signup");
+      console.log("response:", response);
+
+      if (response.status === 200 || response.status === 201) {
+        const { accessToken, email } = response.data.data;
+
+        // Save the token to localStorage
+        localStorage.setItem("accessToken", accessToken);
+
+        // Optionally store user data (if you need it)
+        localStorage.setItem("user", JSON.stringify(email));
+        router.push("/signin");
+      } else {
+        setError("Signup failed");
+      }
+    } catch (error: any) {
+      setError(
+        error.response?.data?.message || error.message || "Signup error"
+      );
     }
   };
 
@@ -53,15 +77,15 @@ export default function SignUpPage() {
 
         <div className="mb-4">
           <label className="block text-regalblue text-[16px] font-quick-semibold-600">
-            Username
+            fullName
           </label>
           <input
             type="text"
-            name="username"
-            id="username"
-            value={formData.username}
+            name="fullName"
+            id="fullName"
+            value={formData.fullName}
             onChange={handleChange}
-            placeholder="username"
+            placeholder="fullName"
             className="w-full px-4 py-2 border rounded mt-1 focus:outline-none focus:ring-0"
             required
           />
@@ -102,13 +126,21 @@ export default function SignUpPage() {
           </div>
         </div>
 
+        <div className="mb-2">
+          <p>
+            alreday have an account?
+            <span className="pl-2 underline hover:text-blue-600">
+              <a href="/signin">Signin</a>
+            </span>
+          </p>
+        </div>
+
         {/* ... submit */}
         <button
           type="submit"
-          disabled={isPending}
           className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
         >
-          {isPending ? "Signing up..." : "Sign Up"}
+          Sign Up
         </button>
       </form>
     </div>

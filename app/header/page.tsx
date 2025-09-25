@@ -13,35 +13,33 @@ import BrowseCategories from "../browsecategory/page";
 import WishListIcon from "../pages/wishlisticon/page";
 import { useRouter } from "next/navigation";
 import Search from "../pages/search/page";
-import Logout from "../logout/page";
-import { createClient } from "@/utils/supabase/client";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { logout, setAccessToken, setUser } from "../store/authSlice";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  console.log("user :", user);
   const router = useRouter();
 
+  const dispatch = useDispatch();
+  const { accessToken, user } = useSelector((state: RootState) => state.auth);
+
+
   useEffect(() => {
-    const supabase = createClient();
+    const storedToken = localStorage.getItem("accessToken");
+    const storedUser = localStorage.getItem("user");
 
-    // Get current user on mount
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
+    if (storedToken && storedUser) {
+      dispatch(setAccessToken(storedToken));
+      dispatch(setUser(JSON.parse(storedUser)));
+    }
+  }, [dispatch]);
 
-    // // Subscribe to auth changes
-    // const { data: authListener } = supabase.auth.onAuthStateChange(
-    //   (event, session) => {
-    //     setUser(session?.user);
-    //   }
-    // );
-
-    // // Cleanup subscription on unmount
-    // return () => {
-    //   authListener.subscription.unsubscribe();
-    // };
-  }, []);
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem("accessToken");
+    router.push("/signin");
+  };
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -74,7 +72,7 @@ const Navbar = () => {
             <CartIcon />
           </Link>
 
-          {user ? (
+          {accessToken ? (
             <>
               <div onClick={() => router.push("/user-profile")}>
                 <button className="px-4 py-1 rounded border border-black ">
@@ -82,7 +80,13 @@ const Navbar = () => {
                 </button>
               </div>
               <div>
-                <Logout />
+                <button
+                  onClick={handleLogout}
+                  type="submit"
+                  className="px-4 py-1 rounded border border-black "
+                >
+                  Logout
+                </button>
               </div>
             </>
           ) : (
@@ -132,28 +136,32 @@ const Navbar = () => {
                 Contact
               </Link>
 
-              {user ? (
+              {accessToken ? (
                 <>
                   <div onClick={() => router.push("/user-profile")}>
-                    <button className="px-4 py-1 rounded border border-black ">
-                      User Profile
-                    </button>
+                    <button className=" py-1 text-start ">User Profile</button>
                   </div>
                   <div>
-                    <Logout />
+                    <button
+                      onClick={handleLogout}
+                      type="submit"
+                      className=" py-1 text-start "
+                    >
+                      Logout
+                    </button>
                   </div>
                 </>
               ) : (
                 <>
                   <button
                     onClick={() => router.push("/signin")}
-                    className="px-4 py-1 rounded border border-black "
+                    className=" py-1 text-start "
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => router.push("/signup")}
-                    className="px-4 py-1 rounded border border-black "
+                    className=" py-1 text-start "
                   >
                     Sign Up
                   </button>
@@ -686,6 +694,61 @@ export default Navbar;
   };
   
   export default CheckOut;
+  ///////////////////////////
+  const someApiCall = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (!accessToken) {
+    console.error("No access token found, user is not authenticated.");
+    return;
+  }
+
+  try {
+    const response = await axiosInstance.get("/some-protected-route", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,  // Use the token from localStorage
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+return (
+  <div>
+    <h2>Categories</h2>
+    <div className="categories-list">
+      {categories.map((categoryItem) => (
+        <div key={categoryItem._id} className="category-section">
+          <h3>{categoryItem.category}</h3>
+          <Image
+            src={categoryItem.image}
+            alt={categoryItem.category}
+            width={200}
+            height={100}
+          />
+          <div className="products-list">
+            {categoryItem.categoryProduct.map((product) => (
+              <div key={product._id} className="product-card">
+                <Image
+                  src={product.image}
+                  alt={product.productName}
+                  width={100}
+                  height={100}
+                />
+                <p>{product.productName}</p>
+                <p>Price: {product.price}</p>
+                <p>Stock: {product.stock}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
   
   */
 }
