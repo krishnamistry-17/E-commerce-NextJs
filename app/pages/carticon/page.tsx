@@ -3,7 +3,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import Link from "next/link";
-import Image from "next/image";
 
 const CartIcon = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);

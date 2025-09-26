@@ -1,5 +1,5 @@
-///Volumes/System/E-commerce-NextJs/my-next-app/app/payment/page.tsx
 "use client";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import CheckoutForm from "../pages/checkout/chekoutForm";
@@ -10,22 +10,12 @@ const PaymentPage = () => {
   const fname = searchParams.get("fname") || "";
   const lname = searchParams.get("lname") || "";
   const email = searchParams.get("email") || "";
-  const phone = searchParams.get("phone") || "";
-  const city = searchParams.get("city") || "";
-  const state = searchParams.get("state") || "";
-  const zipcode = searchParams.get("zipcode") || "";
-  const country = searchParams.get("country") || "";
-
   const clientSecret = searchParams.get("clientSecret") || "";
 
   return (
-    <div>
-      <CheckoutForm
-        customerName={`${fname}${lname}`}
-        customerEmail={email}
-        clientSecret={clientSecret}
-      />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutForm customerName={`${fname} ${lname}`} customerEmail={email} />
+    </Suspense>
   );
 };
 

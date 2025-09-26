@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import SignInButton from "../component/SignInButton";
 import axiosInstance from "@/lib/axios";
@@ -49,10 +49,12 @@ const Signin = () => {
       } else {
         setError("Signin failed");
       }
-    } catch (error: any) {
-      setError(
-        error.response?.data?.message || error.message || "Signin error"
-      );
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message || "Signin error");
+      } else {
+        setError("Signin error");
+      }
     }
   };
 
@@ -104,7 +106,7 @@ const Signin = () => {
 
         <div>
           <p className="pb-2">
-            don't have an account?
+            dont have an account?
             <span className="pl-2 underline hover:text-blue-700">
               <a href="/signup">Signup</a>
             </span>

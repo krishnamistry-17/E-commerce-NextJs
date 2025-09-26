@@ -30,7 +30,12 @@ const inputStyles = {
   },
 };
 
-const CheckoutForm = ({ customerName, customerEmail }: any) => {
+type CheckoutFormProps = {
+  customerName: string;
+  customerEmail: string;
+};
+
+const CheckoutForm = ({ customerName, customerEmail }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -43,7 +48,7 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
   const USD_TO_INR_RATE = 91.6422;
 
   const totalUSD = cartItems.reduce(
-    (sum, item) => sum + item.newPrice * item.quantity,
+    (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
   const totalINR = totalUSD * USD_TO_INR_RATE;
@@ -78,6 +83,12 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
       return;
     }
 
+    if (!clientSecret) {
+      toast.error("Payment client secret is not ready.");
+      setLoading(false);
+      return;
+    }
+
     const cardNumberElement = elements.getElement(CardNumberElement);
     if (!cardNumberElement) {
       toast.error("Card details not entered.");
@@ -86,7 +97,6 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
     }
 
     setLoading(true);
-  
 
     const { error, paymentIntent } = await stripe.confirmCardPayment(
       clientSecret,
@@ -174,7 +184,7 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
           </p>
 
           {cartItems.map((item, index) => {
-            const itemTotalUSD = item?.newPrice * item?.quantity;
+            const itemTotalUSD = Number(item?.price) * item?.quantity;
             const itemTotalINR = itemTotalUSD * USD_TO_INR_RATE;
 
             return (
@@ -182,7 +192,9 @@ const CheckoutForm = ({ customerName, customerEmail }: any) => {
                 className="flex items-center justify-between py-[16px]"
                 key={index}
               >
-                <p className="text-regalblue text-[16px]">{item?.title}</p>
+                <p className="text-regalblue text-[16px]">
+                  {item?.productName}
+                </p>
                 <p className="text-regalblue text-[16px] font-medium">
                   {selectedCurrency === "USD"
                     ? `$${itemTotalUSD.toFixed(2)}`

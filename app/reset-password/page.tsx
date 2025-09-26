@@ -21,7 +21,7 @@ const ResetPassword = () => {
     const form = new FormData(e.currentTarget);
     const code = searchParams.get("code");
 
-    const result = await resetPassword(form, code || "");
+    const result = await resetPassword(form || "");
 
     if (result.status === "success") {
       toast.success("Successfully updated");

@@ -1,13 +1,11 @@
 "use client";
 
 import { forgotPassword } from "@/actions/auth";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);

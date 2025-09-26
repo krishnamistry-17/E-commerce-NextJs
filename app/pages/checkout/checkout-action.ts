@@ -17,7 +17,7 @@ export const chekoutaction = async (formData: FormData): Promise<string> => {
   const items: CartItem[] = JSON.parse(itemJson);
 
   const totalAmount = items.reduce(
-    (sum, item) => sum + item.newPrice * item.quantity,
+    (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
 
@@ -30,5 +30,5 @@ export const chekoutaction = async (formData: FormData): Promise<string> => {
     },
   });
 
-  return paymentIntent.client_secret;
+  return paymentIntent.client_secret || "";
 };

@@ -23,7 +23,7 @@ const Cart = () => {
 
   //  Total price calculation
   const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.newPrice * item.quantity,
+    (acc, item) => acc + Number(item.price) * Number(item.quantity),
     0
   );
 
@@ -123,7 +123,7 @@ const Cart = () => {
                     <div className="flex gap-4">
                       <Image
                         src={item?.image}
-                        alt={item?.title}
+                        alt={item?.productName}
                         width={64}
                         height={64}
                         className="w-[80px] h-[80px] object-cover"
@@ -131,7 +131,7 @@ const Cart = () => {
                       />
                       <div>
                         <h3 className="lg:text-[18px] text-[16px] font-quick-bold-700 text-regalblue">
-                          {item?.title}
+                          {item?.productName}
                         </h3>
 
                         {/*  Quantity Controls */}
@@ -157,7 +157,7 @@ const Cart = () => {
 
                         <div className="md:flex items-center gap-[12px]">
                           <p className="text-sm text-gray-600 mt-1">
-                            Price: ${item?.newPrice?.toFixed(2)}
+                            Price: ${item?.price}
                           </p>
                           {/* <button className="bg-green-200 px-[8px] md:mt-0 mt-3 py-[6px] rounded-md">
                             {item?.size}g
@@ -168,7 +168,8 @@ const Cart = () => {
 
                     <div className="text-right lg:block hidden">
                       <p className="text-sm font-bold mb-2">
-                        Total: ${(item?.newPrice * item?.quantity).toFixed(2)}
+                        Total: $
+                        {(Number(item?.price) * item?.quantity).toFixed(2)}
                       </p>
                       <MdDelete
                         onClick={() => {
@@ -182,7 +183,8 @@ const Cart = () => {
 
                     <div className="lg:hidden flex items-center gap-2 pt-4">
                       <p className="text-sm font-bold mb-2 pt-2">
-                        Total: ${(item?.newPrice * item?.quantity).toFixed(2)}
+                        Total: $
+                        {(Number(item?.price) * item?.quantity).toFixed(2)}
                       </p>
                       <MdDelete
                         onClick={() => {

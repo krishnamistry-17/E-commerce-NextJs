@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { StaticImageData } from "next/image";
 
 export interface BlogDetails {
   id: number;

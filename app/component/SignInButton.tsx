@@ -13,7 +13,7 @@ export default function SignInButton() {
     startTransition(async () => {
       const result = await signInWithGitHub();
       if (result?.url) {
-        window.location.href = result.url; 
+        window.location.href = result.url;
       } else {
         console.error("GitHub login failed.");
       }
@@ -21,33 +21,32 @@ export default function SignInButton() {
   };
 
   return (
-      <div className=" space-y-5">
-        <button
-          type="button"
-          onClick={handleGithub}
-          className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700 flex items-center justify-center gap-[15px]"
-        >
-          Sign In with GitHub{" "}
-          <span>
-            <FaGithub />
-          </span>
-        </button>
+    <div className=" space-y-5">
+      <button
+        type="button"
+        onClick={handleGithub}
+        className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700 flex items-center justify-center gap-[15px]"
+      >
+        {isPending ? "signin" : "Sign In with GitHub"}{" "}
+        <span>
+          <FaGithub />
+        </span>
+      </button>
 
-        <button
-          type="button"
-          onClick={() =>
-            signIn("google", {
-              callbackUrl: "/",
-            })
-          }
-          className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700 flex items-center justify-center gap-[15px]"
-        >
-          Sign In with Google{" "}
-          <span>
-            <FaGoogle />
-          </span>
-        </button>
-      </div>
-    
+      <button
+        type="button"
+        onClick={() =>
+          signIn("google", {
+            callbackUrl: "/",
+          })
+        }
+        className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700 flex items-center justify-center gap-[15px]"
+      >
+        Sign In with Google{" "}
+        <span>
+          <FaGoogle />
+        </span>
+      </button>
+    </div>
   );
 }

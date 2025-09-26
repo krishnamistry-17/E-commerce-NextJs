@@ -22,8 +22,7 @@ const Navbar = () => {
   const router = useRouter();
 
   const dispatch = useDispatch();
-  const { accessToken, user } = useSelector((state: RootState) => state.auth);
-
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");

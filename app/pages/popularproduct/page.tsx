@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { PopularProductHeadings, PopularProducts } from "@/types/product";
 import { addToCart } from "../slice/cartSlice";
 import { showDetails } from "../slice/productDetailSlice";
 import axiosInstance from "@/lib/axios";
@@ -22,11 +21,9 @@ interface Category {
 }
 
 const PopularProduct = () => {
-  const [data, setData] = useState([]);
   const [product, setProducts] = useState<Category[]>([]);
-  const [heading, setHeadings] = useState<PopularProductHeadings[]>([]);
-  const [selectedSize, setSelectedSize] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState(heading[0]?.title || "All");
+
+  const [activeTab, setActiveTab] = useState("All");
   const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
@@ -68,34 +65,30 @@ const PopularProduct = () => {
       ? product
       : product?.filter((products) => products?.productName === activeTab);
 
-  const handleCart = (item: PopularProducts) => {
+  const handleCart = (item: Category) => {
     dispatch(
       addToCart({
         id: item.id,
-        title: item.title,
-        newPrice: item.newPrice,
+        productName: item?.productName,
         quantity: 1,
         image: item?.image,
-        size: item?.size,
+        stock: item?.stock,
+        price: item?.price,
       })
     );
     // Add this item ID to clicked cart IDs
-    setClickedCartIds((prev) => new Set(prev).add(item?.id));
+    setClickedCartIds((prev) => new Set(prev).add(Number(item?.id)));
     toast.success("Item added to cart");
   };
 
-  const handleDetails = (item: PopularProducts) => {
+  const handleDetails = (item: Category) => {
     dispatch(
       showDetails({
         id: item?.id,
-        title: item?.title,
-        newPrice: item?.newPrice,
         image: item?.image,
-        ratingimage: item?.ratingimage,
-        rating: item?.rating,
-        oldPrice: item?.oldPrice,
-        category: item?.category,
-        size: item?.size,
+        price: item?.price,
+        stock: item?.stock,
+        productName: item?.productName,
       })
     );
 
@@ -108,7 +101,15 @@ const PopularProduct = () => {
         <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
           Popular Products
         </p>
-        <div className="sm:flex gap-4 pt-4 md:pt-0">
+        <div className="sm:flex gap-4 flex-wrap pt-4 md:pt-0">
+          <div
+            onClick={() => setActiveTab("All")}
+            className={`cursor-pointer ${
+              activeTab === "All" ? "text-shopbtn font-bold" : "text-regalblue"
+            }`}
+          >
+            All
+          </div>
           {product?.map((item) => (
             <div
               key={item.id}
@@ -149,22 +150,34 @@ const PopularProduct = () => {
         {/* Dropdown menu */}
         {categoryMenu && (
           <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
-            {product?.map((item) => (
+            <div className="flex flex-col pl-2 gap-4 flex-wrap">
               <div
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item?.productName);
-                  setCategoryMenu(false);
-                }}
-                className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                  activeTab === item?.productName
+                onClick={() => setActiveTab("All")}
+                className={`cursor-pointer ${
+                  activeTab === "All"
                     ? "text-shopbtn font-bold"
                     : "text-regalblue"
-                } hover:bg-gray-100`}
+                }`}
               >
-                {item?.productName}
+                All
               </div>
-            ))}
+              {product?.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item?.productName);
+                    setCategoryMenu(false);
+                  }}
+                  className={`cursor-pointer py-2 px-4 rounded-[10px] ${
+                    activeTab === item?.productName
+                      ? "text-shopbtn font-bold"
+                      : "text-regalblue"
+                  } hover:bg-gray-100`}
+                >
+                  {item?.productName}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -217,7 +230,7 @@ const PopularProduct = () => {
                     handleCart(item);
                   }}
                 >
-                  {clickedCartIds.has(item?.id) ? (
+                  {clickedCartIds.has(Number(item?.id)) ? (
                     <IoCheckmarkOutline className="text-shopbtn" />
                   ) : (
                     <Image

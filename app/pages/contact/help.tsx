@@ -3,15 +3,9 @@ import { Contact } from "@/types/product";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
-const containerStyle = {
-  width: "100%",
-  height: "400px",
-};
 
-const defaultCenter = {
-  lat: 20.593683,
-  lng: 78.962883,
-};
+
+
 
 const Help = () => {
   const [product, setProduct] = useState<Contact[]>([]);

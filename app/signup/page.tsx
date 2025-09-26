@@ -1,17 +1,14 @@
 //app/pages/signup/page.tsx
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "../api/apiRoutes";
-import { useDispatch } from "react-redux";
-import { setAccessToken, setUser } from "../store/authSlice";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const [isPending] = useTransition();
+
   const [isShown, setIsShown] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -55,10 +52,12 @@ export default function SignUpPage() {
       } else {
         setError("Signup failed");
       }
-    } catch (error: any) {
-      setError(
-        error.response?.data?.message || error.message || "Signup error"
-      );
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message || "Signup error");
+      } else {
+        setError("Signup error");
+      }
     }
   };
 

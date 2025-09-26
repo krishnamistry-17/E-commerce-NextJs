@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 const CheckOut = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -25,9 +24,6 @@ const CheckOut = () => {
   const [zipcode, setZipCode] = useState<string>("");
   const [phone, setphone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-
-  const stripe = useStripe();
-  const elements = useElements();
 
   const handlePaymentChange = (method: string) => {
     setPaymentMethod(method);
@@ -320,10 +316,10 @@ const CheckOut = () => {
                   <div key={index} className="mb-[12px]">
                     <div className="flex items-center justify-between">
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        {item?.title} x{item?.quantity}
+                        {item?.productName} x{item?.quantity}
                       </p>
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        ${item?.newPrice * item?.quantity}
+                        ${Number(item?.price) * item?.quantity}
                       </p>
                     </div>
                   </div>
@@ -337,7 +333,7 @@ const CheckOut = () => {
                   <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
                     $
                     {cartItems.reduce(
-                      (acc, item) => acc + item?.newPrice * item?.quantity,
+                      (acc, item) => acc + Number(item?.price) * item?.quantity,
                       0
                     )}
                   </p>
@@ -351,7 +347,7 @@ const CheckOut = () => {
                   <p className="text-[16px] font-quick-bold-700 text-regalblue">
                     $
                     {cartItems.reduce(
-                      (acc, item) => acc + item?.newPrice * item?.quantity,
+                      (acc, item) => acc + Number(item?.price) * item?.quantity,
                       0
                     )}
                   </p>

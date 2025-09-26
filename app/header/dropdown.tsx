@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import drop from "../../public/svgs/drop.svg";
@@ -8,9 +9,9 @@ const TopbarDropdowns = () => {
 
   const [selectedLang, setSelectedLang] = useState("English");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-
-  const languageRef = useRef(null);
-  const currencyRef = useRef(null);
+  
+  const languageRef = useRef<HTMLDivElement | null>(null);
+  const currencyRef = useRef<HTMLDivElement | null>(null);
 
   const languages = ["Hindi", "Spanish", "French"];
   const currencies = ["₹", "EUR", "INR"];
@@ -39,10 +40,11 @@ const TopbarDropdowns = () => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
         languageRef.current &&
-        !languageRef.current?.contains(e.target as Node)
+        !languageRef.current.contains(e.target as Node)
       ) {
         setShowLangDropdown(false);
       }
+
       if (
         currencyRef.current &&
         !currencyRef.current?.contains(e.target as Node)

@@ -23,7 +23,7 @@ const RehydrateAuth = () => {
         console.error("Invalid user in localStorage:", err);
       }
     }
-  }, []);
+  }, [dispatch]);
 
   return null;
 };

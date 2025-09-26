@@ -1,326 +1,334 @@
-"use client";
-import { DailyBestSells, DailySells } from "@/types/product";
-import React, { useEffect, useState } from "react";
-import bestbanner from "../../../public/images/bestbanner.png";
-import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../slice/cartSlice";
-import axiosInstance from "@/lib/axios";
-import { showDetails } from "../slice/productDetailSlice";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { IoCheckmarkOutline } from "react-icons/io5";
-import drop from "../../../public/svgs/drop.svg";
+// "use client";
+// import { DailyBestSells, DailySells } from "@/types/product";
+// import React, { useEffect, useState } from "react";
+// import bestbanner from "../../../public/images/bestbanner.png";
+// import Image from "next/image";
+// import { useDispatch } from "react-redux";
+// import { addToCart } from "../slice/cartSlice";
+// import axiosInstance from "@/lib/axios";
+// import { showDetails } from "../slice/productDetailSlice";
+// import { useRouter } from "next/navigation";
+// import { toast } from "react-toastify";
+// import { IoCheckmarkOutline } from "react-icons/io5";
+// import drop from "../../../public/svgs/drop.svg";
 
-const DailySells = () => {
-  const [data, setData] = useState([]);
-  const [product, setProducts] = useState<DailySells[]>([]);
-  const [heading, setHeadings] = useState<DailyBestSells[]>([]);
-  const [selectedSize, setSelectedSize] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("All");
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
-  const [categoryMenu, setCategoryMenu] = useState(false);
-  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+// const DailySells = () => {
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await axiosInstance.get<DailySells[]>("/dailydatas");
-        setProducts(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
-    const fetchProductsheading = async () => {
-      try {
-        const res = await axiosInstance.get<DailyBestSells[]>("/dailysells");
-        setHeadings(res.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
-    fetchProducts();
-    fetchProductsheading();
-  }, []);
+//   const [product, setProducts] = useState<DailySells[]>([]);
+//   const [heading, setHeadings] = useState<DailyBestSells[]>([]);
+//   const [selectedSize, setSelectedSize] = useState<number | null>(null);
+//   const [activeTab, setActiveTab] = useState<string>("All");
+//   const dispatch = useDispatch();
+//   const router = useRouter();
+//   const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
+//   const [categoryMenu, setCategoryMenu] = useState(false);
+//   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
 
-  const categoriesWiseTag: Record<string, string> = {
-    "Save 35%": "bg-pinktag",
-    Sale: "bg-bluetag",
-    "Best Sale": "bg-shopbtn",
-    "Save 15%": "bg-orangetag",
-  };
+//   useEffect(() => {
+//     const fetchProducts = async () => {
+//       try {
+//         const res = await axiosInstance.get<DailySells[]>("/dailydatas");
+//         setProducts(res.data);
+//       } catch (error) {
+//         console.error("Error fetching products", error);
+//       }
+//     };
+//     const fetchProductsheading = async () => {
+//       try {
+//         const res = await axiosInstance.get<DailyBestSells[]>("/dailysells");
+//         setHeadings(res.data);
+//       } catch (error) {
+//         console.error("Error fetching products", error);
+//       }
+//     };
+//     fetchProducts();
+//     fetchProductsheading();
+//   }, []);
 
-  const filteredProduct = product?.filter(
-    (products) => products?.category === activeTab
-  );
+//   const categoriesWiseTag: Record<string, string> = {
+//     "Save 35%": "bg-pinktag",
+//     Sale: "bg-bluetag",
+//     "Best Sale": "bg-shopbtn",
+//     "Save 15%": "bg-orangetag",
+//   };
 
-  const handleCart = (item: DailySells) => {
-    dispatch(
-      addToCart({
-        id: item?.id,
-        title: item?.title,
-        newPrice: item?.newPrice,
-        quantity: 1,
-        image: item?.image,
-        size: item?.size,
-      })
-    );
+//   const filteredProduct = product?.filter(
+//     (products) => products?.category === activeTab
+//   );
 
-    // Add this item ID to clicked cart IDs
-    setClickedCartIds((prev) => new Set(prev).add(item?.id));
-    toast.success("Item added to cart");
-  };
+//   const handleCart = (item: DailySells) => {
+//     dispatch(
+//       addToCart({
+//         id: item?.id,
+//         title: item?.title,
+//         newPrice: item?.newPrice,
+//         quantity: 1,
+//         image: item?.image,
+//         size: item?.size,
+//       })
+//     );
 
-  const handleDetails = (item: DailySells) => {
-    console.log("item????dailysellss??????? :", item);
-    dispatch(
-      showDetails({
-        id: item?.id,
-        title: item?.title,
-        newPrice: item?.newPrice,
-        image: item?.image,
-        ratingimage: item?.ratingimage,
-        rating: item?.rating,
-        oldPrice: item?.oldPrice,
-        category: item?.category,
-        size: item?.size,
-      })
-    );
-    router.push(`/product/${item?.id}`);
-  };
+//     // Add this item ID to clicked cart IDs
+//     setClickedCartIds((prev) => new Set(prev).add(item?.id));
+//     toast.success("Item added to cart");
+//   };
 
-  return (
-    <>
-      <div className="pt-[50px]">
-        <div className="flex flex-col">
-          <div className="md:flex hidden justify-between items-center">
-            <div>
-              <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
-                Daily Best Sells
-              </p>
-            </div>
-            <div>
-              <p
-                className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] pt-[18px]
-              font-quick-semibold-600 text-regalblue 
-              md:flex items-center justify-between gap-[19.63px]
-              "
-              >
-                {heading?.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => setActiveTab(item?.title)}
-                      className={`cursor-pointer pt-2 xs375:pt-0 pl-[29px] xs375:pl-0
-                      ${
-                        activeTab === item?.title
-                          ? "text-shopbtn"
-                          : "text-regalblue"
-                      }
-                      `}
-                    >
-                      {item?.title}
-                    </div>
-                  );
-                })}
-              </p>
-            </div>
-          </div>
-          <div className="md:hidden justify-between items-center">
-            <div>
-              <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700 pb-4">
-                Daily Best Sells
-              </p>
-            </div>
-            {/* Dropdown trigger */}
-            <div
-              className="flex items-center justify-between w-full bg-white py-2 px-4 
-                          rounded-[50px] border border-gray-400 cursor-pointer"
-              onClick={toggleCategoryMenu}
-            >
-              <p className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}>
-                {activeTab}
-              </p>
-              <Image
-                src={drop}
-                alt="Dropdown Icon"
-                height={30}
-                width={30}
-                className="mr-2 ml-3"
-              />
-            </div>
+//   const handleDetails = (item: DailySells) => {
+//     console.log("item????dailysellss??????? :", item);
+//     dispatch(
+//       showDetails({
+//         id: item?.id,
+//         title: item?.title,
+//         newPrice: item?.newPrice,
+//         image: item?.image,
+//         ratingimage: item?.ratingimage,
+//         rating: item?.rating,
+//         oldPrice: item?.oldPrice,
+//         category: item?.category,
+//         size: item?.size,
+//       })
+//     );
+//     router.push(`/product/${item?.id}`);
+//   };
 
-            {/* Dropdown menu */}
-            {categoryMenu && (
-              <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
-                {heading?.map((item, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setActiveTab(item?.title);
-                      setCategoryMenu(false);
-                    }}
-                    className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                      activeTab === item?.title
-                        ? "text-shopbtn "
-                        : "text-regalblue"
-                    } `}
-                  >
-                    {item?.title}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="pt-[43px]">
-            <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 xl:gap-[24px] gap-4 items-stretch">
-              <>
-                <div className="h-full flex">
-                  <Image
-                    src={bestbanner}
-                    alt="bestbanner"
-                    width={25}
-                    height={25}
-                    unoptimized
-                    className="object-cover w-full h-full rounded-[15px]"
-                  />
-                </div>
-                {(activeTab === "All" ? product : filteredProduct)?.map(
-                  (item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="flex flex-col justify-between h-full min-h-[480px] rounded-[15px] border border-productborder relative"
-                        onClick={() => handleDetails(item)}
-                      >
-                        {/* Tag */}
-                        <div className="absolute top-0">
-                          <p
-                            className={`w-[90.23px] h-[31px] 
-        rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full
-        text-center text-[12px] text-white font-lato-regular-400 py-[7px]
-        ${categoriesWiseTag[item?.tag]}
-      `}
-                          >
-                            {item?.tag}
-                          </p>
-                        </div>
+//   return (
+//     <>
+//       <div className="pt-[50px]">
+//         <div className="flex flex-col">
+//           <div className="md:flex hidden justify-between items-center">
+//             <div>
+//               <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
+//                 Daily Best Sells
+//               </p>
+//             </div>
+//             <div>
+//               <p
+//                 className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] pt-[18px]
+//               font-quick-semibold-600 text-regalblue
+//               md:flex items-center justify-between gap-[19.63px]
+//               "
+//               >
+//                 {heading?.map((item, index) => {
+//                   return (
+//                     <div
+//                       key={index}
+//                       onClick={() => setActiveTab(item?.title)}
+//                       className={`cursor-pointer pt-2 xs375:pt-0 pl-[29px] xs375:pl-0
+//                       ${
+//                         activeTab === item?.title
+//                           ? "text-shopbtn"
+//                           : "text-regalblue"
+//                       }
+//                       `}
+//                     >
+//                       {item?.title}
+//                     </div>
+//                   );
+//                 })}
+//               </p>
+//             </div>
+//           </div>
+//           <div className="md:hidden justify-between items-center">
+//             <div>
+//               <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700 pb-4">
+//                 Daily Best Sells
+//               </p>
+//             </div>
+//             {/* Dropdown trigger */}
+//             <div
+//               className="flex items-center justify-between w-full bg-white py-2 px-4
+//                           rounded-[50px] border border-gray-400 cursor-pointer"
+//               onClick={toggleCategoryMenu}
+//             >
+//               <p className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}>
+//                 {activeTab}
+//               </p>
+//               <Image
+//                 src={drop}
+//                 alt="Dropdown Icon"
+//                 height={30}
+//                 width={30}
+//                 className="mr-2 ml-3"
+//               />
+//             </div>
 
-                        {/* Image */}
-                        <Image
-                          src={item?.image}
-                          alt={item?.category}
-                          width={25}
-                          height={25}
-                          unoptimized
-                          className="pt-[25px] px-[25px] w-full"
-                        />
+//             {/* Dropdown menu */}
+//             {categoryMenu && (
+//               <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
+//                 {heading?.map((item, index) => (
+//                   <div
+//                     key={index}
+//                     onClick={() => {
+//                       setActiveTab(item?.title);
+//                       setCategoryMenu(false);
+//                     }}
+//                     className={`cursor-pointer py-2 px-4 rounded-[10px] ${
+//                       activeTab === item?.title
+//                         ? "text-shopbtn "
+//                         : "text-regalblue"
+//                     } `}
+//                   >
+//                     {item?.title}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+//           <div className="pt-[43px]">
+//             <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 xl:gap-[24px] gap-4 items-stretch">
+//               <>
+//                 <div className="h-full flex">
+//                   <Image
+//                     src={bestbanner}
+//                     alt="bestbanner"
+//                     width={25}
+//                     height={25}
+//                     unoptimized
+//                     className="object-cover w-full h-full rounded-[15px]"
+//                   />
+//                 </div>
+//                 {(activeTab === "All" ? product : filteredProduct)?.map(
+//                   (item, index) => {
+//                     return (
+//                       <div
+//                         key={index}
+//                         className="flex flex-col justify-between h-full min-h-[480px] rounded-[15px] border border-productborder relative"
+//                         onClick={() => handleDetails(item)}
+//                       >
+//                         {/* Tag */}
+//                         <div className="absolute top-0">
+//                           <p
+//                             className={`w-[90.23px] h-[31px]
+//         rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full
+//         text-center text-[12px] text-white font-lato-regular-400 py-[7px]
+//         ${categoriesWiseTag[item?.tag]}
+//       `}
+//                           >
+//                             {item?.tag}
+//                           </p>
+//                         </div>
 
-                        {/* Product Content */}
-                        <div className="flex flex-col px-[25px] flex-grow">
-                          {/* Category + Title */}
-                          <p className="text-[12px] text-graytext font-lato-regular-400">
-                            {item?.category}
-                          </p>
-                          <p className="text-[16px] font-quick-bold-700 text-regalblue pt-[8px]">
-                            {item?.title}
-                          </p>
+//                         {/* Image */}
+//                         <Image
+//                           src={item?.image}
+//                           alt={item?.category}
+//                           width={25}
+//                           height={25}
+//                           unoptimized
+//                           className="pt-[25px] px-[25px] w-full"
+//                         />
 
-                          {/* Rating */}
-                          <div className="flex gap-[7.9px] items-center pt-[8px]">
-                            <Image
-                              src={item?.ratingimage}
-                              alt="rating"
-                              width={25}
-                              height={25}
-                              unoptimized
-                              className="w-[60px]"
-                            />
-                          </div>
+//                         {/* Product Content */}
+//                         <div className="flex flex-col px-[25px] flex-grow">
+//                           {/* Category + Title */}
+//                           <p className="text-[12px] text-graytext font-lato-regular-400">
+//                             {item?.category}
+//                           </p>
+//                           <p className="text-[16px] font-quick-bold-700 text-regalblue pt-[8px]">
+//                             {item?.title}
+//                           </p>
 
-                          {/* Price */}
-                          <div className="flex justify-between items-center pt-[22px]">
-                            <div>
-                              <p className="text-[18px] font-quick-bold-700 text-shopbtn">
-                                {item?.newPrice}
-                                <span className="text-[14px] text-ratingtext pl-[10.46px] line-through">
-                                  {item?.oldPrice}
-                                </span>
-                              </p>
-                            </div>
-                          </div>
+//                           {/* Rating */}
+//                           <div className="flex gap-[7.9px] items-center pt-[8px]">
+//                             <Image
+//                               src={item?.ratingimage}
+//                               alt="rating"
+//                               width={25}
+//                               height={25}
+//                               unoptimized
+//                               className="w-[60px]"
+//                             />
+//                           </div>
 
-                          {/* Range */}
-                          <div className="pt-[8px]">
-                            <input
-                              type="range"
-                              className="accent-shopbtn rounded-[4px]"
-                            />
-                          </div>
+//                           {/* Price */}
+//                           <div className="flex justify-between items-center pt-[22px]">
+//                             <div>
+//                               <p className="text-[18px] font-quick-bold-700 text-shopbtn">
+//                                 {item?.newPrice}
+//                                 <span className="text-[14px] text-ratingtext pl-[10.46px] line-through">
+//                                   {item?.oldPrice}
+//                                 </span>
+//                               </p>
+//                             </div>
+//                           </div>
 
-                          {/* Size + Sold Info */}
-                          <div className="flex justify-between items-center py-[8px]">
-                            <p className="text-[14px] font-lato-regular-400 text-ratingtext">
-                              {item?.sold}
-                              <span className="text-shopbtn pl-1">
-                                {item?.soldnumber}
-                              </span>
-                            </p>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedSize(item?.size);
-                              }}
-                              className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
-                                selectedSize === item?.size
-                                  ? "bg-shopbtn text-white"
-                                  : "bg-white border border-shopbtn text-bgbrown"
-                              }`}
-                            >
-                              {item?.size}g
-                            </button>
-                          </div>
+//                           {/* Range */}
+//                           <div className="pt-[8px]">
+//                             <input
+//                               type="range"
+//                               className="accent-shopbtn rounded-[4px]"
+//                             />
+//                           </div>
 
-                          {/* Add to Cart Button */}
-                          <div className="mt-auto pb-4">
-                            <div
-                              className="flex items-center justify-center gap-2 bg-cartbtn rounded-[4px] h-[36px] cursor-pointer"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleCart(item);
-                              }}
-                            >
-                              {clickedCartIds.has(item?.id) ? (
-                                <IoCheckmarkOutline className="text-shopbtn" />
-                              ) : (
-                                <Image
-                                  src={item?.cartimage}
-                                  alt="cart"
-                                  width={25}
-                                  height={25}
-                                  unoptimized
-                                  className="w-5"
-                                />
-                              )}
-                              <button className="text-[14px] font-lato-bold-700 text-shopbtn">
-                                {item?.cart}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }
-                )}
-              </>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+//                           {/* Size + Sold Info */}
+//                           <div className="flex justify-between items-center py-[8px]">
+//                             <p className="text-[14px] font-lato-regular-400 text-ratingtext">
+//                               {item?.sold}
+//                               <span className="text-shopbtn pl-1">
+//                                 {item?.soldnumber}
+//                               </span>
+//                             </p>
+//                             <button
+//                               onClick={(e) => {
+//                                 e.stopPropagation();
+//                                 setSelectedSize(item?.size);
+//                               }}
+//                               className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
+//                                 selectedSize === item?.size
+//                                   ? "bg-shopbtn text-white"
+//                                   : "bg-white border border-shopbtn text-bgbrown"
+//                               }`}
+//                             >
+//                               {item?.size}g
+//                             </button>
+//                           </div>
+
+//                           {/* Add to Cart Button */}
+//                           <div className="mt-auto pb-4">
+//                             <div
+//                               className="flex items-center justify-center gap-2 bg-cartbtn rounded-[4px] h-[36px] cursor-pointer"
+//                               onClick={(e) => {
+//                                 e.stopPropagation();
+//                                 handleCart(item);
+//                               }}
+//                             >
+//                               {clickedCartIds.has(item?.id) ? (
+//                                 <IoCheckmarkOutline className="text-shopbtn" />
+//                               ) : (
+//                                 <Image
+//                                   src={item?.cartimage}
+//                                   alt="cart"
+//                                   width={25}
+//                                   height={25}
+//                                   unoptimized
+//                                   className="w-5"
+//                                 />
+//                               )}
+//                               <button className="text-[14px] font-lato-bold-700 text-shopbtn">
+//                                 {item?.cart}
+//                               </button>
+//                             </div>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     );
+//                   }
+//                 )}
+//               </>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default DailySells;
+
+import React from "react";
+
+const page = () => {
+  return <div>page</div>;
 };
 
-export default DailySells;
+export default page;

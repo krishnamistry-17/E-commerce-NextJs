@@ -1,8 +1,5 @@
 "use client";
-import { BannerHeading, Heading } from "@/types/product";
 import Image from "next/image";
-import next from "../../../public/svgs/next.svg";
-import previous from "../../../public/svgs/previous.svg";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import food from "../../../public/images/food.png";
@@ -26,15 +23,12 @@ interface Category {
   image: string;
 }
 
-export const Categories = () => {
+const Categories = () => {
   const [product, setProducts] = useState<Category[]>([]);
-
-  const [heading, setHeadings] = useState<Heading[]>([]);
-  const [bannerheading, setBannerHeading] = useState<BannerHeading[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("Beverages");
+  const [activeTab, setActiveTab] = useState<string>("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
-  const [visiblecount, setVisibleCount] = useState(5);
+  // const [visiblecount, setVisibleCount] = useState(5);
   const router = useRouter();
 
   useEffect(() => {
@@ -49,7 +43,7 @@ export const Categories = () => {
       try {
         const res = await axiosInstance.get(apiRoutes.GET_ALL_CATEGORY);
         setProducts(res.data.data);
-
+        console.log("res.data.data ????/category:", res.data.data);
       } catch (error) {
         console.error("Error fetching products", error);
       }
@@ -66,9 +60,17 @@ export const Categories = () => {
     "Pet Foods": "bg-bgfruit7",
   };
 
-  const filteredProduct = product.filter(
-    (products) => products?.category === activeTab
-  );
+  // const allProducts = product.flatMap((category) =>
+  //   category.categoryProduct.map((product) => ({
+  //     ...product,
+  //     category: category.category, // retain category info
+  //   }))
+  // );
+
+  const filteredProduct =
+    activeTab === "All"
+      ? product
+      : product.filter((products) => products?.category === activeTab);
 
   // useEffect(() => {
   //   const updateCount = () => {
@@ -139,12 +141,13 @@ export const Categories = () => {
           </div>
         </div>
       </div>
+
       <div>
         <div className="flex flex-col pt-[55px]">
           <div className="md:flex justify-between items-center">
             <div className="md:flex hidden justify-between  items-center pb-[43px]">
               <div>
-                <p className="lg:text-[32px] text-[27px] font-quick-bold-700 text-regalblue">
+                <p className="xl:text-[32px] lg:text-[25px] text-[27px] font-quick-bold-700 text-regalblue">
                   Featured Categories
                 </p>
               </div>
@@ -154,21 +157,31 @@ export const Categories = () => {
                   text-regalblue
                   xs375:flex items-center gap-[27.5px]"
                 >
-                  {product?.map((item) => {
-                    return (
+                  <div className="flex gap-4 flex-wrap">
+                    <div
+                      onClick={() => setActiveTab("All")}
+                      className={`cursor-pointer ${
+                        activeTab === "All"
+                          ? "text-shopbtn font-bold"
+                          : "text-regalblue"
+                      }`}
+                    >
+                      All
+                    </div>
+                    {product?.map((item) => (
                       <div
                         key={item._id}
                         onClick={() => setActiveTab(item?.category)}
-                        className={` cursor-pointer  pt-2 xs375:pt-0  ${
+                        className={`cursor-pointer ${
                           activeTab === item?.category
-                            ? " text-shopbtn"
+                            ? "text-shopbtn font-bold"
                             : "text-regalblue"
                         }`}
                       >
                         {item?.category}
                       </div>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </p>
               </div>
             </div>
@@ -201,37 +214,33 @@ export const Categories = () => {
               {/* Dropdown menu */}
               {categoryMenu && (
                 <div className="mt-2 bg-white border border-gray-400 rounded-[20px] p-2">
-                  {product?.map((item) => (
+                  <div className="flex flex-col pl-2 gap-4 flex-wrap">
                     <div
-                      key={item._id}
-                      onClick={() => {
-                        setActiveTab(item?.category);
-                        setCategoryMenu(false);
-                      }}
-                      className={`cursor-pointer py-2 px-4 rounded-[10px] ${
-                        activeTab === item?.category
-                          ? "text-shopbtn "
+                      onClick={() => setActiveTab("All")}
+                      className={`cursor-pointer ${
+                        activeTab === "All"
+                          ? "text-shopbtn font-bold"
                           : "text-regalblue"
-                      } `}
+                      }`}
                     >
-                      {item?.category}
+                      All
                     </div>
-                  ))}
+                    {product?.map((item) => (
+                      <div
+                        key={item._id}
+                        onClick={() => setActiveTab(item?.category)}
+                        className={`cursor-pointer ${
+                          activeTab === item?.category
+                            ? "text-shopbtn font-bold"
+                            : "text-regalblue"
+                        }`}
+                      >
+                        {item?.category}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
-
-            <div className="lg:flex items-center justify-between gap-2.5 hidden">
-              <span className="bg-bggray w-[40px] h-[40px] rounded-full">
-                <Image
-                  src={previous}
-                  alt="previous"
-                  className=" items-center m-2"
-                />
-              </span>
-              <span className="bg-bggray w-[40px] h-[40px] rounded-full">
-                <Image src={next} alt="next" className=" items-center m-2" />
-              </span>
             </div>
           </div>
 
@@ -239,38 +248,42 @@ export const Categories = () => {
             className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-[24px] 
           rounded-[10px] p-4 text-center items-center"
           >
-            {filteredProduct?.map((item, index) => {
-              return (
+            {filteredProduct
+              ?.flatMap((category) =>
+                category.categoryProduct.map((product) => ({
+                  ...product,
+                  category: category.category,
+                }))
+              )
+              .map((product) => (
                 <div
-                  key={index}
-                  className={`py-[22px]
-                  ${categoryBgColors[item?.category]}
-                  `}
+                  key={product._id}
+                  className={`py-[22px] px-4 rounded-[10px] text-center ${
+                    categoryBgColors[product.category] || "bg-white"
+                  }`}
                 >
-                  <div>
-                    {item.categoryProduct.map((aproduct) => (
-                      <div key={aproduct._id}>
-                        <Image
-                          src={aproduct?.image}
-                          alt={aproduct?.productName}
-                          width={25}
-                          height={25}
-                          unoptimized
-                          className=" items-center justify-center w-full"
-                        />
-                        <p>{aproduct?.productName}</p>
-                        <p>
-                          ₹{aproduct?.price}
-                          <span className="pl-1">{aproduct?.stock}</span>
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <Image
+                    src={product.image}
+                    alt={product.productName}
+                    width={200}
+                    height={200}
+                    className="mx-auto mb-2"
+                    unoptimized
+                  />
+                  <p className="text-regalblue font-semibold">
+                    {product.productName}
+                  </p>
+                  <p className="text-bgbrown">
+                    ₹{product.price}
+                    <span className="text-gray-400 text-sm pl-2">
+                      (Stock: {product.stock})
+                    </span>
+                  </p>
                 </div>
-              );
-            })}
+              ))}
           </div>
         </div>
+
         {/* <div className="pt-[25px] pb-[56px] pl-[12px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 rounded-[10px]">
             {bannerheading.map((item, index) => (
@@ -299,3 +312,5 @@ export const Categories = () => {
     </>
   );
 };
+
+export default Categories;

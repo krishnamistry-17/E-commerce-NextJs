@@ -5,7 +5,6 @@ import food from "../../../public/images/food.png";
 import Image from "next/image";
 import { FiSend } from "react-icons/fi";
 
-
 const Banner = () => {
   return (
     <div className="py-[40px]">
@@ -21,7 +20,7 @@ const Banner = () => {
             Stay home & get your daily needs from our shop
           </p>
           <p className="text-[18px] text-bgbrown font-lato-regular-400 pt-[20px] md:pb-[46px]">
-            Start You'r Daily Shopping with{" "}
+            Start Your Daily Shopping with{" "}
             <span className="text-shopbtn">Nest Mart</span>
           </p>
 

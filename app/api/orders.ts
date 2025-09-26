@@ -22,7 +22,10 @@ type OrderBody = {
   paymentMethod: "cod" | "bank" | "card";
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -32,17 +35,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Validate required fields
     const requiredFields = [
-      "fname","lname","email","phone","country","street","city","state","zipcode","cartItems","paymentMethod"
+      "fname",
+      "lname",
+      "email",
+      "phone",
+      "country",
+      "street",
+      "city",
+      "state",
+      "zipcode",
+      "cartItems",
+      "paymentMethod",
     ];
-    for (let field of requiredFields) {
-      if (!(body as any)[field]) {
+    const bodyObj = body as Record<string, unknown>;
+
+    for (const field of requiredFields) {
+      if (!bodyObj[field]) {
         return res.status(400).json({ error: `Missing field ${field}` });
       }
     }
 
     // Prepare order object
     const newOrder = {
-      id: Date.now().toString(),  // or use UUID
+      id: Date.now().toString(), // or use UUID
       fname: body.fname,
       lname: body.lname,
       email: body.email,
@@ -56,7 +71,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       items: body.cartItems,
       payment_method: body.paymentMethod,
-      payment_status: body.paymentMethod === "cod" ? "pending" : "requires_payment",
+      payment_status:
+        body.paymentMethod === "cod" ? "pending" : "requires_payment",
       order_status: "processing",
       created_at: new Date().toISOString(),
     };
@@ -64,8 +80,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // TODO: Save newOrder to your DB here
 
     res.status(200).json({ order: newOrder });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in orders API:", error);
-    res.status(500).json({ error: error.message });
+
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error occurred." });
+    }
   }
 }

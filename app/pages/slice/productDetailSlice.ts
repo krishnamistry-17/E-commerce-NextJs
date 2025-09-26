@@ -1,16 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StaticImageData } from "next/image";
+
 
 export interface ProductDetails {
   id: string;
-  title: string;
-  newPrice: number;
-  image: StaticImageData;
-  ratingimage: StaticImageData;
-  rating: string;
-  oldPrice: number;
-  category: string;
-  size: number;
+  productName: string;
+  price: string;
+  image: string;
+  stock: number;
 }
 
 interface ProductDetailState {
