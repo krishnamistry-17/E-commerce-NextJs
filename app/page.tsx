@@ -1,11 +1,9 @@
 import React from "react";
 
 import PopularProduct from "./pages/popularproduct/page";
-import DailySells from "./pages/dailysells/page";
-import DealsDay from "./pages/deals/page";
-import Products from "./pages/products/page";
+
 import Banner from "./pages/banner/page";
-import Advertise from "./pages/advertise/page";
+
 import Categories from "./pages/categories/page";
 
 const Page = () => {
