@@ -1,182 +1,195 @@
-// import axiosInstance from "@/lib/axios";
-// import { RelatedProducts } from "@/types/product";
-// import Image from "next/image";
-// import { useRouter } from "next/navigation";
-// import React, { useEffect, useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { addToCart } from "../pages/slice/cartSlice";
-// import { showDetails } from "../pages/slice/productDetailSlice";
+"use client";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import axiosInstance from "@/lib/axios";
+import { toast } from "react-toastify";
+import { IoCheckmarkOutline } from "react-icons/io5";
+import drop from "../../public/svgs/drop.svg";
+import cart from "../../public/svgs/cart.svg";
+import { apiRoutes } from "@/app/api/apiRoutes";
 
-// const Relatedproducts = () => {
-//   const [product, setProduct] = useState<RelatedProducts[]>([]);
-//   const [selectedSize, setSelectedSize] = useState<number | null>(null);
-//   const dispatch = useDispatch();
-//   const router = useRouter();
+interface Category {
+  productName: string;
+  image: string;
+  price: string;
+  stock: number;
+  id: string;
+}
 
-//   useEffect(() => {
-//     const fetchProducts = async () => {
-//       try {
-//         const res = await axiosInstance.get<RelatedProducts[]>(
-//           "/PopularProducts"
-//         );
-//         setProduct(res.data);
-//       } catch (error) {
-//         console.error("Error fetching products", error);
-//       }
-//     };
-//     fetchProducts();
-//   }, []);
+const RelatedProduct = () => {
+  const [product, setProducts] = useState<Category[]>([]);
+  console.log("product :", product);
+  const params = useParams();
+  const [activeTab, setActiveTab] = useState("All");
+  const [clickedCartIds, setClickedCartIds] = useState<Set<string>>(new Set());
+  const [categoryMenu, setCategoryMenu] = useState(false);
+  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+  const router = useRouter();
+  const id = params?.id as string;
 
-//   const categoriesWiseTag: Record<string, string> = {
-//     Hot: "bg-pinktag",
-//     Sale: "bg-bluetag",
-//     New: "bg-shopbtn",
-//     "-14%": "bg-orangetag",
-//   };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const accessToken = localStorage.getItem("accessToken");
 
-//   const handleCart = (item: RelatedProducts) => {
-//     dispatch(
-//       addToCart({
-//         id: item?.id,
-//         title: item?.title,
-//         newPrice: item?.newPrice,
-//         quantity: 1,
-//         image: item?.image,
-//         size: item?.size,
-//       })
-//     );
-//   };
+      if (!accessToken) {
+        console.error("No access token found, user is not authenticated.");
+        return;
+      }
 
-//   const handleDetails = (item: RelatedProducts) => {
-//     dispatch(
-//       showDetails({
-//         id: item?.id,
-//         title: item?.title,
-//         newPrice: item?.newPrice,
-//         image: item?.image,
-//         ratingimage: item?.ratingimage,
-//         rating: item?.rating,
-//         oldPrice: item?.oldPrice,
-//         category: item?.category,
-//         size: item?.size,
-//       })
-//     );
-//     router.push(`/product/${item?.id}`);
-//   };
+      try {
+        const res = await axiosInstance.get(apiRoutes.GET_ALL_PRODUCT);
+        setProducts(res.data.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
 
-//   return (
-//     <div
-//       className="max-w-[1082.86px]
-//      rounded-[15px] xl:py-[41px]  py-5"
-//     >
-//       <p className="text-[32px] font-quick-bold-700 text-regalblue pb-4">
-//         Related Product
-//       </p>
-//       <div className="w-full bg-gray-200 rounded-full h-[3px] mb-4 dark:bg-gray-700">
-//         <div className="bg-progessbtn h-[3px] rounded-full dark:bg-shopbtn w-[23%]"></div>
-//       </div>
-//       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 pt-8">
-//         {product?.map((item, index) => (
-//           <div
-//             key={index}
-//             className="rounded-[15px] border border-productborder relative cursor-pointer"
-//             onClick={() => handleDetails(item)}
-//           >
-//             <div className="absolute top-0">
-//               <p
-//                 className={`w-[60px] h-[31px] text-white text-center text-xs py-[7px] rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full ${
-//                   categoriesWiseTag[item?.tag]
-//                 }`}
-//               >
-//                 {item?.tag}
-//               </p>
-//             </div>
-//             <Image
-//               src={item?.image}
-//               alt={item?.category}
-//               className="pt-6 px-6 w-full"
-//               width={25}
-//               height={25}
-//               unoptimized
-//             />
-//             <div className="px-6 pb-6">
-//               <p className="text-sm text-graytext">{item?.category}</p>
-//               <p className="text-lg font-bold text-regalblue pt-2">
-//                 {item?.title}
-//               </p>
-//               <div className="flex items-center gap-2 pt-2">
-//                 <Image
-//                   src={item?.ratingimage}
-//                   alt="rating"
-//                   width={25}
-//                   height={25}
-//                   unoptimized
-//                   className="  w-[60px]"
-//                 />
-//                 <p className="text-sm text-ratingtext">{item?.rating}</p>
-//               </div>
-//               <p className="text-sm text-ratingtext pt-2">
-//                 By <span className="text-shopbtn">{item?.by}</span>
-//               </p>
-//               <div className="flex justify-between items-center pt-4">
-//                 <div>
-//                   <p className="text-lg font-bold text-shopbtn">
-//                     {item?.newPrice}
-//                     <span className="text-sm text-ratingtext pl-2 line-through">
-//                       {item?.oldPrice}
-//                     </span>
-//                   </p>
-//                 </div>
+    fetchProducts();
+  }, []);
 
-//                 {/* Size Selector */}
-//                 <button
-//                   onClick={(e) => {
-//                     e.stopPropagation();
-//                     setSelectedSize(item?.size);
-//                   }}
-//                   className={`px-[10px] py-[7px] rounded-[5px] text-[14px] ${
-//                     selectedSize === item?.size
-//                       ? "bg-shopbtn text-white"
-//                       : "bg-white border border-shopbtn text-bgbrown"
-//                   }`}
-//                 >
-//                   {item?.size}g
-//                 </button>
+  const categoriesWiseTag: Record<string, string> = {
+    Hot: "bg-pinktag",
+    Sale: "bg-bluetag",
+    New: "bg-shopbtn",
+    "-14%": "bg-orangetag",
+  };
 
-//                 <div
-//                   className="flex items-center bg-cartbtn px-3 py-2 rounded"
-//                   onClick={(e) => {
-//                     e.stopPropagation();
-//                     handleCart(item);
-//                   }}
-//                 >
-//                   <Image
-//                     src={item?.cartimage}
-//                     alt="cart"
-//                     width={25}
-//                     height={25}
-//                     unoptimized
-//                     className="  w-full"
-//                   />
-//                   <button className="text-sm font-bold text-shopbtn ml-1">
-//                     {item?.cart}
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
+  const filteredProduct =
+    activeTab === "All"
+      ? product
+      : product?.filter((products) => products?.productName === activeTab);
 
-// export default Relatedproducts;
+  const handleCart = async (productId: string) => {
+    if (clickedCartIds.has(productId)) {
+      toast.info("Product already added in cart");
+      return;
+    }
 
-import React from "react";
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        toast.info("Please login to add items to your cart.");
+        router.push("/login");
+        return;
+      }
 
-const relatedproducts = () => {
-  return <div>relatedproducts</div>;
+      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
+      console.log("res??add to cart btn :", res);
+
+      if (res.status === 200 || res.data.success) {
+        toast.success("Added to cart successfully!");
+        setClickedCartIds((prev) => new Set(prev).add(productId));
+      }
+    } catch (error: any) {
+      console.error("Failed to add to cart", error);
+      if (error.response?.status === 409) {
+        toast.error("Could not add item to cart.");
+      }
+    }
+
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const handleDetails = async (productId: string) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        toast.info("Please login to add items to your cart.");
+        router.push("/login");
+        return;
+      }
+      const res = await axiosInstance.get(
+        apiRoutes.VIEW_PRODUCT_DETAILS(productId)
+      );
+      console.log("res???product-details :", res);
+    } catch (error) {
+      console.error("Failed to view details", error);
+      toast.info("Please try again.");
+    }
+    router.push(`/product/${productId}`);
+  };
+
+  return (
+    <div className="flex flex-col">
+      <div className="md:flex hidden justify-between items-center">
+        <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
+          Related Products
+        </p>
+      </div>
+
+      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 pt-8">
+        {Array.isArray(filteredProduct) &&
+          filteredProduct
+            ?.filter((item) => item.id !== id)
+            .slice(0, 3)
+            .map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col justify-between h-full rounded-[15px] border border-productborder relative cursor-pointer"
+                onClick={() => handleDetails(item.id)}
+              >
+                <div className="absolute top-0">
+                  <p
+                    className={`w-[60px] h-[31px] text-white text-center text-xs py-[7px] rounded-tl-full rounded-tr-[8px] rounded-bl-[16px] rounded-br-full ${
+                      categoriesWiseTag[item?.price]
+                    }`}
+                  >
+                    {item?.price}
+                  </p>
+                </div>
+
+                <Image
+                  src={item?.image}
+                  alt={item?.productName}
+                  className="pt-6 px-6 w-full"
+                  width={25}
+                  height={25}
+                  unoptimized
+                />
+
+                <div className="px-6 pb-6 flex flex-col flex-grow">
+                  <p className="text-lg font-bold text-regalblue pt-2">
+                    {item?.productName}
+                  </p>
+
+                  <div className="flex justify-between items-center pt-4 mt-auto">
+                    <div>
+                      <p className="text-lg font-bold text-shopbtn">
+                        ₹{item?.price}
+                      </p>
+                    </div>
+
+                    <div
+                      className="flex items-center bg-cartbtn px-3 py-2 rounded"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCart(item?.id);
+                      }}
+                    >
+                      {clickedCartIds.has(item?.id) ? (
+                        <IoCheckmarkOutline className="text-shopbtn" />
+                      ) : (
+                        <Image
+                          src={cart}
+                          alt="cart"
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className="w-5"
+                        />
+                      )}
+                      <button className="text-sm font-bold text-shopbtn ml-1">
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+      </div>
+    </div>
+  );
 };
 
-export default relatedproducts;
+export default RelatedProduct;

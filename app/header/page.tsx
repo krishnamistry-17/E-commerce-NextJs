@@ -15,6 +15,7 @@ import Search from "../pages/search/page";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { logout, setAccessToken, setUser } from "../store/authSlice";
+import useWindowWidth from "../hooks/useWindowWidth";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,6 +23,31 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.auth);
+
+  const windowWidth = useWindowWidth();
+
+  // const handleOutsideClick = (event: MouseEvent) => {
+  //   if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+  //     setIsSubMenuOpen(false);
+  //   }
+  //   if (
+  //     mobileMenuRef.current &&
+  //     !mobileMenuRef.current.contains(event.target as Node)
+  //   ) {
+  //     setIsMobileMenuOpen(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (windowWidth >= 1024) {
+  //     setIsMobileMenuOpen(false);
+  //   }
+  // }, [windowWidth]);
+
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleOutsideClick);
+  //   return () => document.removeEventListener("mousedown", handleOutsideClick);
+  // }, []);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");

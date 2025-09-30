@@ -28,13 +28,6 @@ const PopularProduct = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (!accessToken) {
-        console.error("No access token found, user is not authenticated.");
-        return;
-      }
-
       try {
         const res = await axiosInstance.get(apiRoutes.GET_ALL_PRODUCT);
         setProducts(res.data.data);
@@ -65,22 +58,8 @@ const PopularProduct = () => {
     }
 
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) {
-        toast.info("Please login to add items to your cart.");
-        router.push("/login");
-        return;
-      }
-
-      const res = await axiosInstance.post(
-        apiRoutes.ADD_TO_CART(productId),
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
+      console.log("res??add to cart btn :", res);
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
@@ -89,11 +68,6 @@ const PopularProduct = () => {
     } catch (error: any) {
       console.error("Failed to add to cart", error);
       if (error.response?.status === 409) {
-        toast.info("Product already exists in the cart.");
-      } else if (error.response?.status === 401) {
-        toast.info("Please login to add items to your cart.");
-        router.push("/login");
-      } else {
         toast.error("Could not add item to cart.");
       }
     }
@@ -103,12 +77,6 @@ const PopularProduct = () => {
 
   const handleDetails = async (productId: string) => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) {
-        toast.info("Please login to add items to your cart.");
-        router.push("/login");
-        return;
-      }
       const res = await axiosInstance.get(
         apiRoutes.VIEW_PRODUCT_DETAILS(productId)
       );
@@ -242,9 +210,6 @@ const PopularProduct = () => {
                 <div>
                   <p className="text-lg font-bold text-shopbtn">
                     ₹{item?.price}
-                    <span className="text-sm text-ratingtext pl-2 line-through">
-                      {item?.stock}
-                    </span>
                   </p>
                 </div>
 

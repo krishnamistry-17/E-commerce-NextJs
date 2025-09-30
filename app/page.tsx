@@ -6,7 +6,7 @@ import Banner from "./pages/banner/page";
 
 import Categories from "./pages/categories/page";
 
-const Page = () => {
+const Home = () => {
   // const heading = headings;
 
   // const filteredProducts = products.filter(
@@ -26,4 +26,49 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Home;
+
+{
+  /*const App = () => {
+  return (
+    <>
+      <Root>
+        <Routes>
+          {routes.map(
+            ({ path, component: Component, isProtected, useLayout }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  isProtected ? (
+                    <ProtectedRoute>
+                      {useLayout ? (
+                        // <Layout>
+                        <Component />
+                      ) : (
+                        // </Layout>
+                        <Component />
+                      )}
+                    </ProtectedRoute>
+                  ) : (
+                    <PublicRoute>
+                      {useLayout ? (
+                        // <Layout>
+                        <Component />
+                      ) : (
+                        // </Layout>
+                        <Component />
+                      )}
+                    </PublicRoute>
+                  )
+                }
+              />
+            )
+          )}
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </Root>
+    </>
+  );
+}; */
+}

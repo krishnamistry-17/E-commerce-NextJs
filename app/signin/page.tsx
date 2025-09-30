@@ -33,7 +33,7 @@ const Signin = () => {
         email,
         password,
       });
-      console.log("response:", response);
+
 
       if (response.status === 200 || response.status === 201) {
         const { accessToken, _id, email, role } = response.data.data;

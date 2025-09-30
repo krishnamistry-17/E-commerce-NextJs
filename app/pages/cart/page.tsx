@@ -10,18 +10,19 @@ import { apiRoutes } from "@/app/api/apiRoutes";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import cartimage from "../../../public/images/cart.png";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  const [cartData, setCartData] = useState([]);
+  const [cartData, setCartData] = useState<any[]>([]);
 
   // Fetch cart on mount
   const fetchCart = async () => {
     try {
       const res = await axiosInstance.get(apiRoutes.GET_CART);
-      console.log('res :', res);
-      setCartData(res.data.products);
+
+      setCartData(res?.data?.cart?.cartItems);
     } catch (error) {
       console.error("Error fetching cart data", error);
     }
@@ -37,26 +38,23 @@ const Cart = () => {
   //   0
   // );
 
-  // Update quantity
-  const handleQuantityChange = async (productId: string, quantity: number) => {
-    if (quantity < 1) return;
+  const totalPrice = cartData?.reduce(
+    (acc, item) => acc + Number(item.price) * (item.quantity || 1),
+    0
+  );
 
+  // Update quantity
+
+  const handleQuantityChange = async (productId: string, quantity: number) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
-      const res = await axiosInstance.post(
-        apiRoutes.UPDATE_CART,
-        { productId, quantity },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log("res :", res);
+      const res = await axiosInstance.patch(apiRoutes.UPDATE_CART(productId), {
+        quantity,
+      });
 
-      setCartData(res.data.cartItems || []); // Adjust based on API response
+      fetchCart(); // Refresh cart from backend
     } catch (error) {
       console.error("Failed to update quantity", error);
     }
@@ -69,35 +67,14 @@ const Cart = () => {
       if (!accessToken) return;
 
       const res = await axiosInstance.delete(
-        apiRoutes.REMOVE_FROM_CART(productId),
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        apiRoutes.REMOVE_FROM_CART(productId)
       );
-      console.log("res :", res);
-
-      fetchCart(); // Re-fetch updated cart
+      toast.success("Item removed from cart");
+      fetchCart();
     } catch (error) {
       console.error("Error removing item from cart", error);
     }
   };
-
-  //  Handle quantity change
-  // const handleIncrease = (id: string, currentQty: number) => {
-  //   const newQty = currentQty + 1;
-  //   dispatch(updateQuantity({ id, quantity: newQty }));
-  //   fetchProduct(id, newQty);
-  // };
-
-  // const handleDecrease = (id: string, currentQty: number) => {
-  //   if (currentQty > 1) {
-  //     const newQty = currentQty - 1;
-  //     dispatch(updateQuantity({ id, quantity: newQty }));
-  //     fetchProduct(id, newQty);
-  //   }
-  // };
 
   const handleNavigation = () => router.push("/pages/checkout");
 
@@ -109,11 +86,11 @@ const Cart = () => {
             className="flex items-center gap-[8px] cursor-pointer"
             onClick={() => router.push("/")}
           >
-            <Image src={home} alt="home" width={14} height={14} />
+            <Image src={home} alt="home" width={14} height={14} unoptimized />
             <p className="text-[14px] text-shopbtn font-quick-semibold-600 hidden md:block">
               Home
             </p>
-            <Image src={right} alt="right" width={19} height={24} />
+            <Image src={right} alt="right" width={19} height={24} unoptimized />
           </div>
           <div className="flex items-center gap-[8px]">
             <p className="text-[14px] text-bgbrown font-quick-semibold-600">
@@ -155,80 +132,84 @@ const Cart = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {cartData.map((item: any) => (
-                  <div
-                    key={item._id}
-                    className="border border-gray-300 shadow-md p-4 rounded-md lg:flex justify-between items-center"
-                  >
-                    <div className="flex gap-4">
-                      <Image
-                        src={item.image}
-                        alt={item.productName}
-                        width={64}
-                        height={64}
-                        className="w-[80px] h-[80px] object-cover"
-                        unoptimized
-                      />
-                      <div>
-                        <h3 className="text-[16px] font-semibold text-regalblue">
-                          {item.productName}
-                        </h3>
+                {cartData?.map((item, index) => {
+                  return (
+                    <div
+                      key={item._id}
+                      className="border border-gray-300 shadow-md p-4 rounded-md lg:flex justify-between items-center"
+                    >
+                      <div className="flex gap-4">
+                        <Image
+                          src={item.image}
+                          alt={item.productName}
+                          width={64}
+                          height={64}
+                          className="w-[80px] h-[80px] object-cover"
+                          unoptimized
+                        />
+                        <div>
+                          <h3 className="text-[16px] font-semibold text-regalblue">
+                            {item.productName}
+                          </h3>
 
-                        {/* Quantity Controls */}
-                        <div className="flex items-center gap-2 mt-2">
-                          <button
-                            onClick={() =>
-                              handleQuantityChange(
-                                item._id,
-                                Math.max(1, (item.quantity || 1) - 1)
-                              )
-                            }
-                          >
-                            <FaMinus className="text-shopbtn" />
-                          </button>
-                          <span className="px-2 text-[16px] text-bgbrown font-semibold">
-                            {item.quantity || 1}
-                          </span>
-                          <button
-                            onClick={() =>
-                              handleQuantityChange(
-                                item._id,
-                                (item.quantity || 1) + 1
-                              )
-                            }
-                          >
-                            <FaPlus className="text-shopbtn" />
-                          </button>
+                          {/* Quantity Controls */}
+                          <div className="flex items-center gap-2 mt-2">
+                            <button
+                              onClick={() =>
+                                handleQuantityChange(
+                                  item.productId,
+                                  Math.max(1, item.quantity - 1)
+                                )
+                              }
+                            >
+                              <FaMinus className="text-shopbtn" />
+                            </button>
+                            <span className="px-2 text-[16px] text-bgbrown font-semibold">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() =>
+                                handleQuantityChange(
+                                  item.productId,
+                                  item.quantity + 1
+                                )
+                              }
+                            >
+                              <FaPlus className="text-shopbtn" />
+                            </button>
+                          </div>
+
+                          <p className="text-sm text-gray-600 mt-1">
+                            Price: ₹{item.price}
+                          </p>
                         </div>
+                      </div>
 
-                        <p className="text-sm text-gray-600 mt-1">
-                          Price: ${item.price}
+                      <div className="text-right">
+                        <p className="text-sm font-bold mb-2">
+                          Total: ₹
+                          {(Number(item.price) * (item.quantity || 1)).toFixed(
+                            2
+                          )}
                         </p>
+                        <MdDelete
+                          onClick={() => handleDelete(item?.productId)}
+                          className="cursor-pointer w-6 h-6 text-red-500"
+                        />
                       </div>
                     </div>
-
-                    <div className="text-right">
-                      <p className="text-sm font-bold mb-2">
-                        Total: $
-                        {(Number(item.price) * (item.quantity || 1)).toFixed(2)}
-                      </p>
-                      <MdDelete
-                        onClick={() => handleDelete(item._id)}
-                        className="cursor-pointer w-6 h-6 text-red-500"
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
 
           {/* Cart Summary */}
-          {cartData.length !== 0 && (
-            <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full border border-gray-300 shadow-md p-5 rounded-[20px]">
+          {cartData?.length !== 0 && (
+            <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full h-fit border border-gray-300 shadow-md p-5 rounded-[20px]">
               <h2 className="text-[32px] text-regalblue font-bold">Total</h2>
               <div className="text-[22px] text-regalblue font-semibold pt-4">
-                {/* Cart Total: ${totalPrice.toFixed(2)} */}
+                Cart Total: ${totalPrice?.toFixed(2)}
               </div>
               <div className="pt-4">
                 <button
