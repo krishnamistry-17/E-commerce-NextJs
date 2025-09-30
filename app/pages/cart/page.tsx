@@ -1,57 +1,116 @@
 "use client";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { persistor, RootState } from "../../store/store";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { removeFromCart, updateQuantity } from "../slice/cartSlice";
+import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import { FaMinus, FaPlus } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import axiosInstance from "@/lib/axios";
+import { apiRoutes } from "@/app/api/apiRoutes";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import cartimage from "../../../public/images/cart.png";
-import { useSession } from "next-auth/react";
 
 const Cart = () => {
   const { data: session } = useSession();
-  const dispatch = useDispatch();
   const router = useRouter();
+  const [cartData, setCartData] = useState([]);
 
-  // Get all cart items from redux
-  const cartItems = useSelector((state: RootState) => state.cart.items);
-  console.log("cartItems?????? :", cartItems);
-
-  //  Total price calculation
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + Number(item.price) * Number(item.quantity),
-    0
-  );
-
-  //  Handle quantity change
-  const handleIncrease = (id: string, currentQty: number) => {
-    dispatch(updateQuantity({ id, quantity: currentQty + 1 }));
-  };
-
-  const handleDecrease = (id: string, currentQty: number) => {
-    if (currentQty > 1) {
-      dispatch(updateQuantity({ id, quantity: currentQty - 1 }));
+  // Fetch cart on mount
+  const fetchCart = async () => {
+    try {
+      const res = await axiosInstance.get(apiRoutes.GET_CART);
+      console.log('res :', res);
+      setCartData(res.data.products);
+    } catch (error) {
+      console.error("Error fetching cart data", error);
     }
   };
 
-  const handleNavigation = () => {
-    router.push("/pages/checkout");
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  // Total price calculation
+  // const totalPrice = cartData.reduce(
+  //   (acc, item) => acc + Number(item.price) * (item.quantity || 1),
+  //   0
+  // );
+
+  // Update quantity
+  const handleQuantityChange = async (productId: string, quantity: number) => {
+    if (quantity < 1) return;
+
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) return;
+
+      const res = await axiosInstance.post(
+        apiRoutes.UPDATE_CART,
+        { productId, quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("res :", res);
+
+      setCartData(res.data.cartItems || []); // Adjust based on API response
+    } catch (error) {
+      console.error("Failed to update quantity", error);
+    }
   };
+
+  // Delete item
+  const handleDelete = async (productId: string) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) return;
+
+      const res = await axiosInstance.delete(
+        apiRoutes.REMOVE_FROM_CART(productId),
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("res :", res);
+
+      fetchCart(); // Re-fetch updated cart
+    } catch (error) {
+      console.error("Error removing item from cart", error);
+    }
+  };
+
+  //  Handle quantity change
+  // const handleIncrease = (id: string, currentQty: number) => {
+  //   const newQty = currentQty + 1;
+  //   dispatch(updateQuantity({ id, quantity: newQty }));
+  //   fetchProduct(id, newQty);
+  // };
+
+  // const handleDecrease = (id: string, currentQty: number) => {
+  //   if (currentQty > 1) {
+  //     const newQty = currentQty - 1;
+  //     dispatch(updateQuantity({ id, quantity: newQty }));
+  //     fetchProduct(id, newQty);
+  //   }
+  // };
+
+  const handleNavigation = () => router.push("/pages/checkout");
 
   return (
     <>
-      <div className="w-full  border-b border-gray-200 py-[6px]  px-5">
-        <div className="flex items-center gap-[3px] ">
+      <div className="w-full border-b border-gray-200 py-[6px] px-5">
+        <div className="flex items-center gap-[3px]">
           <div
-            className="flex items-center gap-[8px]"
+            className="flex items-center gap-[8px] cursor-pointer"
             onClick={() => router.push("/")}
           >
             <Image src={home} alt="home" width={14} height={14} />
-            <p className="text-[14px] text-shopbtn font-quick-semibold-600 md:block hidden cursor-pointer">
+            <p className="text-[14px] text-shopbtn font-quick-semibold-600 hidden md:block">
               Home
             </p>
             <Image src={right} alt="right" width={19} height={24} />
@@ -65,134 +124,97 @@ const Cart = () => {
       </div>
 
       <div className="max-w-[1640px] mx-auto xl:px-[103px] px-2 pt-[20px]">
-        <div className="flex items-center justify-between">
-          {/* <button
-          onClick={() => dispatch(clearCart())}
-          className="text-2xl font-bold"
-        >
-          Clear cart
-        </button> */}
-        </div>
-
         <div className="flex flex-col md:flex-row gap-3 py-10">
           <div className="flex-1">
-            {cartItems?.length === 0 ? (
-              <div className=" w-full h-fit border border-gray-300 shadow-md p-5">
+            {cartData?.length === 0 ? (
+              <div className="w-full border border-gray-300 shadow-md p-5">
                 <div className="flex flex-col justify-center items-center">
                   <Image
                     src={cartimage}
-                    alt="cartimage"
+                    alt="cart"
                     width={221}
                     height={162}
                     unoptimized
-                    className=" object-cover"
+                    className="object-cover"
                   />
-                  <p className=" text-[24px] text-regalblue font-semibold py-[20px]">
+                  <p className="text-[24px] text-regalblue font-semibold py-[20px]">
                     Missing Cart Items?
                   </p>
-
-                  <p className=" text-[20px] text-regalblue">
+                  <p className="text-[20px] text-regalblue">
                     {session
-                      ? "Continue shooping Go to Home"
-                      : "Signin to add items"}
+                      ? "Continue shopping. Go to Home."
+                      : "Sign in to add items"}
                   </p>
-                  {session ? (
-                    <button
-                      onClick={() => router.push("/")}
-                      className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
-                    >
-                      Go to Home
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => router.push("/signin")}
-                      className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
-                    >
-                      Signin
-                    </button>
-                  )}
+                  <button
+                    onClick={() => router.push(session ? "/" : "/signin")}
+                    className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
+                  >
+                    {session ? "Go to Home" : "Sign in"}
+                  </button>
                 </div>
               </div>
             ) : (
               <div className="space-y-4">
-                {cartItems.map((item) => (
+                {cartData.map((item: any) => (
                   <div
-                    key={item?.id}
+                    key={item._id}
                     className="border border-gray-300 shadow-md p-4 rounded-md lg:flex justify-between items-center"
                   >
                     <div className="flex gap-4">
                       <Image
-                        src={item?.image}
-                        alt={item?.productName}
+                        src={item.image}
+                        alt={item.productName}
                         width={64}
                         height={64}
                         className="w-[80px] h-[80px] object-cover"
                         unoptimized
                       />
                       <div>
-                        <h3 className="lg:text-[18px] text-[16px] font-quick-bold-700 text-regalblue">
-                          {item?.productName}
+                        <h3 className="text-[16px] font-semibold text-regalblue">
+                          {item.productName}
                         </h3>
 
-                        {/*  Quantity Controls */}
+                        {/* Quantity Controls */}
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() =>
-                              handleDecrease(item?.id, item?.quantity)
+                              handleQuantityChange(
+                                item._id,
+                                Math.max(1, (item.quantity || 1) - 1)
+                              )
                             }
                           >
                             <FaMinus className="text-shopbtn" />
                           </button>
                           <span className="px-2 text-[16px] text-bgbrown font-semibold">
-                            {item?.quantity}
+                            {item.quantity || 1}
                           </span>
                           <button
                             onClick={() =>
-                              handleIncrease(item?.id, item?.quantity)
+                              handleQuantityChange(
+                                item._id,
+                                (item.quantity || 1) + 1
+                              )
                             }
                           >
                             <FaPlus className="text-shopbtn" />
                           </button>
                         </div>
 
-                        <div className="md:flex items-center gap-[12px]">
-                          <p className="text-sm text-gray-600 mt-1">
-                            Price: ${item?.price}
-                          </p>
-                          {/* <button className="bg-green-200 px-[8px] md:mt-0 mt-3 py-[6px] rounded-md">
-                            {item?.size}g
-                          </button> */}
-                        </div>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Price: ${item.price}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="text-right lg:block hidden">
+                    <div className="text-right">
                       <p className="text-sm font-bold mb-2">
                         Total: $
-                        {(Number(item?.price) * item?.quantity).toFixed(2)}
+                        {(Number(item.price) * (item.quantity || 1)).toFixed(2)}
                       </p>
                       <MdDelete
-                        onClick={() => {
-                          dispatch(removeFromCart(item?.id));
-                          persistor.purge();
-                          localStorage.removeItem("persist:root");
-                        }}
-                        className="cursor-pointer w-6 h-6 text-red-500  "
-                      />
-                    </div>
-
-                    <div className="lg:hidden flex items-center gap-2 pt-4">
-                      <p className="text-sm font-bold mb-2 pt-2">
-                        Total: $
-                        {(Number(item?.price) * item?.quantity).toFixed(2)}
-                      </p>
-                      <MdDelete
-                        onClick={() => {
-                          dispatch(removeFromCart(item?.id));
-                          persistor.purge();
-                          localStorage.removeItem("persist:root");
-                        }}
-                        className="cursor-pointer w-6 h-6 text-red-500  "
+                        onClick={() => handleDelete(item._id)}
+                        className="cursor-pointer w-6 h-6 text-red-500"
                       />
                     </div>
                   </div>
@@ -201,26 +223,22 @@ const Cart = () => {
             )}
           </div>
 
-          {/*  Cart Summary */}
-          {cartItems?.length !== 0 && (
-            <>
-              <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full h-fit border border-gray-300 shadow-md p-5 rounded-[20px]">
-                <h2 className="text-[32px] text-regalblue font-quick-bold-700">
-                  Total
-                </h2>
-                <div className="text-[22px] text-regalblue font-quick-semibold-600 pt-4">
-                  Cart Total: ${totalPrice?.toFixed(2)}
-                </div>
-                <div className="pt-4">
-                  <button
-                    className="text-white font-quick-medium-500 text-[16px] bg-shopbtn px-[12px] py-[6px] rounded-[5px]"
-                    onClick={handleNavigation}
-                  >
-                    CheckOut
-                  </button>
-                </div>
-              </aside>
-            </>
+          {/* Cart Summary */}
+          {cartData.length !== 0 && (
+            <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full border border-gray-300 shadow-md p-5 rounded-[20px]">
+              <h2 className="text-[32px] text-regalblue font-bold">Total</h2>
+              <div className="text-[22px] text-regalblue font-semibold pt-4">
+                {/* Cart Total: ${totalPrice.toFixed(2)} */}
+              </div>
+              <div className="pt-4">
+                <button
+                  className="text-white font-medium text-[16px] bg-shopbtn px-[12px] py-[6px] rounded-[5px]"
+                  onClick={handleNavigation}
+                >
+                  CheckOut
+                </button>
+              </div>
+            </aside>
           )}
         </div>
       </div>

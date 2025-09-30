@@ -27,7 +27,7 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
     const { fullName, email, password } = formData;
 
     try {

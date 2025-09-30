@@ -33,17 +33,9 @@ const Categories = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (!accessToken) {
-        console.error("No access token found, user is not authenticated.");
-        return;
-      }
-
       try {
         const res = await axiosInstance.get(apiRoutes.GET_ALL_CATEGORY);
         setProducts(res.data.data);
-        console.log("res.data.data ????/category:", res.data.data);
       } catch (error) {
         console.error("Error fetching products", error);
       }

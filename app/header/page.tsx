@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useEffect, useState } from "react";
-import cart from "../../public/svgs/cart.svg";
 import CartIcon from "../pages/carticon/page";
 import logo from "../../public/svgs/logo.svg";
 import HeaderTop from "../headertop/page";
@@ -67,7 +66,7 @@ const Navbar = () => {
             Blog
           </Link>
           <Link href="/pages/cart">
-            <Image src={cart} alt="cart" className="w-6 h-6" />
+            {/* <Image src={cart} alt="cart" className="w-6 h-6" /> */}
             <CartIcon />
           </Link>
 
@@ -113,7 +112,7 @@ const Navbar = () => {
           </Link>
 
           <Link href="/pages/cart">
-            <Image src={cart} alt="cart" className="w-6 h-6" />
+            {/* <Image src={cart} alt="cart" className="w-6 h-6" /> */}
             <CartIcon />
           </Link>
 

@@ -1,10 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { addToCart } from "../slice/cartSlice";
-import { showDetails } from "../slice/productDetailSlice";
 import axiosInstance from "@/lib/axios";
 import { toast } from "react-toastify";
 import { IoCheckmarkOutline } from "react-icons/io5";
@@ -24,11 +21,9 @@ const PopularProduct = () => {
   const [product, setProducts] = useState<Category[]>([]);
 
   const [activeTab, setActiveTab] = useState("All");
-  const [clickedCartIds, setClickedCartIds] = useState<Set<number>>(new Set());
+  const [clickedCartIds, setClickedCartIds] = useState<Set<string>>(new Set());
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
-
-  const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
@@ -43,8 +38,6 @@ const PopularProduct = () => {
       try {
         const res = await axiosInstance.get(apiRoutes.GET_ALL_PRODUCT);
         setProducts(res.data.data);
-        console.log("res.data.data ?????populsar:", res.data.data);
-        console.log("res???popular :", res);
       } catch (error) {
         console.error("Error fetching products", error);
       }
@@ -65,34 +58,66 @@ const PopularProduct = () => {
       ? product
       : product?.filter((products) => products?.productName === activeTab);
 
-  const handleCart = (item: Category) => {
-    dispatch(
-      addToCart({
-        id: item.id,
-        productName: item?.productName,
-        quantity: 1,
-        image: item?.image,
-        stock: item?.stock,
-        price: item?.price,
-      })
-    );
-    // Add this item ID to clicked cart IDs
-    setClickedCartIds((prev) => new Set(prev).add(Number(item?.id)));
-    toast.success("Item added to cart");
+  const handleCart = async (productId: string) => {
+    if (clickedCartIds.has(productId)) {
+      toast.info("Product already added in cart");
+      return;
+    }
+
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        toast.info("Please login to add items to your cart.");
+        router.push("/login");
+        return;
+      }
+
+      const res = await axiosInstance.post(
+        apiRoutes.ADD_TO_CART(productId),
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (res.status === 200 || res.data.success) {
+        toast.success("Added to cart successfully!");
+        setClickedCartIds((prev) => new Set(prev).add(productId));
+      }
+    } catch (error: any) {
+      console.error("Failed to add to cart", error);
+      if (error.response?.status === 409) {
+        toast.info("Product already exists in the cart.");
+      } else if (error.response?.status === 401) {
+        toast.info("Please login to add items to your cart.");
+        router.push("/login");
+      } else {
+        toast.error("Could not add item to cart.");
+      }
+    }
+
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const handleDetails = (item: Category) => {
-    dispatch(
-      showDetails({
-        id: item?.id,
-        image: item?.image,
-        price: item?.price,
-        stock: item?.stock,
-        productName: item?.productName,
-      })
-    );
-
-    router.push(`/product/${item.id}`);
+  const handleDetails = async (productId: string) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        toast.info("Please login to add items to your cart.");
+        router.push("/login");
+        return;
+      }
+      const res = await axiosInstance.get(
+        apiRoutes.VIEW_PRODUCT_DETAILS(productId)
+      );
+      console.log("res???product-details :", res);
+    } catch (error) {
+      console.error("Failed to view details", error);
+      toast.info("Please try again.");
+    }
+    router.push(`/product/${productId}`);
   };
 
   return (
@@ -187,7 +212,7 @@ const PopularProduct = () => {
           <div
             key={index}
             className="flex flex-col justify-between h-full rounded-[15px] border border-productborder relative cursor-pointer"
-            onClick={() => handleDetails(item)}
+            onClick={() => handleDetails(item.id)}
           >
             <div className="absolute top-0">
               <p
@@ -227,10 +252,10 @@ const PopularProduct = () => {
                   className="flex items-center bg-cartbtn px-3 py-2 rounded"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCart(item);
+                    handleCart(item?.id);
                   }}
                 >
-                  {clickedCartIds.has(Number(item?.id)) ? (
+                  {clickedCartIds.has(item?.id) ? (
                     <IoCheckmarkOutline className="text-shopbtn" />
                   ) : (
                     <Image
