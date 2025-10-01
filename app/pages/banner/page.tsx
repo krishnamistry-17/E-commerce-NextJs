@@ -4,8 +4,10 @@ import React from "react";
 import food from "../../../public/images/food.png";
 import Image from "next/image";
 import { FiSend } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 const Banner = () => {
+  const router = useRouter();
   return (
     <div className="py-[40px]">
       <div
@@ -24,19 +26,21 @@ const Banner = () => {
             <span className="text-shopbtn">Nest Mart</span>
           </p>
 
-          <div className="flex lg:w-[450px] w-[250px] h-[64px] items-center">
-            <div className="flex items-center w-full bg-white rounded-[50px] ">
+          <div className="flex w-full max-w-[450px] h-[64px] items-center">
+            <div className="flex items-center w-full bg-white rounded-[50px]">
               <FiSend className="text-gray-500 mr-2 ml-3" />
 
               <input
                 type="email"
                 placeholder="Your email address"
-                className="flex-grow bg-transparent outline-none text-inputtext"
+                className="flex-grow bg-transparent text-inputtext focus:outline-none text-sm md:text-base"
               />
 
               <button
+                onClick={() => router.push("/signup")}
                 className="ml-2 bg-shopbtn text-white text-[14px] md:text-[16px] 
-              px-[16px] py-[8px] md:px-[40px] md:py-[22px] rounded-[50px] font-quick-bold-700 transition"
+        px-[16px] py-[8px] md:px-[40px] md:py-[22px] 
+        rounded-[50px] font-quick-bold-700 transition whitespace-nowrap"
                 type="submit"
               >
                 Subscribe

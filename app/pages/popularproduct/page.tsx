@@ -57,6 +57,14 @@ const PopularProduct = () => {
       return;
     }
 
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      console.error("No access token found, user is not authenticated.");
+      toast.info("Please Login to add product in cart");
+      return;
+    }
+
     try {
       const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
       console.log("res??add to cart btn :", res);

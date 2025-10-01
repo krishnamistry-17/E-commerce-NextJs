@@ -957,9 +957,9 @@
   ],
   "contact": [
     {
-      "head": "How can help you ?",
-      "title": "Let us know how we can help you",
-      "para1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.,",
+      "head": "",
+      "title": "",
+      "para1": ",",
       "questions": {
         "que1": "01. Visit Feedback",
         "que2": "02. Employer Services",

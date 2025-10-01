@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SlOptionsVertical } from "react-icons/sl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CartIcon from "../pages/carticon/page";
 import logo from "../../public/svgs/logo.svg";
 import HeaderTop from "../headertop/page";
@@ -19,35 +19,37 @@ import useWindowWidth from "../hooks/useWindowWidth";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const router = useRouter();
+  const menuRef = useRef<HTMLLIElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const windowWidth = useWindowWidth();
 
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.auth);
 
-  const windowWidth = useWindowWidth();
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsSubMenuOpen(false);
+    }
+    if (
+      mobileMenuRef.current &&
+      !mobileMenuRef.current.contains(event.target as Node)
+    ) {
+      setIsMenuOpen(false);
+    }
+  };
 
-  // const handleOutsideClick = (event: MouseEvent) => {
-  //   if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-  //     setIsSubMenuOpen(false);
-  //   }
-  //   if (
-  //     mobileMenuRef.current &&
-  //     !mobileMenuRef.current.contains(event.target as Node)
-  //   ) {
-  //     setIsMobileMenuOpen(false);
-  //   }
-  // };
+  useEffect(() => {
+    if (windowWidth >= 1024) {
+      setIsMenuOpen(false);
+    }
+  }, [windowWidth]);
 
-  // useEffect(() => {
-  //   if (windowWidth >= 1024) {
-  //     setIsMobileMenuOpen(false);
-  //   }
-  // }, [windowWidth]);
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleOutsideClick);
-  //   return () => document.removeEventListener("mousedown", handleOutsideClick);
-  // }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");
@@ -148,7 +150,10 @@ const Navbar = () => {
         </div>
 
         {isMenuOpen && (
-          <div className="absolute top-[60px] md:right-4 right-1 w-[120px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden">
+          <div
+            ref={mobileMenuRef}
+            className="absolute top-[60px] md:right-4 right-1 w-[120px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden"
+          >
             <nav className="flex flex-col gap-3 text-sm text-start">
               <Link href="/pages/aboutus" onClick={() => setIsMenuOpen(false)}>
                 About us
@@ -718,60 +723,6 @@ export default Navbar;
   };
   
   export default CheckOut;
-  ///////////////////////////
-  const someApiCall = async () => {
-  const accessToken = localStorage.getItem("accessToken");
-
-  if (!accessToken) {
-    console.error("No access token found, user is not authenticated.");
-    return;
-  }
-
-  try {
-    const response = await axiosInstance.get("/some-protected-route", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,  // Use the token from localStorage
-      },
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
-return (
-  <div>
-    <h2>Categories</h2>
-    <div className="categories-list">
-      {categories.map((categoryItem) => (
-        <div key={categoryItem._id} className="category-section">
-          <h3>{categoryItem.category}</h3>
-          <Image
-            src={categoryItem.image}
-            alt={categoryItem.category}
-            width={200}
-            height={100}
-          />
-          <div className="products-list">
-            {categoryItem.categoryProduct.map((product) => (
-              <div key={product._id} className="product-card">
-                <Image
-                  src={product.image}
-                  alt={product.productName}
-                  width={100}
-                  height={100}
-                />
-                <p>{product.productName}</p>
-                <p>Price: {product.price}</p>
-                <p>Stock: {product.stock}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
 
   
   */

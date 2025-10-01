@@ -30,13 +30,6 @@ const RelatedProduct = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (!accessToken) {
-        console.error("No access token found, user is not authenticated.");
-        return;
-      }
-
       try {
         const res = await axiosInstance.get(apiRoutes.GET_ALL_PRODUCT);
         setProducts(res.data.data);

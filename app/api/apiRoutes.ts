@@ -15,6 +15,7 @@ export const apiRoutes = {
   GET_FAVORITES_PRODUCTS: "/api/product/favourite-product",
   REMOVE_FROM_FAVORITES: (productId: string) =>
     `/api/product/remove-favourite/${productId}`,
+  SEARCH_PRODUCT: "/api/product/search?q=ap",
   SEND_OTP: "/api/auth/send-otp",
   VERIFY_OTP: "/api/auth/verify-otp",
 };
