@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/client";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 // const UserProfile = () => {
 //   //update is for editing profile
@@ -54,21 +56,24 @@ import { createClient } from "@/utils/supabase/client";
 // export default UserProfile;
 
 const UserProfile = () => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    function getUser() {
-      const supabase = createClient();
-      supabase.auth.getUser().then(({ data: { user } }) => {
-        setUser(user);
-      });
-    }
-    getUser();
-  }, []);
+  const user = useSelector((state: RootState) => state.auth);
+  console.log("user :", user);
+
+  // useEffect(() => {
+  //   function getUser() {
+  //     const supabase = createClient();
+  //     supabase.auth.getUser().then(({ data: { user } }) => {
+  //       setUser(user);
+  //     });
+  //   }
+  //   getUser();
+  // }, []);
 
   return (
     <div>
-      <p>{user?.email}</p>
+      <p>{user?.user?.email}</p>
     </div>
   );
 };

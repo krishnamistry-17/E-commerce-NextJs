@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import coupen from "../../../public/svgs/coupen.svg";
@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import axiosInstance from "@/lib/axios";
+import { apiRoutes } from "@/app/api/apiRoutes";
 
 const CheckOut = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -62,6 +64,19 @@ const CheckOut = () => {
       console.log("Order placed with payment method:", paymentMethod);
     }
   };
+
+  useEffect(() => {
+    const createPayment = async () => {
+      try {
+        const res = await axiosInstance.post(apiRoutes.CREATE_PAYMENT,{
+          
+        });
+      } catch (error) {
+        console.error("Error while create the payment!!!!!");
+      }
+    };
+    createPayment();
+  }, []);
 
   return (
     <div className="max-w-[1540px] mx-auto xl:px-[243px] px-2 pt-[20px]">

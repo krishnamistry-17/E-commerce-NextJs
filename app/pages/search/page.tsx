@@ -1,21 +1,41 @@
 "use client";
+import useWindowWidth from "@/app/hooks/useWindowWidth";
+import { RootState } from "@/app/store/store";
 import axiosInstance from "@/lib/axios";
+import { handleCart } from "@/utils/cartHelpers";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+
+interface Category {
+  _id: string;
+  category: string;
+  productName: string;
+  image: string;
+  price: number;
+}
 
 const Search = () => {
   const searchParams = useSearchParams();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [hasUserTyped, setHasUserTyped] = useState(false);
-  console.log("hasUserTyped :", hasUserTyped);
-  const [suggestions, setSuggestions] = useState([]);
-  console.log("suggestions :", suggestions);
+  const menuRef = useRef<HTMLLIElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [suggestions, setSuggestions] = useState<Category[]>([]);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const windowWidth = useWindowWidth();
+  const clickedCartIds = useSelector(
+    (state: RootState) => state.cart.clickedCartIds
+  );
 
   useEffect(() => {
-    const query = searchParams.get("query");
-    setSearchInput(query);
+    const query = searchParams.get("q");
+    setSearchInput(query || "");
   }, [searchParams]);
 
   useEffect(() => {
@@ -30,12 +50,13 @@ const Search = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchInput, hasUserTyped]);
 
-  const fetchSuggestions = async (query) => {
+  const fetchSuggestions = async (query: any) => {
     try {
       const response = await axiosInstance.get(
         `/api/product/search?q=${encodeURIComponent(query)}`
       );
-      setSuggestions(response.data.results || []);
+      setSuggestions(response.data.products || []);
+      console.log("response ???????:", response);
     } catch (error) {
       console.error("Suggestion fetch failed:", error);
     }
@@ -47,6 +68,29 @@ const Search = () => {
       router.push(`/search?q=${encodeURIComponent(searchInput)}`);
     }
   };
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsSubMenuOpen(false);
+    }
+    if (
+      mobileMenuRef.current &&
+      !mobileMenuRef.current.contains(event.target as Node)
+    ) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (windowWidth >= 1024) {
+      setIsMenuOpen(false);
+    }
+  }, [windowWidth]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
   return (
     <div className="relative w-full max-w-[450px]">
       <form action="" onSubmit={handleSearch}>
@@ -59,12 +103,58 @@ const Search = () => {
             <input
               type="search"
               placeholder="Search for items.."
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                setHasUserTyped(true);
+              }}
               className="flex-grow bg-transparent outline-none text-regalblue text-[16px]"
             />
+
             <FaSearch className="text-gray-500 mr-2 ml-3" />
           </div>
         </div>
       </form>
+      {suggestions.length > 0 && (
+        <div
+          className="absolute top-full left-0 right-0 mt-2 z-50 bg-white border 
+                rounded-md shadow-md max-h-[300px] overflow-y-auto"
+          ref={mobileMenuRef}
+        >
+          {suggestions.map((item) => (
+            <div
+              key={item._id}
+              className="flex items-center justify-between px-4 py-2 space-y-3 hover:bg-gray-100 transition-all"
+            >
+              <div className="flex items-center gap-[8px]">
+                <Image
+                  src={item.image}
+                  alt={item.productName}
+                  width={40}
+                  height={40}
+                  className="rounded"
+                />
+                <p className="text-regalblue text-[14px] font-medium truncate max-w-[150px]">
+                  {item.productName}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-[8px]">
+                <p className="text-bgbrown text-[14px] font-semibold">
+                  ${item.price}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => handleCart(item, clickedCartIds, dispatch)}
+                  className="bg-green-200 px-[10px] py-[4px] rounded-md text-regalblue text-[13px] font-semibold"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ const SearchContext = createContext(null);
 export const SearchProvider = ({ children }: { children: React.ReactNode }) => {
   const searchParams = useSearchParams();
 
-  const query = searchParams.get("query");
+  const query = searchParams.get("q");
   const [results, setResults] = useState(null);
 
   const [loading, setLoading] = useState(false);

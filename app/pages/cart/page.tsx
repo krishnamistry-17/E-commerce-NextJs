@@ -4,16 +4,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import { FaMinus, FaPlus } from "react-icons/fa6";
-import { useSession } from "next-auth/react";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import cartimage from "../../../public/images/cart.png";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 const Cart = () => {
-  const { data: session } = useSession();
+  const { accessToken } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const [cartData, setCartData] = useState<any[]>([]);
 
@@ -21,7 +22,6 @@ const Cart = () => {
   const fetchCart = async () => {
     try {
       const res = await axiosInstance.get(apiRoutes.GET_CART);
-
       setCartData(res?.data?.cart?.cartItems);
     } catch (error) {
       console.error("Error fetching cart data", error);
@@ -118,15 +118,15 @@ const Cart = () => {
                     Missing Cart Items?
                   </p>
                   <p className="text-[20px] text-regalblue">
-                    {session
+                    {accessToken
                       ? "Continue shopping. Go to Home."
                       : "Sign in to add items"}
                   </p>
                   <button
-                    onClick={() => router.push(session ? "/" : "/signin")}
+                    onClick={() => router.push(accessToken ? "/" : "/signin")}
                     className="text-white bg-shopbtn text-[16px] px-[32px] py-[6px] my-[8px]"
                   >
-                    {session ? "Go to Home" : "Sign in"}
+                    {accessToken ? "Go to Home" : "Sign in"}
                   </button>
                 </div>
               </div>

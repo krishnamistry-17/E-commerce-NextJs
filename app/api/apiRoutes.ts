@@ -18,4 +18,5 @@ export const apiRoutes = {
   SEARCH_PRODUCT: "/api/product/search?q=ap",
   SEND_OTP: "/api/auth/send-otp",
   VERIFY_OTP: "/api/auth/verify-otp",
+  CREATE_PAYMENT: "/api/pay/create-payment",
 };
