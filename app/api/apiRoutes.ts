@@ -19,4 +19,6 @@ export const apiRoutes = {
   SEND_OTP: "/api/auth/send-otp",
   VERIFY_OTP: "/api/auth/verify-otp",
   CREATE_PAYMENT: "/api/pay/create-payment",
+  RETURN_URL: (newOrder: any) => `/payment-success?orderId=${newOrder._id}`,
+  CANCEL_URL: (newOrder: any) => `/payment-cancel?orderId=${newOrder._id}`,
 };

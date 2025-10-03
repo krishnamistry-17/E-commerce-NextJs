@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
-import { toast } from "react-toastify";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import drop from "../../../public/svgs/drop.svg";
 import cart from "../../../public/svgs/cart.svg";
@@ -94,7 +93,7 @@ const PopularProduct = () => {
       console.log("res???product-details :", res);
     } catch (error) {
       console.error("Failed to view details", error);
-      toast.info("Please try again.");
+      // toast.info("Please try again.");
     }
     router.push(`/product/${productId}`);
   };

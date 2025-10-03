@@ -209,7 +209,7 @@ const Cart = () => {
             <aside className="md:max-w-[300px] lg:max-w-[350px] xl:max-w-[406px] w-full h-fit border border-gray-300 shadow-md p-5 rounded-[20px]">
               <h2 className="text-[32px] text-regalblue font-bold">Total</h2>
               <div className="text-[22px] text-regalblue font-semibold pt-4">
-                Cart Total: ${totalPrice?.toFixed(2)}
+                Cart Total: ₹{totalPrice?.toFixed(2)}
               </div>
               <div className="pt-4">
                 <button

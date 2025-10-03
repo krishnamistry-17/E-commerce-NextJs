@@ -28,7 +28,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.auth);
 
-
   const handleOutsideClick = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setIsSubMenuOpen(false);

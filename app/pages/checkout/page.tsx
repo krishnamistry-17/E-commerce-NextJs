@@ -6,13 +6,13 @@ import coupen from "../../../public/svgs/coupen.svg";
 import shipping from "../../../public/svgs/shipping.svg";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 const CheckOut = () => {
-  const cartItems = useSelector((state: RootState) => state.cart.items);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [agreed, setAgreed] = useState(false);
   const router = useRouter();
@@ -26,57 +26,101 @@ const CheckOut = () => {
   const [zipcode, setZipCode] = useState<string>("");
   const [phone, setphone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [cartData, setCartData] = useState<any[]>([]);
+  console.log("cartDat??? :", cartData);
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  // Fetch cart on mount
+  const fetchCart = async () => {
+    try {
+      const res = await axiosInstance.get(apiRoutes.GET_CART);
+      setCartData(res?.data?.cart?.cartItems);
+      console.log("res :", res);
+    } catch (error) {
+      console.error("Error fetching cart data", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   const handlePaymentChange = (method: string) => {
     setPaymentMethod(method);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // prevent default form submit reload
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      console.error("No access token found, user is not authenticated.");
+      toast.warn("Please signin..");
+      return;
+    }
+
+    if (!email || !fname || !lname) {
+      toast.warning("Please fill all field");
+    }
     if (!paymentMethod) {
-      alert("Please select a payment method");
+      toast.warn("Please select a payment method");
       return;
     }
     if (!agreed) {
-      alert("Please agree to terms");
+      toast.warn("Please agree to terms");
       return;
     }
 
-    if (paymentMethod === "card") {
-      const queryParams = new URLSearchParams({
-        fname,
-        lname,
-        email,
-        phone,
-        city,
-        state,
-        zipcode,
-        country,
-      });
+    const orderPayload = {
+      userId: user?._id,
+      Products: cartData.map((item) => ({
+        ProductId: item?._id,
+        name: item?.productName,
+        price: item?.price,
+        quantity: item?.quantity,
+        total: item?.quantiity * item?.price,
+      })),
+    };
 
-      const targetUrl = `/payment?${queryParams.toString()}`;
-      console.log("Navigating to payment page:", targetUrl);
+    try {
+      if (paymentMethod === "paypal") {
+        // Use the new PayPal API with return URLs
+        const res = await axiosInstance.post(
+          apiRoutes.CREATE_PAYMENT,
+          orderPayload
+        );
+        console.log("PayPal payment response:", res);
+        if (res.data.approvalUrl) {
+          window.location.href = res.data.approvalUrl;
+        } else {
+          toast.error("Failed to get PayPal approval URL");
+        }
+      } else if (paymentMethod === "card") {
+        const queryParams = new URLSearchParams({
+          fname,
+          lname,
+          email,
+          phone,
+          city,
+          state,
+          zipcode,
+          country,
+        });
 
-      router.push(targetUrl);
-    } else {
-      // Handle other payment methods here or show confirmation
-      console.log("Order placed with payment method:", paymentMethod);
+        router.push(`/payment?${queryParams.toString()}`);
+      } else if (paymentMethod === "cod") {
+        toast.info("will update u soon..");
+        console.log("Processing COD order...", orderPayload);
+      } else if (paymentMethod === "bank") {
+        toast.info("will update u soon..");
+        // Handle bank transfer
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("An error occurred while processing your payment.");
     }
   };
-
-  useEffect(() => {
-    const createPayment = async () => {
-      try {
-        const res = await axiosInstance.post(apiRoutes.CREATE_PAYMENT,{
-          
-        });
-      } catch (error) {
-        console.error("Error while create the payment!!!!!");
-      }
-    };
-    createPayment();
-  }, []);
 
   return (
     <div className="max-w-[1540px] mx-auto xl:px-[243px] px-2 pt-[20px]">
@@ -123,7 +167,7 @@ const CheckOut = () => {
               <div className="flex items-center gap-[5px] pb-[19px]">
                 <Image src={shipping} alt="image" width={20} height={20} />
                 <p className="text-[13px] font-quick-bold-700 text-regalblue">
-                  Add<span className="text-red-700">$299.11</span> to cart and
+                  Add<span className="text-red-700">₹299.11</span> to cart and
                   get free shipping!
                 </p>
               </div>
@@ -327,14 +371,14 @@ const CheckOut = () => {
 
               {/* Items */}
               <div className="py-[12px]">
-                {cartItems.map((item, index) => (
+                {cartData.map((item, index) => (
                   <div key={index} className="mb-[12px]">
                     <div className="flex items-center justify-between">
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
                         {item?.productName} x{item?.quantity}
                       </p>
                       <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        ${Number(item?.price) * item?.quantity}
+                        ₹{Number(item?.price) * item?.quantity}
                       </p>
                     </div>
                   </div>
@@ -346,8 +390,8 @@ const CheckOut = () => {
                     Subtotal
                   </p>
                   <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                    $
-                    {cartItems.reduce(
+                    ₹
+                    {cartData.reduce(
                       (acc, item) => acc + Number(item?.price) * item?.quantity,
                       0
                     )}
@@ -360,8 +404,8 @@ const CheckOut = () => {
                     Total
                   </p>
                   <p className="text-[16px] font-quick-bold-700 text-regalblue">
-                    $
-                    {cartItems.reduce(
+                    ₹
+                    {cartData.reduce(
                       (acc, item) => acc + Number(item?.price) * item?.quantity,
                       0
                     )}
@@ -395,6 +439,28 @@ const CheckOut = () => {
                     )}
                   </div>
                 </div>
+                {/*Paypal */}
+                <div className="flex items-start gap-[5px] mt-3">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="paypal"
+                    checked={paymentMethod === "paypal"}
+                    onChange={() => handlePaymentChange("paypal")}
+                    className="mt-1"
+                  />
+                  <div>
+                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
+                      Paypal Payment
+                    </p>
+                    {paymentMethod === "paypal" && (
+                      <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
+                        You will be redirected to PayPal to complete your
+                        purchase.
+                      </p>
+                    )}
+                  </div>
+                </div>
                 {/*Card Payment */}
                 <div className="flex items-start gap-[5px] mt-3">
                   <input
@@ -411,7 +477,6 @@ const CheckOut = () => {
                     </p>
                   </div>
                 </div>
-
                 {/* Cash on Delivery */}
                 <div className="flex items-start gap-[5px] mt-3">
                   <input
