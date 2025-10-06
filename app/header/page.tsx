@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { logout, setAccessToken, setUser } from "../store/authSlice";
 import useWindowWidth from "../hooks/useWindowWidth";
+import { clearCart } from "../pages/slice/cartSlice";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,6 +65,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("accessToken");
+    dispatch(clearCart());
     router.push("/signin");
   };
 

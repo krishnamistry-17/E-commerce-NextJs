@@ -59,7 +59,6 @@ const UserProfile = () => {
   // const [user, setUser] = useState<User | null>(null);
 
   const user = useSelector((state: RootState) => state.auth);
-  console.log("user :", user);
 
   // useEffect(() => {
   //   function getUser() {

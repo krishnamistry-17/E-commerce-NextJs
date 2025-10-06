@@ -19,7 +19,7 @@ export const handleCart = async (
   dispatch: Dispatch
 ) => {
   if (clickedCartIds?.includes(product?.id)) {
-    toast.info("Product already added in cart");
+    toast.info("Product already exists in cart");
     return;
   }
 
@@ -31,7 +31,7 @@ export const handleCart = async (
 
   try {
     const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(product?.id));
-    console.log("res???????carthelp :", res);
+
     if (res.status === 200 || res.data.success) {
       toast.success("Added to cart successfully!");
       dispatch(
@@ -48,4 +48,24 @@ export const handleCart = async (
   }
 
   window.dispatchEvent(new Event("cartUpdated"));
+};
+
+export const clearCartAfterPayment = async (
+  dispatch: any,
+  clearCart: any,
+  productId: string
+): Promise<void> => {
+  try {
+    const res = await axiosInstance.delete(
+      apiRoutes.REMOVE_FROM_CART(productId)
+    );
+    if (res.status === 200 || res.data.success) {
+      console.log("Cart cleared successfully!");
+    }
+    dispatch(clearCart());
+    console.log("Cart cleared successfully!");
+    window.dispatchEvent(new CustomEvent("cartUpdated"));
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+  }
 };

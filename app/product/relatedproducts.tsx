@@ -19,7 +19,7 @@ interface Category {
 
 const RelatedProduct = () => {
   const [product, setProducts] = useState<Category[]>([]);
-  console.log("product :", product);
+
   const params = useParams();
   const [activeTab, setActiveTab] = useState("All");
   const [clickedCartIds, setClickedCartIds] = useState<Set<string>>(new Set());
@@ -68,7 +68,6 @@ const RelatedProduct = () => {
       }
 
       const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
-      console.log("res??add to cart btn :", res);
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
@@ -95,7 +94,6 @@ const RelatedProduct = () => {
       const res = await axiosInstance.get(
         apiRoutes.VIEW_PRODUCT_DETAILS(productId)
       );
-      console.log("res???product-details :", res);
     } catch (error) {
       console.error("Failed to view details", error);
       toast.info("Please try again.");

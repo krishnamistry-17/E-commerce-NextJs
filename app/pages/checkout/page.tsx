@@ -9,8 +9,11 @@ import Image from "next/image";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
+import { CreateOrderRequest } from "@/types/order";
+import { clearCart } from "../slice/cartSlice";
+import { clearCartAfterPayment } from "@/utils/cartHelpers";
 
 const CheckOut = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
@@ -21,21 +24,30 @@ const CheckOut = () => {
   const [company, setCompany] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [street, setStreet] = useState<string>("");
+  const [street1, setStreet1] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [state, setState] = useState<string>("");
   const [zipcode, setZipCode] = useState<string>("");
   const [phone, setphone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [cartData, setCartData] = useState<any[]>([]);
-  console.log("cartDat??? :", cartData);
+  const [cartData, setCartData] = useState<
+    Array<{
+      productId: string;
+      productName: string;
+      price: number;
+      quantity: number;
+      total: number;
+    }>
+  >([]);
+
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
 
   // Fetch cart on mount
   const fetchCart = async () => {
     try {
       const res = await axiosInstance.get(apiRoutes.GET_CART);
       setCartData(res?.data?.cart?.cartItems);
-      console.log("res :", res);
     } catch (error) {
       console.error("Error fetching cart data", error);
     }
@@ -60,8 +72,21 @@ const CheckOut = () => {
       return;
     }
 
-    if (!email || !fname || !lname) {
-      toast.warning("Please fill all field");
+    // Validation
+    if (
+      !email ||
+      !fname ||
+      !lname ||
+      !phone ||
+      !city ||
+      !state ||
+      !zipcode ||
+      !country ||
+      !street ||
+      !street1
+    ) {
+      toast.warning("Please fill all required fields");
+      return;
     }
     if (!paymentMethod) {
       toast.warn("Please select a payment method");
@@ -72,53 +97,167 @@ const CheckOut = () => {
       return;
     }
 
-    const orderPayload = {
-      userId: user?._id,
-      Products: cartData.map((item) => ({
-        ProductId: item?._id,
-        name: item?.productName,
-        price: item?.price,
-        quantity: item?.quantity,
-        total: item?.quantiity * item?.price,
-      })),
-    };
-
     try {
-      if (paymentMethod === "paypal") {
-        // Use the new PayPal API with return URLs
-        const res = await axiosInstance.post(
-          apiRoutes.CREATE_PAYMENT,
-          orderPayload
+      if (paymentMethod === "cod") {
+        // Create order directly for COD
+        const orderData: CreateOrderRequest = {
+          Products: cartData.map((item) => ({
+            ProductId: item?.productId,
+            quantity: item?.quantity,
+            price: item?.price,
+            total: item?.total,
+          })),
+        };
+
+        const orderResponse = await axiosInstance.post(
+          apiRoutes.CREATE_ALL_PAYMENT,
+          orderData
         );
-        console.log("PayPal payment response:", res);
-        if (res.data.approvalUrl) {
-          window.location.href = res.data.approvalUrl;
+        console.log("orderResponse??????? ????create order:", orderResponse);
+
+        if (orderResponse.status === 200) {
+          toast.success("Order placed successfully!");
+          // Clear cart after successful order
+          await clearCartAfterPayment(
+            dispatch,
+            clearCart,
+            cartData[0].productId
+          );
+          router.push(`/pages/thankyou?orderId=${orderResponse.data.orderId}`);
         } else {
-          toast.error("Failed to get PayPal approval URL");
+          toast.error(orderResponse.data.message || "Failed to create order");
         }
       } else if (paymentMethod === "card") {
-        const queryParams = new URLSearchParams({
-          fname,
-          lname,
-          email,
-          phone,
-          city,
-          state,
-          zipcode,
-          country,
-        });
+        // For card payments, create payment intent first then redirect
+        try {
+          const totalAmount = cartData.reduce(
+            (acc, item) => acc + Number(item?.price) * item?.quantity,
+            0
+          );
 
-        router.push(`/payment?${queryParams.toString()}`);
-      } else if (paymentMethod === "cod") {
-        toast.info("will update u soon..");
-        console.log("Processing COD order...", orderPayload);
+          // Create payment intent
+          const paymentResponse = await fetch("/api/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount: Math.round(totalAmount * 100), // Convert to cents
+              currency: "inr",
+            }),
+          });
+
+          const paymentData = await paymentResponse.json();
+
+          if (paymentData.error) {
+            toast.error(paymentData.error);
+            return;
+          }
+
+          // Redirect to payment page with client secret
+          const queryParams = new URLSearchParams({
+            fname,
+            lname,
+            email,
+            phone,
+            city,
+            state,
+            zipcode,
+            country,
+            street,
+            street1,
+            clientSecret: paymentData.clientSecret,
+            paymentIntentId: paymentData.paymentIntentId,
+          });
+
+          router.push(`/payment?${queryParams.toString()}`);
+        } catch (error: any) {
+          console.error("Payment intent creation error:", error);
+          toast.error("Failed to initialize payment. Please try again.");
+        }
+      } else if (paymentMethod === "paypal") {
+        // For PayPal, create order first then redirect to PayPal
+        const orderData: CreateOrderRequest = {
+          Products: cartData.map((item) => ({
+            ProductId: item?.productId,
+            quantity: item?.quantity,
+            price: item?.price,
+            total: item?.total,
+          })),
+        };
+
+        const orderResponse = await axiosInstance.post(
+          apiRoutes.CREATE_ALL_PAYMENT,
+          orderData
+        );
+
+        if (orderResponse.status === 200) {
+          // Use existing PayPal flow with order ID
+          const orderPayload = {
+            Products: cartData.map((item) => ({
+              ProductId: item?.productId,
+              name: item?.productName,
+              price: item?.price,
+              quantity: item?.quantity,
+              total: item?.total,
+            })),
+          };
+
+          const res = await axiosInstance.post(
+            apiRoutes.CREATE_ALL_PAYMENT,
+            orderPayload
+          );
+
+          if (res.data.approvalUrl) {
+            // Clear cart before redirecting to PayPal
+            await clearCartAfterPayment(
+              dispatch,
+              clearCart,
+              cartData[0].productId
+            );
+            window.location.href = res.data.approvalUrl;
+          } else {
+            toast.error("Failed to get PayPal approval URL");
+          }
+        } else {
+          toast.error(orderResponse.data.message || "Failed to create order");
+        }
       } else if (paymentMethod === "bank") {
-        toast.info("will update u soon..");
-        // Handle bank transfer
+        // For bank transfer, create order with pending payment
+        const orderData: CreateOrderRequest = {
+          Products: cartData.map((item) => ({
+            ProductId: item?.productId,
+            quantity: item?.quantity,
+            price: item?.price,
+            total: item?.total,
+          })),
+        };
+
+        const orderResponse = await axiosInstance.post(
+          apiRoutes.CREATE_ALL_PAYMENT,
+          orderData
+        );
+
+        if (orderResponse.status === 200) {
+          toast.success(
+            "Order placed successfully! Please complete bank transfer."
+          );
+          // Clear cart after successful order
+          await clearCartAfterPayment(
+            dispatch,
+            clearCart,
+            cartData[0].productId
+          );
+          router.push(`/pages/thankyou?orderId=${orderResponse.data.orderId}`);
+        } else {
+          toast.error(orderResponse.data.message || "Failed to create order");
+        }
       }
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast.error("An error occurred while processing your payment.");
+    } catch (error: any) {
+      console.error("Order creation error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while processing your order."
+      );
     }
   };
 
@@ -251,8 +390,8 @@ const CheckOut = () => {
                   <div className="pt-[8px]">
                     <input
                       type="text"
-                      value={street}
-                      onChange={(e) => setStreet(e.target.value)}
+                      value={street1}
+                      onChange={(e) => setStreet1(e.target.value)}
                       placeholder="Apartment, suite, unit, etc. (optional)"
                       className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
@@ -473,7 +612,7 @@ const CheckOut = () => {
                   />
                   <div>
                     <p className="text-[16px] font-quick-semibold-600 text-regalblue">
-                      Card Payment
+                      Card (Stripe) Payment
                     </p>
                   </div>
                 </div>

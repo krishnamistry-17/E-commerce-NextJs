@@ -55,6 +55,9 @@ const Cart = () => {
       });
 
       fetchCart(); // Refresh cart from backend
+
+      // Dispatch event to update cart icon
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
     } catch (error) {
       console.error("Failed to update quantity", error);
     }
@@ -71,6 +74,9 @@ const Cart = () => {
       );
       toast.success("Item removed from cart");
       fetchCart();
+
+      // Dispatch event to update cart icon
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
     } catch (error) {
       console.error("Error removing item from cart", error);
     }

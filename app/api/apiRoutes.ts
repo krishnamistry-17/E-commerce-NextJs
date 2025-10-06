@@ -15,10 +15,20 @@ export const apiRoutes = {
   GET_FAVORITES_PRODUCTS: "/api/product/favourite-product",
   REMOVE_FROM_FAVORITES: (productId: string) =>
     `/api/product/remove-favourite/${productId}`,
+  ADD_FAVORITES_TO_CART: "/api/product/add-favourite-to-cart",
   SEARCH_PRODUCT: "/api/product/search?q=ap",
   SEND_OTP: "/api/auth/send-otp",
   VERIFY_OTP: "/api/auth/verify-otp",
-  CREATE_PAYMENT: "/api/pay/create-payment",
-  RETURN_URL: (newOrder: any) => `/payment-success?orderId=${newOrder._id}`,
-  CANCEL_URL: (newOrder: any) => `/payment-cancel?orderId=${newOrder._id}`,
+  CREATE_PAYMENT: "/api/paypal/create-payment",
+  RETURN_URL: (newOrder: { _id: string }) =>
+    `/payment-success?orderId=${newOrder._id}`,
+  CANCEL_URL: (newOrder: { _id: string }) =>
+    `/payment-cancel?orderId=${newOrder._id}`,
+  CREATE_ORDER: "/api/product/create-order",
+  GET_ORDERS: "/api/users/orders",
+  GET_ORDER_BY_ID: (orderId: string) => `/api/product/order/${orderId}`,
+  CHANGE_ORDER_STATUS: (orderId: string) =>
+    `api/product/order/${orderId}/status`,
+  CREATE_ALL_PAYMENT: "/api/pay/create-payment",
+  CLEAR_CART: "/api/product/remove-item",
 };

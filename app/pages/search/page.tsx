@@ -56,7 +56,6 @@ const Search = () => {
         `/api/product/search?q=${encodeURIComponent(query)}`
       );
       setSuggestions(response.data.products || []);
-      console.log("response ???????:", response);
     } catch (error) {
       console.error("Suggestion fetch failed:", error);
     }

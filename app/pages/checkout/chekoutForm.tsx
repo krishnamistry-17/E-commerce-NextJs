@@ -13,6 +13,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { clearCart } from "../slice/cartSlice";
+import { OrderService } from "@/services/orderService";
+import { CreateOrderRequest, ShippingAddress } from "@/types/order";
+import axiosInstance from "@/lib/axios";
+import { apiRoutes } from "@/app/api/apiRoutes";
+import { clearCartAfterPayment } from "@/utils/cartHelpers";
 
 const inputStyles = {
   style: {
@@ -33,9 +38,16 @@ const inputStyles = {
 type CheckoutFormProps = {
   customerName: string;
   customerEmail: string;
+  clientSecret?: string;
+  paymentIntentId?: string;
 };
 
-const CheckoutForm = ({ customerName, customerEmail }: CheckoutFormProps) => {
+const CheckoutForm = ({
+  customerName,
+  customerEmail,
+  clientSecret: passedClientSecret,
+  paymentIntentId,
+}: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -44,6 +56,10 @@ const CheckoutForm = ({ customerName, customerEmail }: CheckoutFormProps) => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [cartData, setCartData] = useState<any[]>([]);
+  const [shippingAddress, setShippingAddress] =
+    useState<ShippingAddress | null>(null);
+  const [isInitializing, setIsInitializing] = useState(false);
 
   const USD_TO_INR_RATE = 91.6422;
 
@@ -53,26 +69,75 @@ const CheckoutForm = ({ customerName, customerEmail }: CheckoutFormProps) => {
   );
   const totalINR = totalUSD * USD_TO_INR_RATE;
 
+  // Fetch cart data and extract shipping address from URL params
   useEffect(() => {
-    const createPaymentIntent = async () => {
-      const response = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount:
-            selectedCurrency === "USD"
-              ? Math.round(totalUSD * 100)
-              : Math.round(totalINR * 100),
-          currency: selectedCurrency.toLowerCase(),
-        }),
-      });
-
-      const data = await response.json();
-      setClientSecret(data.clientSecret);
+    const fetchCartData = async () => {
+      try {
+        const response = await axiosInstance.get(apiRoutes.GET_CART);
+        setCartData(response?.data?.cart?.cartItems || []);
+      } catch (error) {
+        console.error("Error fetching cart data", error);
+      }
     };
 
-    createPaymentIntent();
-  }, [selectedCurrency, totalUSD, totalINR]);
+    fetchCartData();
+
+    // Extract shipping address from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const address: ShippingAddress = {
+      firstName: urlParams.get("fname") || "",
+      lastName: urlParams.get("lname") || "",
+      email: urlParams.get("email") || "",
+      phone: urlParams.get("phone") || "",
+      address: urlParams.get("street") || "",
+      address1: urlParams.get("street1") || "",
+      city: urlParams.get("city") || "",
+      state: urlParams.get("state") || "",
+      zipCode: urlParams.get("zipcode") || "",
+      country: urlParams.get("country") || "",
+    };
+    setShippingAddress(address);
+  }, []);
+
+  useEffect(() => {
+    // Use passed client secret if available, otherwise create new one
+    if (passedClientSecret) {
+      setClientSecret(passedClientSecret);
+    } else {
+      const createPaymentIntent = async () => {
+        setIsInitializing(true);
+        try {
+          const response = await fetch("/api/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount:
+                selectedCurrency === "USD"
+                  ? Math.round(totalUSD * 100)
+                  : Math.round(totalINR * 100),
+              currency: selectedCurrency.toLowerCase(),
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.error) {
+            toast.error(data.error);
+            return;
+          }
+
+          setClientSecret(data.clientSecret);
+        } catch (error: any) {
+          console.error("Error creating payment intent:", error);
+          toast.error("Failed to initialize payment. Please try again.");
+        } finally {
+          setIsInitializing(false);
+        }
+      };
+
+      createPaymentIntent();
+    }
+  }, [selectedCurrency, totalUSD, totalINR, passedClientSecret]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,16 +183,49 @@ const CheckoutForm = ({ customerName, customerEmail }: CheckoutFormProps) => {
     } else if (paymentIntent?.status === "succeeded") {
       toast.success("Payment successful!");
 
-      const cardNumberElement = elements.getElement(CardNumberElement);
-      const cardExpiryElement = elements.getElement(CardExpiryElement);
-      const cardCvcElement = elements.getElement(CardCvcElement);
+      // Create order after successful payment
+      try {
+        if (shippingAddress && cartData.length > 0) {
+          const orderData = {
+            Products: cartData.map((item) => ({
+              ProductId: item?.productId,
+              quantity: item?.quantity,
+              price: item?.price,
+              total: item?.total,
+            })),
+          };
 
-      cardNumberElement?.clear();
-      cardExpiryElement?.clear();
-      cardCvcElement?.clear();
+          const orderResponse = await axiosInstance.post(
+            apiRoutes.CREATE_ALL_PAYMENT,
+            orderData
+          );
 
-      router.push("/pages/thankyou");
-      dispatch(clearCart());
+          if (orderResponse.status === 200) {
+            const cardNumberElement = elements.getElement(CardNumberElement);
+            const cardExpiryElement = elements.getElement(CardExpiryElement);
+            const cardCvcElement = elements.getElement(CardCvcElement);
+
+            cardNumberElement?.clear();
+            cardExpiryElement?.clear();
+            cardCvcElement?.clear();
+
+            // Clear cart after successful payment and order creation
+            await clearCartAfterPayment(dispatch, clearCart);
+            router.push(
+              `/pages/thankyou?orderId=${orderResponse.data.orderId}`
+            );
+          } else {
+            toast.error(orderResponse.data.message || "Failed to create order");
+          }
+        } else {
+          toast.error("Shipping address or cart data not found");
+        }
+      } catch (orderError: any) {
+        console.error("Order creation error:", orderError);
+        toast.error(
+          "Payment successful but failed to create order. Please contact support."
+        );
+      }
     }
     setLoading(false);
   };
@@ -135,6 +233,42 @@ const CheckoutForm = ({ customerName, customerEmail }: CheckoutFormProps) => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  // Show loading state while initializing payment
+  if (isInitializing) {
+    return (
+      <div className="max-w-[1640px] mx-auto my-[30px] xl:px-[143px] px-4 sm:px-6 py-6">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-shopbtn mx-auto mb-4"></div>
+            <p className="text-regalblue text-lg">Initializing payment...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if client secret is not available
+  if (!clientSecret) {
+    return (
+      <div className="max-w-[1640px] mx-auto my-[30px] xl:px-[143px] px-4 sm:px-6 py-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <h2 className="text-red-800 text-lg font-semibold mb-2">
+            Payment Initialization Failed
+          </h2>
+          <p className="text-red-600 mb-4">
+            Unable to initialize payment. Please try again or contact support.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-shopbtn text-white px-4 py-2 rounded-md hover:bg-opacity-90"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

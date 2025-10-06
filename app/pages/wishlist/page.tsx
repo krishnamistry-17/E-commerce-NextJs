@@ -6,10 +6,11 @@ import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
+import cart from "../../../public/svgs/cart.svg";
 
 const WhishList = () => {
   const [product, setProduct] = useState<any[]>([]);
-  console.log("product :", product);
+  const [favProducts, setFavProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -21,7 +22,6 @@ const WhishList = () => {
         }
 
         const res = await axiosInstance.get(apiRoutes.GET_FAVORITES_PRODUCTS);
-        console.log("res.data:", res.data);
 
         setProduct(res.data.favourites || []);
       } catch (error) {
@@ -33,18 +33,34 @@ const WhishList = () => {
     fetchProductDetails();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (productId: string) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
       const res = await axiosInstance.delete(
-        apiRoutes.REMOVE_FROM_FAVORITES(id)
+        apiRoutes.REMOVE_FROM_FAVORITES(productId)
       );
       toast.success("Item removed from favorites");
       setProduct([]);
     } catch (error) {
       console.error("Error removing item from favorites", error);
+    }
+  };
+
+  const handleAddToCart = async (id: string) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) return;
+
+      const res = await axiosInstance.post(apiRoutes.ADD_FAVORITES_TO_CART, {
+        productId: id,
+      });
+
+      toast.success("Item added to cart");
+      setFavProducts([]);
+    } catch (error) {
+      console.error("Error adding item to cart", error);
     }
   };
 
@@ -61,7 +77,6 @@ const WhishList = () => {
           ) : (
             <div className="space-y-4">
               {product?.map((item, index) => {
-                console.log("item :", item);
                 return (
                   <div
                     key={index}
@@ -87,7 +102,23 @@ const WhishList = () => {
                       </div>
                     </div>
 
-                    <div className="text-right">
+                    <div className="text-right flex items-center gap-2">
+                      <div className="flex items-center gap-2 bg-cartbtn px-3 py-3 rounded">
+                        <Image
+                          src={cart}
+                          alt="cart"
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className="w-5"
+                        />
+                        <button
+                          className="text-sm font-bold text-shopbtn ml-1"
+                          onClick={() => handleAddToCart(item?._id)}
+                        >
+                          Add to cart
+                        </button>
+                      </div>
                       <MdDelete
                         className="cursor-pointer w-6 h-6 text-red-500"
                         onClick={() => handleDelete(item?._id)}

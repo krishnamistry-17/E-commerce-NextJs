@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import axiosInstance from "@/lib/axios";
-import { apiRoutes } from "../../apiRoutes";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { userId, Products } = body;
+    const { Products } = body;
 
-    if (!userId || !Products || Products.length === 0) {
+    if (!Products || Products.length === 0) {
       return NextResponse.json(
         { error: "Missing required order parameters" },
         { status: 400 }
@@ -15,42 +13,30 @@ export async function POST(req: NextRequest) {
     }
 
     // Calculate total amount
-    const totalAmount = Products.reduce((sum: number, item: any) => {
-      return sum + item.price * item.quantity;
-    }, 0);
-
-    // Get the base URL for return URLs
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    // Prepare the payment payload with return URLs
-    const paymentPayload = {
-      userId,
-      Products,
-      totalAmount,
-      returnUrl: `${baseUrl}/pages/paypal/success`,
-      cancelUrl: `${baseUrl}/pages/paypal/cancel`,
-      currency: "USD", // or 'INR' based on your preference
-      description: `Order payment for ${Products.length} item(s)`,
-    };
-
-    // Call your existing backend API that creates PayPal payment
-    const response = await axiosInstance.post(
-      apiRoutes.CREATE_PAYMENT,
-      paymentPayload
+    const totalAmount = Products.reduce(
+      (sum: number, item: { price: number; quantity: number }) => {
+        return sum + item.price * item.quantity;
+      },
+      0
     );
 
-    if (response.data.approvalUrl) {
-      return NextResponse.json({
-        success: true,
-        approvalUrl: response.data.approvalUrl,
-        paymentId: response.data.paymentId,
-      });
-    } else {
-      return NextResponse.json(
-        { error: "Failed to create PayPal payment" },
-        { status: 500 }
-      );
-    }
+    // For demo purposes, we'll simulate PayPal payment creation
+    // In a real implementation, you would integrate with PayPal SDK
+    const paymentId = `paypal_${Date.now()}_${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+
+    // Generate approval URL (in real implementation, this comes from PayPal)
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+    const approvalUrl = `${baseUrl}/pages/paypal/success?paymentId=${paymentId}`;
+
+    return NextResponse.json({
+      success: true,
+      approvalUrl,
+      paymentId,
+      totalAmount,
+      currency: "INR",
+    });
   } catch (error) {
     console.error("PayPal payment creation error:", error);
     return NextResponse.json(

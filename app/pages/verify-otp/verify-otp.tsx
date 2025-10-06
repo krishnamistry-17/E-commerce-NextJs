@@ -13,7 +13,6 @@ const Verifyotp = () => {
         email,
         otp,
       });
-      console.log("res????verify :", res);
     } catch (error) {
       console.error("Error while sending otp");
     }

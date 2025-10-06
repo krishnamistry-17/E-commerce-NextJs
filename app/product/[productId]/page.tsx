@@ -18,20 +18,25 @@ import { MdOutlineFavorite } from "react-icons/md";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import Relatedproducts from "../relatedproducts";
 import Banner from "@/app/pages/banner/page";
+import { useDispatch, useSelector } from "react-redux";
+import { updateQuantity } from "@/app/pages/slice/cartSlice";
+import { handleCart } from "@/utils/cartHelpers";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<any>(null);
   const [categories, setCategories] = useState<any>(null);
   const [wishList, setWishList] = useState<any>(null);
-  console.log("categories :", categories);
+  const dispatch = useDispatch();
+
   const params = useParams();
   const router = useRouter();
   const [value, setValue] = useState(150);
   const [quantity, setQuantity] = useState(1);
   const [isWishClick, setIsWishClick] = useState(false);
   const [clickedFavIds, setClickedFavIds] = useState<Set<string>>(new Set());
-  const [isCartClick, setIsCartClick] = useState(false);
   const productId = params?.productId as string;
+
+  const clickedCartIds = useSelector((state: any) => state.cart.clickedCartIds);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -64,7 +69,7 @@ const ProductDetail = () => {
 
   const handleWishList = async () => {
     if (clickedFavIds.has(productId)) {
-      toast.info("Product already added in cart");
+      toast.info("Product already exists in favorites");
       return;
     }
     try {
@@ -72,6 +77,7 @@ const ProductDetail = () => {
         apiRoutes.ADD_PRODUCT_FAVORITES(productId)
       );
       setWishList(res.data.data);
+
       setIsWishClick(true);
       if (res.status === 200 || res.data.success) {
         toast.success("Added to Favorites successfully!");
@@ -79,7 +85,7 @@ const ProductDetail = () => {
       }
     } catch (error) {
       console.error("Failed to fetch product details:", error);
-      toast.error("Could not fetch product details. Please try again.");
+      toast.error("Product already exists in favorites");
     }
   };
 
@@ -234,12 +240,15 @@ const ProductDetail = () => {
                     <button
                       onClick={() => {
                         const newQty = quantity - 1;
-                        // if (newQty >= 1) {
-                        //   setQuantity(newQty);
-                        //   dispatch(
-                        //     updateQuantity({ id: product.id, quantity: newQty })
-                        //   );
-                        // }
+                        if (newQty >= 1) {
+                          setQuantity(newQty);
+                          dispatch(
+                            updateQuantity({
+                              id: productId,
+                              quantity: Math.max(1, newQty - 1),
+                            })
+                          );
+                        }
                       }}
                     >
                       <FaMinus className="text-shopbtn" />
@@ -253,9 +262,12 @@ const ProductDetail = () => {
                       onClick={() => {
                         const newQty = quantity + 1;
                         setQuantity(newQty);
-                        // dispatch(
-                        //   updateQuantity({ id: product.id, quantity: newQty })
-                        // );
+                        dispatch(
+                          updateQuantity({
+                            id: productId,
+                            quantity: Math.max(1, newQty + 1),
+                          })
+                        );
                       }}
                     >
                       <FaPlus className="text-shopbtn" />
@@ -264,9 +276,12 @@ const ProductDetail = () => {
 
                   <button
                     className="bg-shopbtn py-3 px-6 flex items-center gap-2 text-white text-[16px] font-quick-bold-700 rounded-[5px]"
-                    // onClick={() => handleCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCart(product, clickedCartIds, dispatch);
+                    }}
                   >
-                    {isCartClick ? (
+                    {clickedCartIds?.includes(productId) ? (
                       <IoCheckmarkOutline className="text-white" />
                     ) : (
                       <Image src={cart} alt="cart" width={20} height={20} />

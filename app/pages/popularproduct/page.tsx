@@ -90,7 +90,6 @@ const PopularProduct = () => {
       const res = await axiosInstance.get(
         apiRoutes.VIEW_PRODUCT_DETAILS(productId)
       );
-      console.log("res???product-details :", res);
     } catch (error) {
       console.error("Failed to view details", error);
       // toast.info("Please try again.");
@@ -231,7 +230,7 @@ const PopularProduct = () => {
                     handleCart(item, clickedCartIds, dispatch);
                   }}
                 >
-                  {clickedCartIds?.has(item?.id) ? (
+                  {clickedCartIds?.includes(item?.id) ? (
                     <IoCheckmarkOutline className="text-shopbtn" />
                   ) : (
                     <Image
@@ -244,7 +243,7 @@ const PopularProduct = () => {
                     />
                   )}
                   <button className="text-sm font-bold text-shopbtn ml-1">
-                    Add
+                    {clickedCartIds?.includes(item?.id) ? "Added" : "Add"}
                   </button>
                 </div>
               </div>

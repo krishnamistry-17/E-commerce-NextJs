@@ -38,8 +38,6 @@ export default function SignUpPage() {
         password,
       });
 
-      console.log("response:", response);
-
       if (response.status === 200 || response.status === 201) {
         const { accessToken, email } = response.data.data;
 
@@ -61,29 +59,29 @@ export default function SignUpPage() {
     }
   };
 
-    //   // Example in a React component within Next.js
-    // async function requestOtp(email) {
-    //   const response = await fetch('/api/send-otp', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ email }),
-    //   });
-    //   const data = await response.json();
-    //   // Handle response (e.g., show success message or error)
-    // }    // Example in a React component within Next.js
-    // async function verifyOtp(email, otp) {
-    //   const response = await fetch('/api/verify-otp', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ email, otp }),
-    //   });
-    //   const data = await response.json();
-    //   // Handle response (e.g., redirect to dashboard or show error)
-    // }
+  //   // Example in a React component within Next.js
+  // async function requestOtp(email) {
+  //   const response = await fetch('/api/send-otp', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ email }),
+  //   });
+  //   const data = await response.json();
+  //   // Handle response (e.g., show success message or error)
+  // }    // Example in a React component within Next.js
+  // async function verifyOtp(email, otp) {
+  //   const response = await fetch('/api/verify-otp', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ email, otp }),
+  //   });
+  //   const data = await response.json();
+  //   // Handle response (e.g., redirect to dashboard or show error)
+  // }
 
   return (
     <div className="flex items-center justify-center">

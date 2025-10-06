@@ -30,9 +30,12 @@ const HeaderTop = () => {
               Wishlist <span className=" text-black pl-[8.5px]">|</span>
               <WishListIcon />
             </Link>
-            <p className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px]">
+            <Link
+              href={"/pages/orders"}
+              className="text-[13px] font-lato-regular-400 text-bgbrown pl-[8.5px] cursor-pointer"
+            >
               Order Tracking
-            </p>
+            </Link>
           </div>
           <div className=" xs375:flex items-center ">
             <p className="text-[13px] font-lato-regular-400 text-bgbrown ">

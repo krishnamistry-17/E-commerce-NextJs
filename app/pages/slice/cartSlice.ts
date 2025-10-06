@@ -33,8 +33,8 @@ const cartSlice = createSlice({
       } else {
         state.items.push(action.payload);
       }
-      if (!state.clickedCartIds.includes(action.payload.id)) {
-        state.clickedCartIds.push(action.payload.id);
+      if (!state.clickedCartIds?.includes(action.payload.id)) {
+        state.clickedCartIds?.push(action.payload.id);
       }
     },
     removeFromCart(state, action: PayloadAction<string>) {

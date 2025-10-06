@@ -11,7 +11,7 @@ const Sendotp = () => {
       const res = await axiosInstance.post(apiRoutes.SEND_OTP, {
         email,
       });
-      console.log("res???send :", res);
+   
     } catch (error) {
       console.error("Error while sending otp");
     }

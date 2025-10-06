@@ -22,7 +22,7 @@ export const SearchProvider = ({ children }: { children: React.ReactNode }) => {
             `/api/product/search?q=${query}`
           );
           setResults(response.data.results);
-          console.log("response :", response);
+         
         } catch (error) {
           console.error("Error fetching search results:", error);
           setResults(null);

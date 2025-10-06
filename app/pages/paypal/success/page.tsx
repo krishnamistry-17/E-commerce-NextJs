@@ -3,12 +3,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
+import { clearCart } from "../../slice/cartSlice";
+import { clearCartAfterPayment } from "@/utils/cartHelpers";
 
 const PayPalSuccess = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
   const [isProcessing, setIsProcessing] = useState(true);
   const [paymentStatus, setPaymentStatus] = useState<
     "processing" | "success" | "error"
@@ -46,8 +50,8 @@ const PayPalSuccess = () => {
         setPaymentStatus("success");
         toast.success("Payment completed successfully!");
 
-        // Clear cart or update order status
-        // You might want to dispatch an action to clear the cart here
+        // Clear cart after successful PayPal payment
+        await clearCartAfterPayment(dispatch, clearCart);
 
         // Redirect to thank you page after a delay
         setTimeout(() => {
