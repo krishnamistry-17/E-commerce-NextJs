@@ -21,7 +21,7 @@ export class OrderService {
         apiRoutes.CREATE_ORDER,
         orderData
       );
-      console.log("response ????create order:", response);
+
       return response.data;
     } catch (error: any) {
       console.error("Create order error:", error);

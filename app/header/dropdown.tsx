@@ -9,12 +9,22 @@ const TopbarDropdowns = () => {
 
   const [selectedLang, setSelectedLang] = useState("English");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-  
+
   const languageRef = useRef<HTMLDivElement | null>(null);
   const currencyRef = useRef<HTMLDivElement | null>(null);
 
-  const languages = ["Hindi", "Spanish", "French"];
-  const currencies = ["₹", "EUR", "INR"];
+  const languages = ["English", "Hindi", "Spanish", "French"];
+  const currencies = ["USD", "₹", "EUR", "INR"];
+
+  const handleLanguageChange = (lang: string) => {
+    setSelectedLang(lang);
+    setShowLangDropdown(false);
+  };
+
+  const handleCurrencyChange = (currency: string) => {
+    setSelectedCurrency(currency);
+    setShowCurrencyDropdown(false);
+  };
 
   // const language = localStorage.getItem("lang");
   // console.log('language :', language);
@@ -82,7 +92,7 @@ const TopbarDropdowns = () => {
               <button
                 key={lang}
                 onClick={() => {
-                  setSelectedLang(lang);
+                  handleLanguageChange(lang);
                   setShowLangDropdown(false);
                 }}
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"

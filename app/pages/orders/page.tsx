@@ -7,14 +7,13 @@ import Image from "next/image";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import { toast } from "react-toastify";
+import { MdDelete } from "react-icons/md";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState<any[]>([]);
-  console.log("orders ????:", orders);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [filteredOrders, setFilteredOrders] = useState<any[]>([]);
-  console.log("filteredOrders ????:", filteredOrders);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +21,6 @@ const OrderPage = () => {
         setLoading(true);
         const response = await axiosInstance.get(apiRoutes.GET_ORDERS);
         setOrders(response?.data?.orders);
-        console.log("response ????fetch orders:", response);
       } catch (error) {
         console.error("Error fetching orders:", error);
         toast.error("Error fetching orders");
@@ -32,6 +30,22 @@ const OrderPage = () => {
     };
     fetchData();
   }, []);
+
+  const handleDelete = async (orderId: string) => {
+    try {
+      const res = await axiosInstance.patch(apiRoutes.REMOVE_ORDERS, {
+        orderId,
+      });
+    
+      toast.success("Order deleted successfully");
+      setOrders(orders?.filter((order) => order?._id !== orderId));
+      setFilteredOrders(
+        filteredOrders?.filter((order) => order?._id !== orderId)
+      );
+    } catch (error) {
+      console.error("Error deleting order:", error);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -82,7 +96,7 @@ const OrderPage = () => {
         status === "All" ? order : order.status === status
       )
     );
-    console.log("filteredOrders ????:", filteredOrders);
+   
   };
 
   return (
@@ -172,15 +186,10 @@ const OrderPage = () => {
                       {order.status?.charAt(0)?.toUpperCase() +
                         order?.status?.slice(1)}
                     </span>
-                    {/* <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(
-                        order?.paymentStatus
-                      )}`}
-                    >
-                      Payment:{" "}
-                      {order.paymentStatus?.charAt(0)?.toUpperCase() +
-                        order?.paymentStatus?.slice(1)}
-                    </span> */}
+                    <MdDelete
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => handleDelete(order?._id)}
+                    />
                   </div>
                 </div>
 
@@ -230,7 +239,6 @@ const OrderPage = () => {
                   </h4>
                   <div className="space-y-2">
                     {order?.Products?.map((item: any, index: any) => {
-                      console.log("item ????:", item);
                       return (
                         <div
                           key={index}

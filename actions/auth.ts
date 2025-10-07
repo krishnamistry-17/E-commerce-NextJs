@@ -139,7 +139,7 @@ export async function signInWithGitHub() {
 }
 
 export async function signInWithGoogle() {
-  const supabase = await createClient();
+  const supabase = await createClient();  
   const origin = await axiosInstance.get("origin");
 
   const { data, error } = await supabase.auth.signInWithOAuth({

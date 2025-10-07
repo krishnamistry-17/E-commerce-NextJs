@@ -113,7 +113,7 @@ const CheckOut = () => {
           apiRoutes.CREATE_ALL_PAYMENT,
           orderData
         );
-        console.log("orderResponse??????? ????create order:", orderResponse);
+       
 
         if (orderResponse.status === 200) {
           toast.success("Order placed successfully!");

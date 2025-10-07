@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import SignInButton from "../component/SignInButton";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "../api/apiRoutes";
 import { useDispatch } from "react-redux";
@@ -34,7 +33,6 @@ const Signin = () => {
         password,
       });
 
-
       if (response.status === 200 || response.status === 201) {
         const { accessToken, _id, email, role } = response.data.data;
 
@@ -59,7 +57,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center  py-8">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-full max-w-md"
@@ -120,8 +118,8 @@ const Signin = () => {
           Submit
         </button>
 
-        <p className="text-center py-[10px]">or</p>
-        <SignInButton />
+        {/* <p className="text-center py-[10px]">or</p> */}
+        {/* <SignInButton /> */}
 
         <div className="py-[10px]">
           <p>

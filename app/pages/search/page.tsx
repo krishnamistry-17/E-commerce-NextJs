@@ -15,6 +15,8 @@ interface Category {
   productName: string;
   image: string;
   price: number;
+  stock: number;
+  quantity?: number;
 }
 
 const Search = () => {
@@ -90,6 +92,7 @@ const Search = () => {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
+
   return (
     <div className="relative w-full max-w-[450px]">
       <form action="" onSubmit={handleSearch}>

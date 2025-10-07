@@ -8,7 +8,7 @@ import drop from "../../../public/svgs/drop.svg";
 import cart from "../../../public/svgs/cart.svg";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import { handleCart } from "@/utils/cartHelpers";
+import { toast } from "react-toastify";
 
 interface Category {
   productName: string;
@@ -25,8 +25,10 @@ const PopularProduct = () => {
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const router = useRouter();
-
   const clickedCartIds = useSelector((state: any) => state.cart.clickedCartIds);
+  const setClickedCartIds = useSelector(
+    (state: any) => state.cart.setClickedCartIds
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,38 +54,38 @@ const PopularProduct = () => {
     activeTab === "All"
       ? product
       : product?.filter((products) => products?.productName === activeTab);
+ 
 
-  // const handleCart = async (productId: string) => {
-  //   if (clickedCartIds.has(productId)) {
-  //     toast.info("Product already added in cart");
-  //     return;
-  //   }
+  const handleCart = async (productId: string) => {
+    if (clickedCartIds?.includes(productId)) {
+      toast.info("Product already added in cart");
+      return;
+    }
 
-  //   const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
 
-  //   if (!accessToken) {
-  //     console.error("No access token found, user is not authenticated.");
-  //     toast.info("Please Login to add product in cart");
-  //     return;
-  //   }
+    if (!accessToken) {
+      console.error("No access token found, user is not authenticated.");
+      toast.info("Please Login to add product in cart");
+      return;
+    }
 
-  //   try {
-  //     const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
-  //     console.log("res??add to cart btn????:", res);
+    try {
+      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
 
-  //     if (res.status === 200 || res.data.success) {
-  //       toast.success("Added to cart successfully!");
-  //       setClickedCartIds((prev) => new Set(prev).add(productId));
-  //     }
-  //   } catch (error: any) {
-  //     console.error("Failed to add to cart", error);
-  //     if (error.response?.status === 409) {
-  //       toast.error("Could not add item to cart.");
-  //     }
-  //   }
+      if (res.status === 200 || res.data.success) {
+        toast.success("Added to cart successfully!");
+        setClickedCartIds((prev: any) => [...prev, productId]);
+      }
+    } catch (error: any) {
+      console.error("Failed to add to cart", error);
+      if (error.response?.status === 409) {
+        toast.error("Could not add item to cart.");
+      }
+    }
 
-  //   window.dispatchEvent(new Event("cartUpdated"));
-  // };
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
 
   const handleDetails = async (productId: string) => {
     try {
@@ -227,7 +229,7 @@ const PopularProduct = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     // call the reusable handleCart helper
-                    handleCart(item, clickedCartIds, dispatch);
+                    handleCart(item?.id);
                   }}
                 >
                   {clickedCartIds?.includes(item?.id) ? (

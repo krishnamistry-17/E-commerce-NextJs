@@ -5,9 +5,9 @@ import type { Dispatch } from "@reduxjs/toolkit";
 import { addToCart } from "@/app/pages/slice/cartSlice";
 
 interface Product {
-  id: string;
+  _id: string;
   productName: string;
-  price: string;
+  price: number;
   image: string;
   stock: number;
   quantity?: number;
@@ -18,7 +18,7 @@ export const handleCart = async (
   clickedCartIds: string[],
   dispatch: Dispatch
 ) => {
-  if (clickedCartIds?.includes(product?.id)) {
+  if (clickedCartIds?.includes(product?._id)) {
     toast.info("Product already exists in cart");
     return;
   }
@@ -30,14 +30,18 @@ export const handleCart = async (
   }
 
   try {
-    const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(product?.id));
+    const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(product?._id));
 
     if (res.status === 200 || res.data.success) {
       toast.success("Added to cart successfully!");
       dispatch(
         addToCart({
-          ...product,
-          quantity: product.quantity || 1,
+          id: product?._id,
+          productName: product?.productName,
+          price: product?.price.toString(),
+          quantity: product?.quantity || 1,
+          image: product?.image,
+          stock: product?.stock,
         })
       );
     }
@@ -63,7 +67,7 @@ export const clearCartAfterPayment = async (
       console.log("Cart cleared successfully!");
     }
     dispatch(clearCart());
-    console.log("Cart cleared successfully!");
+
     window.dispatchEvent(new CustomEvent("cartUpdated"));
   } catch (error) {
     console.error("Error clearing cart:", error);

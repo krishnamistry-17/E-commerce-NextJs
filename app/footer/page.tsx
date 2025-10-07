@@ -39,13 +39,13 @@ const Footer = () => {
           <p className="text-[24px] font-quick-bold-700 text-regalblue pl-[12px] pt-[15px]">
             Account
           </p>
-          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px]">
-            <p>Sign In</p>
-            <p>View Cart</p>
-            <p>My Wishlist</p>
-            <p>Track My Order</p>
+          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px] cursor-pointer">
+            <a href="/signin">Sign In</a>
+            <a href="/pages/cart">View Cart</a>
+            <a href="/pages/wishlist">My Wishlist</a>
+            <a href="/pages/orders">Track My Order</a>
             <p>Help Ticket</p>
-            <p>Shipping Details</p>
+            <a href="/pages/orders">Shipping Details</a>
             <p>Compare Products</p>
           </div>
         </div>
@@ -54,12 +54,12 @@ const Footer = () => {
           <p className="text-[24px] font-quick-bold-700 text-regalblue pl-[12px] pt-[15px]">
             Company
           </p>
-          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px]">
-            <p>About Us</p>
-            <p>Delivery Information</p>
+          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px] cursor-pointer">
+            <a href="/pages/aboutus">About Us</a>
+            <a href="/pages/orders">Delivery Information</a>
             <p>Privacy Policy</p>
             <p>Terms & Conditions</p>
-            <p>Contact Us</p>
+            <a href="/pages/contact">Contact Us</a>
             <p>Support Center</p>
             <p>Careers</p>
           </div>
@@ -69,7 +69,7 @@ const Footer = () => {
           <p className="text-[24px] font-quick-bold-700 text-regalblue pl-[12px] pt-[15px]">
             Corporate
           </p>
-          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px]">
+          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px] cursor-pointer">
             <p>Become a Vendor</p>
             <p>Affiliate Program</p>
             <p>Farm Business</p>
@@ -84,7 +84,7 @@ const Footer = () => {
           <p className="text-[24px] font-quick-bold-700 text-regalblue pl-[12px] pt-[15px]">
             Popular
           </p>
-          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px]">
+          <div className="pt-[20px] flex flex-col gap-[13px] font-lato-regular-400 text-[15px] text-regalblue px-[12px] cursor-pointer">
             <p>Milk & Flavoured Milk</p>
             <p>Butter and Margarine</p>
             <p>Eggs Substitutes</p>

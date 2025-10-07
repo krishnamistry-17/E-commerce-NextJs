@@ -13,11 +13,13 @@ export interface CartItem {
 interface CartState {
   items: CartItem[];
   clickedCartIds: string[];
+  setClickedCartIds: string[];
 }
 
 const initialState: CartState = {
   items: [],
   clickedCartIds: [],
+  setClickedCartIds: [],
 };
 
 const cartSlice = createSlice({
