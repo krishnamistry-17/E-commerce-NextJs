@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 import { toast } from "react-toastify";
 import { IoCheckmarkOutline } from "react-icons/io5";
-import drop from "../../public/svgs/drop.svg";
+// import drop from "../../public/svgs/drop.svg";
 import cart from "../../public/svgs/cart.svg";
 import { apiRoutes } from "@/app/api/apiRoutes";
 
@@ -21,10 +21,10 @@ const RelatedProduct = () => {
   const [product, setProducts] = useState<Category[]>([]);
 
   const params = useParams();
-  const [activeTab, setActiveTab] = useState("All");
+  // const [activeTab, setActiveTab] = useState("All");
   const [clickedCartIds, setClickedCartIds] = useState<Set<string>>(new Set());
-  const [categoryMenu, setCategoryMenu] = useState(false);
-  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+  // const [categoryMenu, setCategoryMenu] = useState(false);
+  // const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const router = useRouter();
   const id = params?.id as string;
 
@@ -67,15 +67,17 @@ const RelatedProduct = () => {
         return;
       }
 
-      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
+      await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
         setClickedCartIds((prev) => new Set(prev).add(productId));
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to add to cart", error);
-      if (error.response?.status === 409) {
+      if (
+        (error as { response?: { status?: number } })?.response?.status === 409
+      ) {
         toast.error("Could not add item to cart.");
       }
     }
@@ -91,9 +93,7 @@ const RelatedProduct = () => {
         router.push("/login");
         return;
       }
-      const res = await axiosInstance.get(
-        apiRoutes.VIEW_PRODUCT_DETAILS(productId)
-      );
+      await axiosInstance.get(apiRoutes.VIEW_PRODUCT_DETAILS(productId));
     } catch (error) {
       console.error("Failed to view details", error);
       toast.info("Please try again.");

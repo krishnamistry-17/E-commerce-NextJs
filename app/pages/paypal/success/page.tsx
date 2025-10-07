@@ -5,7 +5,6 @@ import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import axiosInstance from "@/lib/axios";
-import { apiRoutes } from "@/app/api/apiRoutes";
 import { clearCart } from "../../slice/cartSlice";
 import { clearCartAfterPayment } from "@/utils/cartHelpers";
 
@@ -26,6 +25,44 @@ const PayPalSuccess = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
+    const executePayment = async () => {
+      try {
+        setIsProcessing(true);
+
+        // Call your backend to execute the PayPal payment
+        const response = await axiosInstance.post(
+          "/api/paypal/execute-payment",
+          {
+            paymentId,
+            token,
+            payerId,
+          }
+        );
+
+        if (response.data.success) {
+          setPaymentStatus("success");
+          toast.success("Payment completed successfully!");
+
+          // Clear cart after successful PayPal payment
+          await clearCartAfterPayment(dispatch, clearCart);
+
+          // Redirect to thank you page after a delay
+          setTimeout(() => {
+            router.push("/pages/thankyou");
+          }, 3000);
+        } else {
+          setPaymentStatus("error");
+          toast.error("Payment execution failed");
+        }
+      } catch (error) {
+        console.error("Payment execution error:", error);
+        setPaymentStatus("error");
+        toast.error("An error occurred while processing your payment");
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
     if (paymentId && token && payerId) {
       executePayment();
     } else {
@@ -33,42 +70,7 @@ const PayPalSuccess = () => {
       setIsProcessing(false);
       toast.error("Invalid payment parameters");
     }
-  }, [paymentId, token, payerId]);
-
-  const executePayment = async () => {
-    try {
-      setIsProcessing(true);
-
-      // Call your backend to execute the PayPal payment
-      const response = await axiosInstance.post("/api/paypal/execute-payment", {
-        paymentId,
-        token,
-        payerId,
-      });
-
-      if (response.data.success) {
-        setPaymentStatus("success");
-        toast.success("Payment completed successfully!");
-
-        // Clear cart after successful PayPal payment
-        await clearCartAfterPayment(dispatch, clearCart);
-
-        // Redirect to thank you page after a delay
-        setTimeout(() => {
-          router.push("/pages/thankyou");
-        }, 3000);
-      } else {
-        setPaymentStatus("error");
-        toast.error("Payment execution failed");
-      }
-    } catch (error) {
-      console.error("Payment execution error:", error);
-      setPaymentStatus("error");
-      toast.error("An error occurred while processing your payment");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  }, [paymentId, token, payerId, dispatch, router]);
 
   if (isProcessing) {
     return (

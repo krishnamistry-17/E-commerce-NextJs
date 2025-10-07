@@ -1,10 +1,9 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Order, OrderResponse } from "@/types/order";
 import { OrderService } from "@/services/orderService";
-import { toast } from "react-toastify";
 import Image from "next/image";
 
 const Thankyou = () => {
@@ -23,9 +22,9 @@ const Thankyou = () => {
     } else {
       setLoading(false);
     }
-  }, [orderId]);
+  }, [orderId, fetchOrderDetails]);
 
-  const fetchOrderDetails = async () => {
+  const fetchOrderDetails = useCallback(async () => {
     try {
       if (!orderId) return;
 
@@ -36,13 +35,13 @@ const Thankyou = () => {
       } else {
         console.error(response.message || "Failed to fetch order details");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching order:", error);
       console.error("Failed to fetch order details");
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
 
   if (loading) {
     return (

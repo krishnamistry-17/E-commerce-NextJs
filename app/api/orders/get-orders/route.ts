@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Order, OrderResponse } from "@/types/order";
-import axiosInstance from "@/lib/axios";
 
 export async function GET(request: NextRequest) {
   try {
@@ -51,15 +50,20 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(orderResponse);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Get orders error:", error);
 
     const errorMessage =
-      error.response?.data?.message || "Failed to fetch orders";
+      (error as { response?: { data?: { message?: string } } })?.response?.data
+        ?.message || "Failed to fetch orders";
 
     return NextResponse.json(
       { success: false, message: errorMessage },
-      { status: error.response?.status || 500 }
+      {
+        status:
+          (error as { response?: { status?: number } })?.response?.status ||
+          500,
+      }
     );
   }
 }

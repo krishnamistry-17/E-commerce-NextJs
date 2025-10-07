@@ -13,8 +13,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { clearCart } from "../slice/cartSlice";
-import { OrderService } from "@/services/orderService";
-import { CreateOrderRequest, ShippingAddress } from "@/types/order";
+// import { ShippingAddress } from "@/types/order";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import { clearCartAfterPayment } from "@/utils/cartHelpers";
@@ -46,7 +45,6 @@ const CheckoutForm = ({
   customerName,
   customerEmail,
   clientSecret: passedClientSecret,
-  paymentIntentId,
 }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -56,9 +54,26 @@ const CheckoutForm = ({
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [cartData, setCartData] = useState<any[]>([]);
-  const [shippingAddress, setShippingAddress] =
-    useState<ShippingAddress | null>(null);
+  const [cartData, setCartData] = useState<
+    Array<{
+      productId: string;
+      quantity: number;
+      price: number;
+      total: number;
+    }>
+  >([]);
+  const [shippingAddress, setShippingAddress] = useState<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    address1: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  } | null>(null);
   const [isInitializing, setIsInitializing] = useState(false);
 
   const USD_TO_INR_RATE = 91.6422;
@@ -84,7 +99,18 @@ const CheckoutForm = ({
 
     // Extract shipping address from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const address: ShippingAddress = {
+    const address: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+      address: string;
+      address1: string;
+      city: string;
+      state: string;
+      zipCode: string;
+      country: string;
+    } = {
       firstName: urlParams.get("fname") || "",
       lastName: urlParams.get("lname") || "",
       email: urlParams.get("email") || "",
@@ -127,7 +153,7 @@ const CheckoutForm = ({
           }
 
           setClientSecret(data.clientSecret);
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("Error creating payment intent:", error);
           toast.error("Failed to initialize payment. Please try again.");
         } finally {
@@ -220,7 +246,7 @@ const CheckoutForm = ({
         } else {
           toast.error("Shipping address or cart data not found");
         }
-      } catch (orderError: any) {
+      } catch (orderError: unknown) {
         console.error("Order creation error:", orderError);
         toast.error(
           "Payment successful but failed to create order. Please contact support."

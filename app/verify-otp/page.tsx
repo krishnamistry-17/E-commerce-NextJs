@@ -26,7 +26,7 @@ const Verifyotp = () => {
       } else {
         toast.error("Invalid otp");
       }
-    } catch (error) {
+    } catch {
       console.error("Error while sending otp");
       toast.error("Error while sending otp");
     }

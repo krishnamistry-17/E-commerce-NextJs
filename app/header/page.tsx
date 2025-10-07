@@ -20,7 +20,7 @@ import { clearCart } from "../pages/slice/cartSlice";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  // const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const router = useRouter();
   const menuRef = useRef<HTMLLIElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);

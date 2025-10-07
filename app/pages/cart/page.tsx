@@ -16,7 +16,16 @@ import { RootState } from "@/app/store/store";
 const Cart = () => {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
-  const [cartData, setCartData] = useState<any[]>([]);
+  const [cartData, setCartData] = useState<
+    Array<{
+      _id: string;
+      productId: string;
+      productName: string;
+      price: number;
+      quantity: number;
+      image: string;
+    }>
+  >([]);
 
   // Fetch cart on mount
   const fetchCart = async () => {
@@ -50,7 +59,7 @@ const Cart = () => {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
-      const res = await axiosInstance.patch(apiRoutes.UPDATE_CART(productId), {
+      await axiosInstance.patch(apiRoutes.UPDATE_CART(productId), {
         quantity,
       });
 
@@ -69,9 +78,7 @@ const Cart = () => {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
-      const res = await axiosInstance.delete(
-        apiRoutes.REMOVE_FROM_CART(productId)
-      );
+      await axiosInstance.delete(apiRoutes.REMOVE_FROM_CART(productId));
       toast.success("Item removed from cart");
       fetchCart();
 
@@ -138,7 +145,7 @@ const Cart = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {cartData?.map((item, index) => {
+                {cartData?.map((item) => {
                   return (
                     <div
                       key={item._id}

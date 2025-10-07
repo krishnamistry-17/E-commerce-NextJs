@@ -21,10 +21,10 @@ const TopbarDropdowns = () => {
     setShowLangDropdown(false);
   };
 
-  const handleCurrencyChange = (currency: string) => {
-    setSelectedCurrency(currency);
-    setShowCurrencyDropdown(false);
-  };
+  // const handleCurrencyChange = (currency: string) => {
+  //   setSelectedCurrency(currency);
+  //   setShowCurrencyDropdown(false);
+  // };
 
   // const language = localStorage.getItem("lang");
   // console.log('language :', language);

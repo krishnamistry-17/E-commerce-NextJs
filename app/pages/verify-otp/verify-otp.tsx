@@ -9,11 +9,11 @@ const Verifyotp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post(apiRoutes.VERIFY_OTP, {
+      await axiosInstance.post(apiRoutes.VERIFY_OTP, {
         email,
         otp,
       });
-    } catch (error) {
+    } catch {
       console.error("Error while sending otp");
     }
   };

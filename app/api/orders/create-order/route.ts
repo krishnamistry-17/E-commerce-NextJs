@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Order, CreateOrderRequest, OrderResponse } from "@/types/order";
-import axiosInstance from "@/lib/axios";
-import { apiRoutes } from "@/app/api/apiRoutes";
+import { Order, OrderResponse } from "@/types/order";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +20,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required fields
-    if (!body.products || !Array.isArray(body.products) || body.products.length === 0) {
+    if (
+      !body.products ||
+      !Array.isArray(body.products) ||
+      body.products.length === 0
+    ) {
       return NextResponse.json(
         { success: false, message: "Products are required" },
         { status: 400 }
@@ -38,7 +40,8 @@ export async function POST(request: NextRequest) {
 
     // Calculate totals from the provided products
     const subtotal = body.products.reduce(
-      (total: number, item: any) => total + Number(item.price) * item.quantity,
+      (total: number, item: { price: number; quantity: number }) =>
+        total + Number(item.price) * item.quantity,
       0
     );
 
@@ -57,14 +60,22 @@ export async function POST(request: NextRequest) {
       _id: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       orderNumber,
       userId: body.userID,
-      items: body.products.map((item: any) => ({
-        productId: item.ProductId,
-        productName: item.productName || `Product ${item.ProductId}`,
-        price: Number(item.price),
-        quantity: item.quantity,
-        image: item.image || "",
-        totalPrice: Number(item.price) * item.quantity,
-      })),
+      items: body.products.map(
+        (item: {
+          ProductId: string;
+          productName?: string;
+          price: number;
+          quantity: number;
+          image?: string;
+        }) => ({
+          productId: item.ProductId,
+          productName: item.productName || `Product ${item.ProductId}`,
+          price: Number(item.price),
+          quantity: item.quantity,
+          image: item.image || "",
+          totalPrice: Number(item.price) * item.quantity,
+        })
+      ),
       shippingAddress: {
         firstName: body.shippingAddress?.firstName || "",
         lastName: body.shippingAddress?.lastName || "",
@@ -101,15 +112,22 @@ export async function POST(request: NextRequest) {
 
     console.log("Returning response:", response);
     return NextResponse.json(response, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Create order error:", error);
 
     const errorMessage =
-      error.response?.data?.message || error.message || "Failed to create order";
+      (error as { response?: { data?: { message?: string } } })?.response?.data
+        ?.message ||
+      (error as Error)?.message ||
+      "Failed to create order";
 
     return NextResponse.json(
       { success: false, message: errorMessage },
-      { status: error.response?.status || 500 }
+      {
+        status:
+          (error as { response?: { status?: number } })?.response?.status ||
+          500,
+      }
     );
   }
 }

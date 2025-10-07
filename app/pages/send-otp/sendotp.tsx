@@ -8,11 +8,11 @@ const Sendotp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post(apiRoutes.SEND_OTP, {
+      await axiosInstance.post(apiRoutes.SEND_OTP, {
         email,
       });
-   
-    } catch (error) {
+      console.log("res??:");
+    } catch {
       console.error("Error while sending otp");
     }
   };

@@ -29,7 +29,7 @@ const ForgotPassword = () => {
         setError(res.data.message || "Error in signin");
       }
     } catch (error) {
-      console.error("Error while sending forgot password email");
+      console.error("Error while sending forgot password email",error);
     }
   };
   return (

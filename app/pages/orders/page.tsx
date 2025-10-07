@@ -10,10 +10,36 @@ import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
 
 const OrderPage = () => {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<
+    Array<{
+      _id: string;
+      id: string;
+      status: string;
+      date: string;
+      address: string;
+      subtotal: number;
+      Products: Array<{
+        quantity: number;
+        price: number;
+      }>;
+    }>
+  >([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [filteredOrders, setFilteredOrders] = useState<any[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<
+    Array<{
+      _id: string;
+      id: string;
+      status: string;
+      date: string;
+      address: string;
+      subtotal: number;
+      Products: Array<{
+        quantity: number;
+        price: number;
+      }>;
+    }>
+  >([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,10 +59,10 @@ const OrderPage = () => {
 
   const handleDelete = async (orderId: string) => {
     try {
-      const res = await axiosInstance.patch(apiRoutes.REMOVE_ORDERS, {
+      await axiosInstance.patch(apiRoutes.REMOVE_ORDERS, {
         orderId,
       });
-    
+
       toast.success("Order deleted successfully");
       setOrders(orders?.filter((order) => order?._id !== orderId));
       setFilteredOrders(
@@ -64,20 +90,20 @@ const OrderPage = () => {
     }
   };
 
-  const getPaymentStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "failed":
-        return "bg-red-100 text-red-800";
-      case "refunded":
-        return "bg-orange-100 text-orange-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  //   // const getPaymentStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case "pending":
+  //       return "bg-yellow-100 text-yellow-800";
+  //     case "completed":
+  //       return "bg-green-100 text-green-800";
+  //     case "failed":
+  //       return "bg-red-100 text-red-800";
+  //     case "refunded":
+  //       return "bg-orange-100 text-orange-800";
+  //     default:
+  //       return "bg-gray-100 text-gray-800";
+  //   }
+  // };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -96,7 +122,6 @@ const OrderPage = () => {
         status === "All" ? order : order.status === status
       )
     );
-   
   };
 
   return (
@@ -163,7 +188,7 @@ const OrderPage = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredOrders?.map((order: any) => (
+            {filteredOrders?.map((order) => (
               <div
                 key={order?.id}
                 className="border border-gray-300 rounded-lg p-6 shadow-md"
@@ -238,7 +263,7 @@ const OrderPage = () => {
                     Order Items
                   </h4>
                   <div className="space-y-2">
-                    {order?.Products?.map((item: any, index: any) => {
+                    {order?.Products?.map((item, index) => {
                       return (
                         <div
                           key={index}

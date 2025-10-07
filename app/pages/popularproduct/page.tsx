@@ -7,7 +7,7 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 import drop from "../../../public/svgs/drop.svg";
 import cart from "../../../public/svgs/cart.svg";
 import { apiRoutes } from "@/app/api/apiRoutes";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 interface Category {
@@ -20,14 +20,18 @@ interface Category {
 
 const PopularProduct = () => {
   const [product, setProducts] = useState<Category[]>([]);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const router = useRouter();
-  const clickedCartIds = useSelector((state: any) => state.cart.clickedCartIds);
+  const clickedCartIds = useSelector(
+    (state: { cart: { clickedCartIds: string[] } }) => state.cart.clickedCartIds
+  );
   const setClickedCartIds = useSelector(
-    (state: any) => state.cart.setClickedCartIds
+    (state: {
+      cart: { setClickedCartIds: (fn: (prev: string[]) => string[]) => void };
+    }) => state.cart.setClickedCartIds
   );
 
   useEffect(() => {
@@ -54,7 +58,6 @@ const PopularProduct = () => {
     activeTab === "All"
       ? product
       : product?.filter((products) => products?.productName === activeTab);
- 
 
   const handleCart = async (productId: string) => {
     if (clickedCartIds?.includes(productId)) {
@@ -75,11 +78,13 @@ const PopularProduct = () => {
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
-        setClickedCartIds((prev: any) => [...prev, productId]);
+        setClickedCartIds((prev: string[]) => [...prev, productId]);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to add to cart", error);
-      if (error.response?.status === 409) {
+      if (
+        (error as { response?: { status?: number } })?.response?.status === 409
+      ) {
         toast.error("Could not add item to cart.");
       }
     }
@@ -89,9 +94,7 @@ const PopularProduct = () => {
 
   const handleDetails = async (productId: string) => {
     try {
-      const res = await axiosInstance.get(
-        apiRoutes.VIEW_PRODUCT_DETAILS(productId)
-      );
+      await axiosInstance.get(apiRoutes.VIEW_PRODUCT_DETAILS(productId));
     } catch (error) {
       console.error("Failed to view details", error);
       // toast.info("Please try again.");

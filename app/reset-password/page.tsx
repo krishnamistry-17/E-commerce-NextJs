@@ -34,7 +34,7 @@ const ResetPasswordForm = () => {
         setError(res.data.message || "Error in resetting password");
         toast.error(res.data.message || "Error in resetting password");
       }
-    } catch (error) {
+    } catch {
       console.error("Error in resetting password");
     }
   };

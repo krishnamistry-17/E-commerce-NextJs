@@ -9,8 +9,15 @@ import { apiRoutes } from "@/app/api/apiRoutes";
 import cart from "../../../public/svgs/cart.svg";
 
 const WhishList = () => {
-  const [product, setProduct] = useState<any[]>([]);
-  const [favProducts, setFavProducts] = useState<any[]>([]);
+  const [product, setProduct] = useState<
+    Array<{
+      _id: string;
+      productName: string;
+      price: number;
+      image: string;
+    }>
+  >([]);
+  // const [favProducts, setFavProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -38,9 +45,7 @@ const WhishList = () => {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
-      const res = await axiosInstance.delete(
-        apiRoutes.REMOVE_FROM_FAVORITES(productId)
-      );
+      await axiosInstance.delete(apiRoutes.REMOVE_FROM_FAVORITES(productId));
       toast.success("Item removed from favorites");
       setProduct([]);
     } catch (error) {
@@ -53,12 +58,12 @@ const WhishList = () => {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
-      const res = await axiosInstance.post(apiRoutes.ADD_FAVORITES_TO_CART, {
+      await axiosInstance.post(apiRoutes.ADD_FAVORITES_TO_CART, {
         productId: id,
       });
 
       toast.success("Item added to cart");
-      setFavProducts([]);
+      // setFavProducts([]);
     } catch (error) {
       console.error("Error adding item to cart", error);
     }

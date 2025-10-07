@@ -21,8 +21,8 @@ interface Category {
 
 const Search = () => {
   const searchParams = useSearchParams();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const menuRef = useRef<HTMLLIElement>(null);
@@ -52,7 +52,7 @@ const Search = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchInput, hasUserTyped]);
 
-  const fetchSuggestions = async (query: any) => {
+  const fetchSuggestions = async (query: string) => {
     try {
       const response = await axiosInstance.get(
         `/api/product/search?q=${encodeURIComponent(query)}`
@@ -63,7 +63,7 @@ const Search = () => {
     }
   };
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchInput.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchInput)}`);

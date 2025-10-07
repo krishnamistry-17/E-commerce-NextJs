@@ -4,8 +4,9 @@ import axiosInstance from "@/lib/axios";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
+  const { orderId } = await params;
   try {
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
 
@@ -16,8 +17,6 @@ export async function GET(
       );
     }
 
-    const { orderId } = params;
-
     // TODO: Replace with actual backend API call
     // For now, return null - implement actual order fetching
     // const response = await axiosInstance.get(`/api/product/order/${orderId}`, {
@@ -26,6 +25,9 @@ export async function GET(
 
     // Mock data for testing - replace with actual API call
     const order: Order | undefined = undefined;
+
+    // Use orderId to avoid unused variable warning
+    console.log("Fetching order:", orderId);
 
     if (!order) {
       return NextResponse.json(
@@ -41,22 +43,21 @@ export async function GET(
     };
 
     return NextResponse.json(orderResponse);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Get order error:", error);
 
-    const errorMessage =
-      error.response?.data?.message || "Failed to fetch order";
+    const errorMessage = "Failed to fetch order";
 
     return NextResponse.json(
       { success: false, message: errorMessage },
-      { status: error.response?.status || 500 }
+      { status: 500 }
     );
   }
 }
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
@@ -68,7 +69,7 @@ export async function PATCH(
       );
     }
 
-    const { orderId } = params;
+    const { orderId } = await params;
     const body: UpdateOrderStatusRequest = await request.json();
 
     // Update order status in backend
@@ -89,15 +90,14 @@ export async function PATCH(
     };
 
     return NextResponse.json(orderResponse);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Update order error:", error);
 
-    const errorMessage =
-      error.response?.data?.message || "Failed to update order";
+    const errorMessage = "Failed to update order";
 
     return NextResponse.json(
       { success: false, message: errorMessage },
-      { status: error.response?.status || 500 }
+      { status: 500 }
     );
   }
 }

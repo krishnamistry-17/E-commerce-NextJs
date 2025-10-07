@@ -40,7 +40,7 @@ const CheckOut = () => {
     }>
   >([]);
 
-  const { user } = useSelector((state: RootState) => state.auth);
+  const {} = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   // Fetch cart on mount
@@ -113,7 +113,6 @@ const CheckOut = () => {
           apiRoutes.CREATE_ALL_PAYMENT,
           orderData
         );
-       
 
         if (orderResponse.status === 200) {
           toast.success("Order placed successfully!");
@@ -169,7 +168,7 @@ const CheckOut = () => {
           });
 
           router.push(`/payment?${queryParams.toString()}`);
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("Payment intent creation error:", error);
           toast.error("Failed to initialize payment. Please try again.");
         }
@@ -251,7 +250,7 @@ const CheckOut = () => {
           toast.error(orderResponse.data.message || "Failed to create order");
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Order creation error:", error);
       toast.error(
         error instanceof Error

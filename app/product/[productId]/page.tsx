@@ -23,9 +23,26 @@ import { updateQuantity } from "@/app/pages/slice/cartSlice";
 import { handleCart } from "@/utils/cartHelpers";
 
 const ProductDetail = () => {
-  const [product, setProduct] = useState<any>(null);
-  const [categories, setCategories] = useState<any>(null);
-  const [wishList, setWishList] = useState<any>(null);
+  const [product, setProduct] = useState<{
+    _id: string;
+    productName: string;
+    price: number;
+    image: string;
+    category: string;
+    title: string;
+    stock: number;
+  } | null>(null);
+  const [categories, setCategories] = useState<Array<{
+    category: string;
+    categoryProduct: Array<{
+      _id: string;
+      productName: string;
+      image: string;
+      price: number;
+      stock: number;
+    }>;
+  }> | null>(null);
+  // const [wishList, setWishList] = useState<any>(null);
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -36,7 +53,9 @@ const ProductDetail = () => {
   const [clickedFavIds, setClickedFavIds] = useState<Set<string>>(new Set());
   const productId = params?.productId as string;
 
-  const clickedCartIds = useSelector((state: any) => state.cart.clickedCartIds);
+  const clickedCartIds = useSelector(
+    (state: { cart: { clickedCartIds: string[] } }) => state.cart.clickedCartIds
+  );
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -76,7 +95,7 @@ const ProductDetail = () => {
       const res = await axiosInstance.post(
         apiRoutes.ADD_PRODUCT_FAVORITES(productId)
       );
-      setWishList(res.data.data);
+      // setWishList(res.data.data);
 
       setIsWishClick(true);
       if (res.status === 200 || res.data.success) {
@@ -354,7 +373,7 @@ const ProductDetail = () => {
             </div>
 
             <div className="flex flex-col gap-4">
-              {categories?.map((cat: any, index: number) => (
+              {categories?.map((cat, index: number) => (
                 <div key={index} className="flex flex-col gap-2">
                   {/* Category title */}
                   <p className="text-[16px] font-quick-bold-700 text-regalblue">
@@ -362,7 +381,7 @@ const ProductDetail = () => {
                   </p>
 
                   {/* Products in the category */}
-                  {cat.categoryProduct?.map((product: any) => (
+                  {cat.categoryProduct?.map((product) => (
                     <div
                       key={product._id}
                       className="flex items-center justify-between border border-bggray rounded-[5px] p-3 cursor-pointer hover:bg-gray-100"
@@ -421,10 +440,10 @@ const ProductDetail = () => {
             </div>
             <div className="pt-[14px]">
               <div className="flex flex-col gap-4">
-                {categories?.map((cat: any, index: number) => (
+                {categories?.map((cat, index: number) => (
                   <div key={index} className="flex flex-col gap-2">
                     {/* Products in the category */}
-                    {cat.categoryProduct?.map((product: any) => (
+                    {cat.categoryProduct?.map((product) => (
                       <div
                         key={product._id}
                         className="flex items-center justify-between border border-bggray rounded-[5px] p-3 cursor-pointer hover:bg-gray-100"

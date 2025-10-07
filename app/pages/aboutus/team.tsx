@@ -1,7 +1,5 @@
-import axiosInstance from "@/lib/axios";
-import { AboutWelcome } from "@/types/product";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import fb from "../../../public/svgs/fb.svg";
 import twit from "../../../public/svgs/twit.svg";
 import insta from "../../../public/svgs/insta.svg";
