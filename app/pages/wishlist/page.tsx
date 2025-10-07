@@ -108,7 +108,7 @@ const WhishList = () => {
                     </div>
 
                     <div className="text-right flex items-center gap-2">
-                      <div className="flex items-center gap-2 bg-cartbtn px-3 py-3 rounded">
+                      <div className="md:flex hidden items-center gap-2 bg-cartbtn px-3 py-3 rounded">
                         <Image
                           src={cart}
                           alt="cart"
@@ -123,6 +123,17 @@ const WhishList = () => {
                         >
                           Add to cart
                         </button>
+                      </div>
+                      <div className="md:hidden items-center gap-2  px-3 py-3 rounded">
+                        <Image
+                          onClick={() => handleAddToCart(item?._id)}
+                          src={cart}
+                          alt="cart"
+                          width={25}
+                          height={25}
+                          unoptimized
+                          className="w-5"
+                        />
                       </div>
                       <MdDelete
                         className="cursor-pointer w-6 h-6 text-red-500"

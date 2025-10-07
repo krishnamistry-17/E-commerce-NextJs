@@ -277,7 +277,7 @@ const CheckOut = () => {
           className="flex items-center gap-[8px]"
           onClick={() => router.push("/pages/cart")}
         >
-          <p className="text-[14px] text-shopbtn font-quick-semibold-600 md:block hidden cursor-pointer">
+          <p className="text-[14px] text-shopbtn font-quick-semibold-600  cursor-pointer">
             Cart
           </p>
           <Image src={right} alt="right" width={19} height={24} />
@@ -299,13 +299,13 @@ const CheckOut = () => {
         </div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="flex  gap-[15px] pt-[30px]">
+        <div className="md:flex  gap-[15px] pt-[30px]">
           <div className="max-w-[980px] w-full ">
             <div className="bg-bgpink px-[15px] py-[19px] rounded-[5px] border border-pinkbg">
-              <div className="flex items-center gap-[5px] pb-[19px]">
+              <div className="flex items-center gap-[5px] md:pb-[19px] pb-[10px]">
                 <Image src={shipping} alt="image" width={20} height={20} />
                 <p className="text-[13px] font-quick-bold-700 text-regalblue">
-                  Add<span className="text-red-700">₹299.11</span> to cart and
+                  Add<span className="text-red-700 pl-1">₹299.11</span> to cart and
                   get free shipping!
                 </p>
               </div>
@@ -319,7 +319,7 @@ const CheckOut = () => {
                 Billing details
               </p>
               <div className="w-full">
-                <div className="flex items-center gap-[20px] w-full">
+                <div className="md:flex items-center gap-[20px] w-full">
                   <div className="flex flex-col w-full">
                     <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                       First Name<span className="text-red-600">*</span>
@@ -491,7 +491,7 @@ const CheckOut = () => {
             </div>
           </div>
 
-          <div className="max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50">
+          <div className="md:max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50 md:mt-0 mt-[30px] ">
             <div className="flex flex-col px-[21px]">
               <p className="text-[15px] font-quick-bold-700 text-regalblue py-[21px] ">
                 Your Order

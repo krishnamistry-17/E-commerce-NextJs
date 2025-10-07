@@ -134,8 +134,8 @@ const SearchContent = () => {
                 <Image
                   src={item.image}
                   alt={item.productName}
-                  width={40}
-                  height={40}
+                  width={50}
+                  height={60}
                   className="rounded"
                 />
                 <p className="text-regalblue text-[14px] font-medium truncate max-w-[150px]">
@@ -149,7 +149,10 @@ const SearchContent = () => {
                 </p>
                 <button
                   type="button"
-                  onClick={() => handleCart(item, clickedCartIds, dispatch)}
+                  onClick={() => {
+                    handleCart(item, clickedCartIds, dispatch);
+                    setSuggestions([]);
+                  }}
                   className="bg-green-200 px-[10px] py-[4px] rounded-md text-regalblue text-[13px] font-semibold"
                 >
                   Add

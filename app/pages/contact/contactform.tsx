@@ -52,14 +52,14 @@ const ContactForm = () => {
                 <input
                   type="text"
                   placeholder="First Name"
-                  className="py-[22px] pl-[21px] w-full focus:outline-none"
+                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
                 />
               </div>
-              <div className="w-full border border-bordercolor rounded-[10px] md:pt-0 pt-[20px]">
+              <div className="w-full border border-bordercolor rounded-[10px] md:mt-0 mt-[20px]">
                 <input
                   type="email"
                   placeholder="Your Email"
-                  className="py-[22px] pl-[21px] w-full focus:outline-none"
+                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
                 />
               </div>
             </div>
@@ -69,14 +69,14 @@ const ContactForm = () => {
                 <input
                   type="tel"
                   placeholder="Your Phone"
-                  className="py-[22px] pl-[21px] w-full focus:outline-none"
+                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
                 />
               </div>
-              <div className="w-full border border-bordercolor rounded-[10px] md:pt-0 pt-[20px]">
+              <div className="w-full border border-bordercolor rounded-[10px] md:mt-0 mt-[20px]">
                 <input
                   type="text"
                   placeholder="Subject"
-                  className="py-[22px] pl-[21px] w-full focus:outline-none"
+                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
                 />
               </div>
             </div>

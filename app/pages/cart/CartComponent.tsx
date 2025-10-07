@@ -209,7 +209,7 @@ const CartComponent = () => {
                         </div>
                       </div>
 
-                      <div className="text-right">
+                      <div className=" flex lg:flex-col flex-row justify-between items-center  lg:mt-0 mt-2">
                         <p className="text-sm font-bold mb-2">
                           Total: ₹
                           {(Number(item.price) * (item.quantity || 1)).toFixed(

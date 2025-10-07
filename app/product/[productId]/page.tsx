@@ -142,7 +142,7 @@ const ProductDetail = () => {
       if (
         (error as { response?: { status?: number } })?.response?.status === 409
       ) {
-        toast.error("Could not add item to cart.");
+        toast.info("Product already exists in cart");
       }
     }
 
@@ -161,8 +161,8 @@ const ProductDetail = () => {
 
   return (
     <div>
-      <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] xs375:px-5 px-2">
-        <div className="flex items-center gap-[12px]">
+      <div className="w-full  border-b border-gray-200 py-[12px] xl:px-[143px] px-5">
+        <div className="flex items-center md:gap-[12px] gap-[6px]">
           <div
             className="flex items-center gap-[8px]"
             onClick={() => router.push("/")}

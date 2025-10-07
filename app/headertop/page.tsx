@@ -39,7 +39,7 @@ const HeaderTop = () => {
           </div>
           <div className=" xs375:flex items-center ">
             <p className="text-[13px] font-lato-regular-400 text-bgbrown ">
-              Need help? Call Us:+{" "}
+              Need help?<span className="pl-1">Call Us:+</span>{" "}
               <span className=" text-shopbtn">1800 900</span>{" "}
               <span className=" text-black pl-[8.5px] pr-[8.5px]">|</span>
             </p>

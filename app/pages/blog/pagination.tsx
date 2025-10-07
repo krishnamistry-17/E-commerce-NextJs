@@ -1,127 +1,132 @@
-// import React from "react";
-// import { MdArrowBackIos } from "react-icons/md";
-// import { MdArrowForwardIos } from "react-icons/md";
+import React from "react";
+import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowForwardIos } from "react-icons/md";
 
-// const Pagination = ({ totalPages = 5, currentPage, setCurrentPage }) => {
-//   const getPaginationRange = () => {
-//     const range = [];
+type PaginationProps = {
+  postPerPage: number;
+  totalPosts: number;
+  currentPage: number;
+  totalPages: number;
+  handlePageChange: (pageNumber: number) => void;
+  setCurrentPage: (pageNumber: number) => void;
+};
 
-//     range.push(1);
+const Pagination = ({
+  currentPage,
+  totalPages,
+  setCurrentPage,
+}: PaginationProps) => {
+  const getPaginationRange = () => {
+    const range = [];
 
-//     if (currentPage > 3) {
-//       range.push("...");
-//     }
+    range.push(1);
 
-//     const start = Math.max(2, currentPage - 1);
-//     const end = Math.min(totalPages - 1, totalPages + 1);
+    if (currentPage > 3) {
+      range.push("...");
+    }
 
-//     for (let i = start; i <= end; i++) {
-//       range.push(i);
-//     }
-//     if (currentPage < totalPages - 2) {
-//       range.push("...");
-//     }
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, totalPages + 1);
 
-//     range.push(totalPages);
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+    if (currentPage < totalPages - 2) {
+      range.push("...");
+    }
 
-//     return range;
-//   };
+    range.push(totalPages);
 
-//   const paginationRange = getPaginationRange();
+    return range;
+  };
 
-//   const paginate = (pageNumber: number, e) => {
-//     e.preventDefault();
-//     if (pageNumber >= 1 && pageNumber <= totalPages) {
-//       setCurrentPage(pageNumber);
-//     }
-//   };
+  const paginationRange = getPaginationRange();
 
-//   const goToPreviousPage = (e) => {
-//     e.preventDefault();
-//     if (currentPage === 1) {
-//       setCurrentPage(totalPages);
-//     } else {
-//       setCurrentPage(currentPage - 1);
-//     }
-//   };
+  const paginate = (
+    pageNumber: number,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
-//   const goToNextPage = (e) => {
-//     e.preventDefault();
-//     if (currentPage === 1) {
-//       setCurrentPage(totalPages);
-//     } else {
-//       setCurrentPage(currentPage + 1);
-//     }
-//   };
+  const goToPreviousPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (currentPage === 1) {
+      setCurrentPage(totalPages);
+    } else {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-//   return (
-//     <div
-//       className="flex flex-col lg:flex-row  
-//     items-center gap-4 mt-[16px] mb-[25px]"
-//     >
-//       {/* Previous Button */}
-//       <button
-//         className="flex items-center justify-center 
-//         w-[40px] h-[40px] bg-bggray rounded-[40px]
-//        "
-//         onClick={goToPreviousPage}
-//       >
-//         <MdArrowBackIos className="pl-[4px]" />
-//       </button>
+  const goToNextPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (currentPage === 1) {
+      setCurrentPage(totalPages);
+    } else {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
-//       <div className="flex sm:gap-4 xs:gap-2">
-//         {paginationRange.map((number, index) =>
-//           typeof number === "number" ? (
-//             <button
-//               key={index}
-//               className={`
-//        w-[40px] h-[40px] bg-bggray rounded-[40px]
-//         ${
-//           currentPage === number
-//             ? "bg-shopbtn text-white text-[16px] font-quick-bold-700"
-//             : "bg-bggray text-bgbrown text-[16px] font-quick-bold-700"
-//         }
-//       `}
-//               onClick={(e) => paginate(number, e)}
-//             >
-//               {number}
-//             </button>
-//           ) : (
-//             <span
-//               key={index}
-//               className={`
-//         flex items-center justify-center 
-//         w-[40px] h-[40px] bg-bggray rounded-[40px]
-//       `}
-//             >
-//               ...
-//             </span>
-//           )
-//         )}
-//       </div>
-
-//       {/* Next Button */}
-//       <button
-//         className="flex items-center justify-center 
-//          w-[40px] h-[40px] bg-bggray rounded-[40px] 
-//         "
-//         onClick={goToNextPage}
-//       >
-//         <MdArrowForwardIos className="pl-[2px]" />
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default Pagination;
-
-
-import React from 'react'
-
-const pagination = () => {
   return (
-    <div>pagination</div>
-  )
-}
+    <div
+      className="flex flex-col lg:flex-row  
+    items-center gap-4 mt-[16px] mb-[25px]"
+    >
+      {/* Previous Button */}
+      <button
+        className="flex items-center justify-center 
+        w-[40px] h-[40px] bg-bggray rounded-[40px]
+       "
+        onClick={goToPreviousPage}
+      >
+        <MdArrowBackIos className="pl-[4px]" />
+      </button>
 
-export default pagination
+      <div className="flex sm:gap-4 xs:gap-2">
+        {paginationRange.map((number, index) =>
+          typeof number === "number" ? (
+            <button
+              key={index}
+              className={`
+       w-[40px] h-[40px] bg-bggray rounded-[40px]
+        ${
+          currentPage === number
+            ? "bg-shopbtn text-white text-[16px] font-quick-bold-700"
+            : "bg-bggray text-bgbrown text-[16px] font-quick-bold-700"
+        }
+      `}
+              onClick={(e) => paginate(number, e)}
+            >
+              {number}
+            </button>
+          ) : (
+            <span
+              key={index}
+              className={`
+        flex items-center justify-center 
+        w-[40px] h-[40px] bg-bggray rounded-[40px]
+      `}
+            >
+              ...
+            </span>
+          )
+        )}
+      </div>
+
+      {/* Next Button */}
+      <button
+        className="flex items-center justify-center 
+         w-[40px] h-[40px] bg-bggray rounded-[40px] 
+        "
+        onClick={goToNextPage}
+      >
+        <MdArrowForwardIos className="pl-[2px]" />
+      </button>
+    </div>
+  );
+};
+
+export default Pagination;

@@ -17,7 +17,7 @@ export default function NotFound() {
         <div className="space-y-4">
           <Link
             href="/"
-            className="inline-block w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            className="inline-block w-full bg-shopbtn text-white px-6 py-3 rounded-lg font-medium"
           >
             Go Home
           </Link>

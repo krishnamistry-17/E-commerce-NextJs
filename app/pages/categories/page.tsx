@@ -27,7 +27,10 @@ const Categories = () => {
   const [product, setProducts] = useState<Category[]>([]);
   const [activeTab, setActiveTab] = useState<string>("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
-  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
+
+  const handleCategoryMenu = () => {
+    setCategoryMenu((prev) => !prev);
+  };
   // const [visiblecount, setVisibleCount] = useState(5);
   const router = useRouter();
 
@@ -188,7 +191,7 @@ const Categories = () => {
               <div
                 className="flex items-center justify-between w-full bg-white py-2 px-4 
                 rounded-[50px] border border-gray-400 cursor-pointer"
-                onClick={toggleCategoryMenu}
+                onClick={handleCategoryMenu}
               >
                 <p
                   className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}
