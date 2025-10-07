@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -8,7 +8,7 @@ import axiosInstance from "@/lib/axios";
 import { clearCart } from "../../slice/cartSlice";
 import { clearCartAfterPayment } from "@/utils/cartHelpers";
 
-const PayPalSuccess = () => {
+const PayPalSuccessContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
@@ -44,7 +44,11 @@ const PayPalSuccess = () => {
           toast.success("Payment completed successfully!");
 
           // Clear cart after successful PayPal payment
-          await clearCartAfterPayment(dispatch, clearCart);
+          await clearCartAfterPayment(
+            dispatch,
+            clearCart,
+            response.data.orderId
+          );
 
           // Redirect to thank you page after a delay
           setTimeout(() => {
@@ -141,6 +145,20 @@ const PayPalSuccess = () => {
       </p>
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
     </div>
+  );
+};
+
+const PayPalSuccess = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
+      <PayPalSuccessContent />
+    </Suspense>
   );
 };
 

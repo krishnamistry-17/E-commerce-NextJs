@@ -21,7 +21,7 @@ const RelatedProduct = () => {
   const [product, setProducts] = useState<Category[]>([]);
 
   const params = useParams();
-  // const [activeTab, setActiveTab] = useState("All");
+  const [activeTab] = useState("All");
   const [clickedCartIds, setClickedCartIds] = useState<Set<string>>(new Set());
   // const [categoryMenu, setCategoryMenu] = useState(false);
   // const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
@@ -60,14 +60,17 @@ const RelatedProduct = () => {
     }
 
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
       if (!accessToken) {
         toast.info("Please login to add items to your cart.");
         router.push("/login");
         return;
       }
 
-      await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
+      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
@@ -87,7 +90,10 @@ const RelatedProduct = () => {
 
   const handleDetails = async (productId: string) => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
       if (!accessToken) {
         toast.info("Please login to add items to your cart.");
         router.push("/login");

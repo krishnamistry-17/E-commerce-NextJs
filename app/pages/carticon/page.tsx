@@ -1,25 +1,24 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import cartIcon from "@/public/svgs/cart.svg";
-// import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 
 const CartIcon = () => {
   const [cartCount, setCartCount] = useState(0);
-  // const products = useSelector((state: any) => state.cart.products || []);
-  // console.log("products :", products);
-  // const cartCount = products.reduce(
-  //   (acc: number, item: any) => acc + item.quantity,
-  //   0
-  // );
 
   useEffect(() => {
+    if (typeof window === "undefined") return; // Safety for SSR
+
     const fetchCart = async () => {
       const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) return;
+      if (!accessToken) {
+        setCartCount(0);
+        return;
+      }
 
       try {
         const res = await axiosInstance.get(apiRoutes.GET_CART);
@@ -36,12 +35,15 @@ const CartIcon = () => {
       }
     };
 
-    fetchCart(); // initial
+    fetchCart(); // initial fetch
 
     const handleCartUpdate = () => fetchCart();
 
     window.addEventListener("cartUpdated", handleCartUpdate);
-    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
   }, []);
 
   return (

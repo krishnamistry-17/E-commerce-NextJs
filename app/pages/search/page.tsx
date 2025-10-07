@@ -1,11 +1,11 @@
 "use client";
-import useWindowWidth from "@/app/hooks/useWindowWidth";
+// import useWindowWidth from "@/app/hooks/useWindowWidth";
 import { RootState } from "@/app/store/store";
 import axiosInstance from "@/lib/axios";
 import { handleCart } from "@/utils/cartHelpers";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,18 +19,20 @@ interface Category {
   quantity?: number;
 }
 
-const Search = () => {
+const SearchContent = () => {
   const searchParams = useSearchParams();
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+
+  // const [_isMenuOpen, _setIsMenuOpen] = useState(false);
+  // const [_isSubMenuOpen, _setIsSubMenuOpen] = useState(false);
+
   const [searchInput, setSearchInput] = useState("");
   const [hasUserTyped, setHasUserTyped] = useState(false);
-  const menuRef = useRef<HTMLLIElement>(null);
+  // const menuRef = useRef<HTMLLIElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const [suggestions, setSuggestions] = useState<Category[]>([]);
   const router = useRouter();
   const dispatch = useDispatch();
-  const windowWidth = useWindowWidth();
+  // const windowWidth = useWindowWidth();
   const clickedCartIds = useSelector(
     (state: RootState) => state.cart.clickedCartIds
   );
@@ -70,28 +72,28 @@ const Search = () => {
     }
   };
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setIsSubMenuOpen(false);
-    }
-    if (
-      mobileMenuRef.current &&
-      !mobileMenuRef.current.contains(event.target as Node)
-    ) {
-      setIsMenuOpen(false);
-    }
-  };
+  // const handleOutsideClick = (event: MouseEvent) => {
+  //   if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+  //     _setIsSubMenuOpen(false);
+  //   }
+  //   if (
+  //     mobileMenuRef.current &&
+  //     !mobileMenuRef.current.contains(event.target as Node)
+  //   ) {
+  //     _setIsMenuOpen(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (windowWidth >= 1024) {
-      setIsMenuOpen(false);
-    }
-  }, [windowWidth]);
+  // useEffect(() => {
+  //   if (windowWidth >= 1024) {
+  //     _setIsMenuOpen(false);
+  //   }
+  // }, [windowWidth]);
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleOutsideClick);
+  //   return () => document.removeEventListener("mousedown", handleOutsideClick);
+  // }, []);
 
   return (
     <div className="relative w-full max-w-[450px]">
@@ -158,6 +160,20 @@ const Search = () => {
         </div>
       )}
     </div>
+  );
+};
+
+const Search = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
+      <SearchContent />
+    </Suspense>
   );
 };
 

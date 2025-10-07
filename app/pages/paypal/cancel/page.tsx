@@ -1,10 +1,10 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { FaTimesCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-const PayPalCancel = () => {
+const PayPalCancelContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -72,6 +72,20 @@ const PayPalCancel = () => {
         </button>
       </div>
     </div>
+  );
+};
+
+const PayPalCancel = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
+      <PayPalCancelContent />
+    </Suspense>
   );
 };
 

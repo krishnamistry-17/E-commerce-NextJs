@@ -2,10 +2,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import CheckoutForm from "../pages/checkout/chekoutForm";
 
-const CheckoutFormWrapper = () => {
+const CheckoutFormWrapperContent = () => {
   const searchParams = useSearchParams();
 
   const fname = searchParams.get("fname") || "";
@@ -37,6 +37,20 @@ const CheckoutFormWrapper = () => {
       clientSecret={clientSecret}
       paymentIntentId={paymentIntentId}
     />
+  );
+};
+
+const CheckoutFormWrapper = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
+      <CheckoutFormWrapperContent />
+    </Suspense>
   );
 };
 

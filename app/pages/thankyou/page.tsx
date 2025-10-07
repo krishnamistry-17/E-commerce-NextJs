@@ -1,28 +1,18 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Order, OrderResponse } from "@/types/order";
 import { OrderService } from "@/services/orderService";
 import Image from "next/image";
 
-const Thankyou = () => {
+const ThankyouContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
   const orderId = searchParams.get("orderId");
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    if (orderId) {
-      fetchOrderDetails();
-    } else {
-      setLoading(false);
-    }
-  }, [orderId, fetchOrderDetails]);
 
   const fetchOrderDetails = useCallback(async () => {
     try {
@@ -42,6 +32,16 @@ const Thankyou = () => {
       setLoading(false);
     }
   }, [orderId]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (orderId) {
+      fetchOrderDetails();
+    } else {
+      setLoading(false);
+    }
+  }, [orderId, fetchOrderDetails]);
 
   if (loading) {
     return (
@@ -255,6 +255,20 @@ const Thankyou = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const Thankyou = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
+      <ThankyouContent />
+    </Suspense>
   );
 };
 

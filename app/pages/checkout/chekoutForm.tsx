@@ -236,7 +236,11 @@ const CheckoutForm = ({
             cardCvcElement?.clear();
 
             // Clear cart after successful payment and order creation
-            await clearCartAfterPayment(dispatch, clearCart);
+            await clearCartAfterPayment(
+              dispatch,
+              clearCart,
+              cartData[0].productId
+            );
             router.push(
               `/pages/thankyou?orderId=${orderResponse.data.orderId}`
             );

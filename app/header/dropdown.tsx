@@ -30,19 +30,25 @@ const TopbarDropdowns = () => {
   // console.log('language :', language);
 
   useEffect(() => {
-    const storedLang = localStorage.getItem("lang");
-    const storedCurrency = localStorage.getItem("currency");
+    if (typeof window !== "undefined") {
+      const storedLang = localStorage.getItem("lang");
+      const storedCurrency = localStorage.getItem("currency");
 
-    if (storedLang) setSelectedLang(storedLang);
-    if (storedCurrency) setSelectedCurrency(storedCurrency);
+      if (storedLang) setSelectedLang(storedLang);
+      if (storedCurrency) setSelectedCurrency(storedCurrency);
+    }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("lang", selectedLang);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("lang", selectedLang);
+    }
   }, [selectedLang]);
 
   useEffect(() => {
-    localStorage.setItem("currency", selectedCurrency);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("currency", selectedCurrency);
+    }
   }, [selectedCurrency]);
 
   // Close dropdowns on outside click
@@ -63,10 +69,12 @@ const TopbarDropdowns = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (typeof window !== "undefined") {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
   }, []);
 
   return (

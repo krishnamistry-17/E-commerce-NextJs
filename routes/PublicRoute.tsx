@@ -5,7 +5,7 @@ interface PublicRouteProps {
   children: ReactNode;
 }
 
-const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
+const PublicRoute = ({ children }: PublicRouteProps) => {
   // const isAuthenticated = localStorage.getItem("authToken");
 
   return <>{children}</>;

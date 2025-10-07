@@ -16,7 +16,27 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import storage from "redux-persist/lib/storage"; // localStorage for web
+// Create a noop storage for SSR
+const createNoopStorage = () => {
+  return {
+    getItem() {
+      return Promise.resolve(null);
+    },
+    setItem(_key: string, value: unknown) {
+      return Promise.resolve(value);
+    },
+    removeItem() {
+      return Promise.resolve();
+    },
+  };
+};
+
+// Use noop storage for SSR, localStorage for client
+const storage =
+  typeof window !== "undefined"
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require("redux-persist/lib/storage").default
+    : createNoopStorage();
 
 //  Combine reducers
 const rootReducer = combineReducers({

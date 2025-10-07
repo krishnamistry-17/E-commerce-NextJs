@@ -4,7 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useEffect, useRef, useState } from "react";
-import CartIcon from "../pages/carticon/page";
+import dynamic from "next/dynamic";
+
+const CartIcon = dynamic(() => import("../pages/carticon/page"), {
+  ssr: false,
+});
 import logo from "../../public/svgs/logo.svg";
 import HeaderTop from "../headertop/page";
 import fillwish from "../../public/svgs/fillwish.svg";
@@ -20,7 +24,8 @@ import { clearCart } from "../pages/slice/cartSlice";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  console.log("isSubMenuOpen??:", isSubMenuOpen);
   const router = useRouter();
   const menuRef = useRef<HTMLLIElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -48,23 +53,30 @@ const Navbar = () => {
   }, [windowWidth]);
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
+    if (typeof window !== "undefined") {
+      document.addEventListener("mousedown", handleOutsideClick);
+      return () =>
+        document.removeEventListener("mousedown", handleOutsideClick);
+    }
   }, []);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken");
-    const storedUser = localStorage.getItem("user");
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("accessToken");
+      const storedUser = localStorage.getItem("user");
 
-    if (storedToken && storedUser) {
-      dispatch(setAccessToken(storedToken));
-      dispatch(setUser(JSON.parse(storedUser)));
+      if (storedToken && storedUser) {
+        dispatch(setAccessToken(storedToken));
+        dispatch(setUser(JSON.parse(storedUser)));
+      }
     }
   }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("accessToken");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
+    }
     dispatch(clearCart());
     router.push("/signin");
   };

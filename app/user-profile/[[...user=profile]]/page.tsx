@@ -10,7 +10,7 @@ const UserProfile = () => {
   return (
     <div className="p-4 text-md space-y-4">
       <h1>User Profile</h1>
-      <p>Email:{user}</p>
+      <p>Email:{user?.email}</p>
     </div>
   );
 };

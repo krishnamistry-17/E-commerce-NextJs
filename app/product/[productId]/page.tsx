@@ -12,15 +12,15 @@ import whishlist from "../../../public/svgs/whishlist.svg";
 import repeat from "../../../public/svgs/repeat.svg";
 import filter from "../../../public/svgs/filter.svg";
 import Image from "next/image";
-import { FaMinus } from "react-icons/fa6";
-import { FaPlus } from "react-icons/fa6";
+import { FaMinus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { MdOutlineFavorite } from "react-icons/md";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import Relatedproducts from "../relatedproducts";
 import Banner from "@/app/pages/banner/page";
 import { useDispatch, useSelector } from "react-redux";
 import { updateQuantity } from "@/app/pages/slice/cartSlice";
-import { handleCart } from "@/utils/cartHelpers";
+import Description from "../description";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<{
@@ -56,6 +56,11 @@ const ProductDetail = () => {
   const clickedCartIds = useSelector(
     (state: { cart: { clickedCartIds: string[] } }) => state.cart.clickedCartIds
   );
+  const setClickedCartIds = useSelector(
+    (state: {
+      cart: { setClickedCartIds: (fn: (prev: string[]) => string[]) => void };
+    }) => state.cart.setClickedCartIds
+  );
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -67,7 +72,7 @@ const ProductDetail = () => {
         setProduct(res.data.data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
-        toast.error("Could not fetch product details. Please try again.");
+        toast.info("Product already exists in cart");
       }
     };
 
@@ -105,6 +110,44 @@ const ProductDetail = () => {
     } catch (error) {
       console.error("Failed to fetch product details:", error);
       toast.error("Product already exists in favorites");
+    }
+  };
+
+  const handleCart = async (productId: string) => {
+    if (clickedCartIds?.includes(productId)) {
+      toast.info("Product already added in cart");
+      return;
+    }
+
+    const accessToken =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+
+    if (!accessToken) {
+      console.error("No access token found, user is not authenticated.");
+      toast.info("Please Login to add product in cart");
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
+
+      if (res.status === 200 || res.data.success) {
+        toast.success("Added to cart successfully!");
+        setClickedCartIds((prev: string[]) => [...prev, productId]);
+      }
+    } catch (error: unknown) {
+      console.error("Failed to add to cart", error);
+      if (
+        (error as { response?: { status?: number } })?.response?.status === 409
+      ) {
+        toast.error("Could not add item to cart.");
+      }
+    }
+
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
     }
   };
 
@@ -297,7 +340,7 @@ const ProductDetail = () => {
                     className="bg-shopbtn py-3 px-6 flex items-center gap-2 text-white text-[16px] font-quick-bold-700 rounded-[5px]"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleCart(product, clickedCartIds, dispatch);
+                      handleCart(productId);
                     }}
                   >
                     {clickedCartIds?.includes(productId) ? (
@@ -358,6 +401,9 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="mt-8">
+            <Description />
           </div>
         </div>
 
