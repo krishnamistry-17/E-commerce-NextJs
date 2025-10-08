@@ -19,7 +19,11 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 import Relatedproducts from "../relatedproducts";
 import Banner from "@/app/pages/banner/page";
 import { useDispatch, useSelector } from "react-redux";
-import { updateQuantity } from "@/app/pages/slice/cartSlice";
+import {
+  updateQuantity,
+  addToClickedCartIds,
+  setClickedCartIds as setClickedCartIdsAction,
+} from "../../pages/slice/cartSlice";
 import Description from "../description";
 
 const ProductDetail = () => {
@@ -48,7 +52,7 @@ const ProductDetail = () => {
   const params = useParams();
   const router = useRouter();
   const [value, setValue] = useState(150);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const [isWishClick, setIsWishClick] = useState(false);
   const [clickedFavIds, setClickedFavIds] = useState<Set<string>>(new Set());
   const productId = params?.productId as string;
@@ -57,11 +61,6 @@ const ProductDetail = () => {
     (state: { cart: { clickedCartIds: string[] } }) => state.cart.clickedCartIds
   );
   console.log("clickedCartIds", clickedCartIds);
-  const setClickedCartIds = useSelector(
-    (state: {
-      cart: { setClickedCartIds: (fn: (prev: string[]) => string[]) => void };
-    }) => state.cart.setClickedCartIds
-  );
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -86,10 +85,65 @@ const ProductDetail = () => {
       }
     };
 
+    const fetchCartQuantity = async () => {
+      try {
+        const accessToken =
+          typeof window !== "undefined"
+            ? localStorage.getItem("accessToken")
+            : null;
+
+        if (!accessToken) return;
+
+        const res = await axiosInstance.get(apiRoutes.GET_CART);
+        const cartItems = res.data.cart.cartItems || [];
+
+        // Update clickedCartIds with all products in cart
+        const cartProductIds = cartItems.map(
+          (item: { productId: string }) => item.productId
+        );
+        console.log("Fetched cart, setting clickedCartIds:", cartProductIds);
+        dispatch(setClickedCartIdsAction(cartProductIds));
+
+        // Find current product in cart
+        const cartItem = cartItems.find(
+          (item: { productId: string; quantity: number }) =>
+            item.productId === productId
+        );
+
+        if (cartItem) {
+          console.log(
+            "Product found in cart with quantity:",
+            cartItem.quantity
+          );
+          setQuantity(cartItem?.quantity || 1);
+        } else {
+          console.log("Product not found in cart");
+        }
+      } catch (error) {
+        console.error("Error fetching cart quantity", error);
+      }
+    };
+
+    // Handler for cart update events
+    const handleCartUpdate = () => {
+      console.log(
+        "Cart updated event received on product page, refetching cart"
+      );
+      fetchCartQuantity();
+    };
+
     if (productId) {
       fetchProductDetails();
+      fetchCartQuantity();
     }
     fetchProducts();
+
+    // Add event listener for cart updates
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
   }, [productId]);
 
   const handleWishList = async () => {
@@ -132,11 +186,20 @@ const ProductDetail = () => {
     }
 
     try {
-      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId));
+      const res = await axiosInstance.post(apiRoutes.ADD_TO_CART(productId), {
+        quantity: quantity,
+      });
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
-        setClickedCartIds((prev: string[]) => [...prev, productId]);
+        console.log("Adding product to clickedCartIds:", productId);
+        dispatch(addToClickedCartIds(productId));
+        console.log("Product added, current clickedCartIds:", clickedCartIds);
+
+        // Dispatch cart update event after successful add
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("cartUpdated"));
+        }
       }
     } catch (error: unknown) {
       console.error("Failed to add to cart", error);
@@ -144,11 +207,8 @@ const ProductDetail = () => {
         (error as { response?: { status?: number } })?.response?.status === 409
       ) {
         toast.info("Product already exists in cart");
+        dispatch(addToClickedCartIds(productId));
       }
-    }
-
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("cartUpdated"));
     }
   };
 
@@ -301,16 +361,57 @@ const ProductDetail = () => {
                 <div className="flex flex-wrap gap-3 items-center pt-4">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         const newQty = quantity - 1;
                         if (newQty >= 1) {
                           setQuantity(newQty);
+
+                          // Update in Redux
                           dispatch(
                             updateQuantity({
                               id: productId,
-                              quantity: Math.max(1, newQty - 1),
+                              quantity: newQty,
                             })
                           );
+
+                          // If product is already in cart, update backend
+                          console.log("Checking if product is in cart:", {
+                            productId,
+                            clickedCartIds,
+                            isInCart: clickedCartIds?.includes(productId),
+                          });
+
+                          if (clickedCartIds?.includes(productId)) {
+                            console.log(
+                              "Updating cart quantity in backend:",
+                              newQty
+                            );
+                            try {
+                              await axiosInstance.patch(
+                                apiRoutes.UPDATE_CART(productId),
+                                { quantity: newQty }
+                              );
+
+                              console.log(
+                                "Cart updated successfully, dispatching event"
+                              );
+                              // Notify cart to refresh
+                              if (typeof window !== "undefined") {
+                                window.dispatchEvent(
+                                  new CustomEvent("cartUpdated")
+                                );
+                              }
+                            } catch (error) {
+                              console.error(
+                                "Failed to update cart quantity",
+                                error
+                              );
+                            }
+                          } else {
+                            console.log(
+                              "Product not in cart yet, skipping backend update"
+                            );
+                          }
                         }
                       }}
                     >
@@ -322,15 +423,56 @@ const ProductDetail = () => {
                     </span>
 
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         const newQty = quantity + 1;
                         setQuantity(newQty);
+
+                        // Update in Redux
                         dispatch(
                           updateQuantity({
                             id: productId,
-                            quantity: Math.max(1, newQty + 1),
+                            quantity: newQty,
                           })
                         );
+
+                        // If product is already in cart, update backend
+                        console.log("Checking if product is in cart:", {
+                          productId,
+                          clickedCartIds,
+                          isInCart: clickedCartIds?.includes(productId),
+                        });
+
+                        if (clickedCartIds?.includes(productId)) {
+                          console.log(
+                            "Updating cart quantity in backend:",
+                            newQty
+                          );
+                          try {
+                            await axiosInstance.patch(
+                              apiRoutes.UPDATE_CART(productId),
+                              { quantity: newQty }
+                            );
+
+                            console.log(
+                              "Cart updated successfully, dispatching event"
+                            );
+                            // Notify cart to refresh
+                            if (typeof window !== "undefined") {
+                              window.dispatchEvent(
+                                new CustomEvent("cartUpdated")
+                              );
+                            }
+                          } catch (error) {
+                            console.error(
+                              "Failed to update cart quantity",
+                              error
+                            );
+                          }
+                        } else {
+                          console.log(
+                            "Product not in cart yet, skipping backend update"
+                          );
+                        }
                       }}
                     >
                       <FaPlus className="text-shopbtn" />

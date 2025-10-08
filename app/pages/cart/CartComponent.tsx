@@ -11,15 +11,16 @@ import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import cartimage from "../../../public/images/cart.png";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { clearCart } from "../slice/cartSlice";
+import { removeFromCart } from "../slice/cartSlice";
 
 const CartComponent = () => {
+  const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   console.log("cartItems", cartItems);
-  const dispatch = useDispatch();
+
   const router = useRouter();
   const [cartData, setCartData] = useState<
     Array<{
@@ -36,14 +37,22 @@ const CartComponent = () => {
   // Fetch cart on mount and sync with Redux
   const fetchCart = async () => {
     try {
+      console.log("CartComponent: Fetching cart from backend...");
       const res = await axiosInstance.get(apiRoutes.GET_CART);
+      console.log("CartComponent: Cart response:", res.data);
       const backendCartData = res?.data?.cart?.cartItems;
 
       if (backendCartData && backendCartData.length > 0) {
+        console.log(
+          "CartComponent: Setting cart data from backend:",
+          backendCartData
+        );
         setCartData(backendCartData);
       } else {
+        console.log("CartComponent: Backend cart is empty");
         // If backend cart is empty, use Redux store data
         if (cartItems.length > 0) {
+          console.log("CartComponent: Using Redux cart data:", cartItems);
           const formattedCartData = cartItems.map((item) => ({
             _id: item.id,
             productId: item.id,
@@ -53,12 +62,19 @@ const CartComponent = () => {
             image: item.image,
           }));
           setCartData(formattedCartData);
+        } else {
+          console.log("CartComponent: Both backend and Redux carts are empty");
+          setCartData([]);
         }
       }
     } catch (error) {
       console.error("Error fetching cart data", error);
       // Fallback to Redux store data
       if (cartItems.length > 0) {
+        console.log(
+          "CartComponent: Error occurred, using Redux fallback:",
+          cartItems
+        );
         const formattedCartData = cartItems.map((item) => ({
           _id: item.id,
           productId: item.id,
@@ -68,13 +84,18 @@ const CartComponent = () => {
           image: item.image,
         }));
         setCartData(formattedCartData);
+      } else {
+        console.log(
+          "CartComponent: Error occurred, no fallback data available"
+        );
+        setCartData([]);
       }
     }
   };
 
   useEffect(() => {
     fetchCart();
-  }, [cartItems.length, cartData]); // Re-fetch when Redux cart changes
+  }, [cartItems.length]); // Re-fetch when Redux cart changes
 
   // Listen for cart update events
   useEffect(() => {
@@ -128,25 +149,33 @@ const CartComponent = () => {
           : null;
       if (!accessToken) return;
 
+      console.log("CartComponent: Deleting product:", productId);
       await axiosInstance.delete(apiRoutes.REMOVE_FROM_CART(productId));
       toast.success("Item removed from cart");
-      fetchCart();
 
+      // Remove from Redux store
+      dispatch(removeFromCart(productId));
+
+      // Update local cartData optimistically
+      const updatedCart = cartData.filter(
+        (item) => item.productId !== productId
+      );
+      setCartData(updatedCart); // Manually update state first
+
+      console.log("CartComponent: Updated cart data, dispatching event");
       // Dispatch event to update cart icon
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("cartUpdated"));
       }
+
+      // Re-fetch from backend (optional, or for accuracy)
+      fetchCart();
     } catch (error) {
       console.error("Error removing item from cart", error);
     }
   };
 
   const handleNavigation = () => router.push("/pages/checkout");
-
-  // const handleClearCart = () => {
-  //   dispatch(clearCart());
-  //   toast.success("Cart cleared successfully");
-  // };
 
   return (
     <>
@@ -173,14 +202,6 @@ const CartComponent = () => {
       <div className="max-w-[1640px] mx-auto xl:px-[103px] px-2 pt-[20px]">
         <div className="flex items-center justify-between px-5">
           <h1 className="text-[24px] text-regalblue font-semibold">Cart</h1>
-          {/* {cartData?.length !== 0 && (
-            <button
-              className="bg-shopbtn text-white px-4 py-2 rounded-md"
-              onClick={() => handleClearCart()}
-            >
-              Clear Cart
-            </button>
-          )} */}
         </div>
         <div className="flex flex-col md:flex-row gap-3 py-10">
           <div className="flex-1">

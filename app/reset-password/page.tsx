@@ -7,6 +7,20 @@ import { toast } from "react-toastify";
 import { MdArrowBack } from "react-icons/md";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "../api/apiRoutes";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
+
+const initialValues = {
+  email: "",
+  password: "",
+};
 
 const ResetPasswordForm = () => {
   const [isShown, setIsShown] = useState(false);
@@ -17,14 +31,13 @@ const ResetPasswordForm = () => {
 
   const togglePassword = () => setIsShown(!isShown);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (values: typeof initialValues) => {
     setError(null);
 
     try {
       const res = await axiosInstance.post(apiRoutes.RESET_PASSWORD, {
-        email,
-        password,
+        email: values.email,
+        password: values.password,
       });
       console.log("res??:", res);
       if (res.status === 200 || res.status === 201) {
@@ -41,9 +54,9 @@ const ResetPasswordForm = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
+      <div
+        className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8
+      "
       >
         <div className="flex gap-2 sm:hidden">
           <MdArrowBack
@@ -54,53 +67,69 @@ const ResetPasswordForm = () => {
             Reset Password
           </h2>
         </div>
+
         <h2 className="text-[24px] font-quick-bold-700 text-regalblue mb-6 text-center sm:block hidden">
           Reset Password
         </h2>
-        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
 
-        <div className="mb-6">
-          <label className="block text-regalblue text-[16px] font-quick-semibold-600">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="abc@gmail.com"
-            className="w-full px-4 py-2 border rounded mt-1 focus:outline-none focus:ring-0"
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700">Password</label>
-          <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1">
-            <input
-              type={isShown ? "text" : "password"}
-              name="password"
-              id="password"
-              value={password || ""}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="123456789"
-              className="focus:outline-none focus:ring-0 w-full"
-              required
-            />
-            <div onClick={togglePassword} className="cursor-pointer">
-              {isShown ? <FaEye /> : <FaEyeSlash />}
-            </div>
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
         >
-          Submit
-        </button>
-      </form>
+          {() => (
+            <Form className="w-full max-w-lg">
+              <div className="mb-6">
+                <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+                  Email<span className="text-red-600">*</span>
+                </label>
+                <Field
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="abc@gmail.com"
+                  className="w-full px-4 py-2 border rounded mt-1 focus:outline-none focus:ring-0"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 pt-1 text-[12px]"
+                />
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-gray-700">
+                  Password<span className="text-red-600">*</span>
+                </label>
+                <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1">
+                  <Field
+                    type={isShown ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    placeholder="123456789"
+                    className="focus:outline-none focus:ring-0 w-full"
+                  />
+                  <div onClick={togglePassword} className="cursor-pointer">
+                    {isShown ? <FaEye /> : <FaEyeSlash />}
+                  </div>
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 pt-1 text-[12px]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700"
+              >
+                Submit
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };

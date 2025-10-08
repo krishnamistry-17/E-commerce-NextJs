@@ -58,10 +58,24 @@ const cartSlice = createSlice({
       state.items = [];
       state.clickedCartIds = [];
     },
+    addToClickedCartIds(state, action: PayloadAction<string>) {
+      if (!state.clickedCartIds.includes(action.payload)) {
+        state.clickedCartIds.push(action.payload);
+      }
+    },
+    setClickedCartIds(state, action: PayloadAction<string[]>) {
+      state.clickedCartIds = action.payload;
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+  addToClickedCartIds,
+  setClickedCartIds,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

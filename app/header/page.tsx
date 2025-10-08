@@ -167,6 +167,7 @@ const Navbar = () => {
           <div
             ref={mobileMenuRef}
             className="absolute top-[60px] md:right-4 right-1 w-[120px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden"
+            onClick={() => setIsMenuOpen(false)}
           >
             <nav className="flex flex-col gap-3 text-sm text-start">
               <Link href="/pages/aboutus" onClick={() => setIsMenuOpen(false)}>

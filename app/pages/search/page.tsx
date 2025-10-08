@@ -72,34 +72,11 @@ const SearchContent = () => {
     }
   };
 
-  // const handleOutsideClick = (event: MouseEvent) => {
-  //   if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-  //     _setIsSubMenuOpen(false);
-  //   }
-  //   if (
-  //     mobileMenuRef.current &&
-  //     !mobileMenuRef.current.contains(event.target as Node)
-  //   ) {
-  //     _setIsMenuOpen(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (windowWidth >= 1024) {
-  //     _setIsMenuOpen(false);
-  //   }
-  // }, [windowWidth]);
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleOutsideClick);
-  //   return () => document.removeEventListener("mousedown", handleOutsideClick);
-  // }, []);
-
   return (
-    <div className="relative w-full max-w-[450px]">
+    <div className="relative w-full lg:max-w-[450px]">
       <form action="" onSubmit={handleSearch}>
         <div
-          className="flex xl:w-[450px] lg:w-[401px] md:w-[350px] 
+          className="flex xl:w-[450px] lg:w-[401px]
        w-full h-fit px-3 py-4 items-center
        border border-progessbtn rounded-[4px] bg-white"
         >
@@ -151,11 +128,15 @@ const SearchContent = () => {
                   type="button"
                   onClick={() => {
                     handleCart(item, clickedCartIds, dispatch);
-                    setSuggestions([]);
+                    // setSuggestions([]); //if userclick and close the suggestion menu auto then use this
                   }}
-                  className="bg-green-200 px-[10px] py-[4px] rounded-md text-regalblue text-[13px] font-semibold"
+                  className={`${
+                    clickedCartIds?.includes(item._id)
+                      ? "bg-blue-200"
+                      : "bg-green-200"
+                  } px-[10px] py-[4px] rounded-md text-regalblue text-[13px] font-semibold`}
                 >
-                  Add
+                  {clickedCartIds?.includes(item._id) ? "Added" : "Add"}
                 </button>
               </div>
             </div>

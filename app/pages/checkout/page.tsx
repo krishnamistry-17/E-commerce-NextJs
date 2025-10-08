@@ -14,6 +14,48 @@ import { RootState } from "@/app/store/store";
 import { CreateOrderRequest } from "@/types/order";
 import { clearCart } from "../slice/cartSlice";
 import { clearCartAfterPayment } from "@/utils/cartHelpers";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  fname: Yup.string().required("First Name is required"),
+  lname: Yup.string().required("Last Name is required"),
+  company: Yup.string(), // Optional
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  phone: Yup.string()
+    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .required("Phone is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State is required"),
+  zipcode: Yup.string()
+    .matches(/^\d{5,6}$/, "ZIP code must be 5-6 digits")
+    .required("ZIP Code is required"),
+  country: Yup.string().required("Country is required"),
+  street: Yup.string().required("Street address is required"),
+  street1: Yup.string(), // Optional
+  agreed: Yup.boolean(),
+  shipToDifferentAddress: Yup.boolean(),
+  orderNotes: Yup.string(),
+});
+
+const initialValues = {
+  fname: "",
+  lname: "",
+  company: "",
+  email: "",
+  phone: "",
+  city: "",
+  state: "",
+  zipcode: "",
+  country: "",
+  street: "",
+  street1: "",
+  agreed: false,
+  shipToDifferentAddress: false,
+  orderNotes: "",
+};
 
 const CheckOut = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
@@ -398,176 +440,247 @@ const CheckOut = () => {
               <p className="text-[15px] lg:text-[18px] xl:text-[22px] font-quick-bold-700  text-regalblue">
                 Billing details
               </p>
-              <div className="w-full">
-                <div className="md:flex items-center gap-[20px] w-full">
-                  <div className="flex flex-col w-full">
-                    <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                      First Name<span className="text-red-600">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={fname}
-                      onChange={(e) => setFName(e.target.value)}
-                      className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={(values) => {
+                  // Update state with Formik values
+                  setFName(values.fname);
+                  setLName(values.lname);
+                  setEmail(values.email);
+                  setphone(values.phone);
+                  setCity(values.city);
+                  setState(values.state);
+                  setZipCode(values.zipcode);
+                  setCountry(values.country);
+                  setStreet(values.street);
+                  setStreet1(values.street1);
+                  setCompany(values.company);
+                }}
+              >
+                {() => (
+                  <Form>
+                    <div className="w-full">
+                      <div className="md:flex items-center gap-[20px] w-full">
+                        <div className="flex flex-col w-full">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            First Name<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="fname"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
-                    />
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                      Last Name<span className="text-red-600">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={lname}
-                      onChange={(e) => setLName(e.target.value)}
-                      className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                          />
+                          <ErrorMessage
+                            name="fname"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                        <div className="flex flex-col w-full">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            Last Name<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="lname"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Company Name<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                          />
+                          <ErrorMessage
+                            name="lname"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Company Name (Optional)
+                        </label>
+                        <Field
+                          type="text"
+                          name="company"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Country / Region<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="company"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Country / Region
+                          <span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="country"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Street address<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                    placeholder="House number and street name"
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="country"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Street address<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="street"
+                          placeholder="House number and street name"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                  <div className="pt-[8px]">
-                    <input
-                      type="text"
-                      value={street1}
-                      onChange={(e) => setStreet1(e.target.value)}
-                      placeholder="Apartment, suite, unit, etc. (optional)"
-                      className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="street"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                        <div className="pt-[8px]">
+                          <Field
+                            type="text"
+                            name="street1"
+                            placeholder="Apartment, suite, unit, etc. (optional)"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Town / City<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                          />
+                          <ErrorMessage
+                            name="street1"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Town / City<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="city"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    State<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="city"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          State<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="state"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    ZIP Code<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    value={zipcode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="state"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          ZIP Code<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="zipcode"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Phone<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setphone(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="zipcode"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Phone<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="tel"
+                          name="phone"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Email address<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="phone"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Email address<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="email"
+                          name="email"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-                <div className="flex items-center gap-[5px] py-[8px]">
-                  <input type="checkbox" />
-                  <p className="text-[14px] font-quick-medium-500 text-regalblue">
-                    Create an account?
-                  </p>
-                </div>
-                <div className="flex items-center gap-[5px] py-[8px]">
-                  <input type="checkbox" />
-                  <p className="text-[14px] font-quick-bold-700 text-regalblue">
-                    Ship to a different address?
-                  </p>
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                    Order notes (optional)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Notes about your order, e.g. special notes for delivery."
-                    className="w-full border border-gray-300 rounded-[8px] py-[30px] pl-2 focus:outline-none 
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-[5px] py-[8px]">
+                        <Field type="checkbox" name="agreed" />
+
+                        <p className="text-[14px] font-quick-medium-500 text-regalblue">
+                          Create an account?
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-[5px] py-[8px]">
+                        <Field type="checkbox" name="shipToDifferentAddress" />
+
+                        <p className="text-[14px] font-quick-bold-700 text-regalblue">
+                          Ship to a different address?
+                        </p>
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          Order notes (optional)
+                        </label>
+                        <Field
+                          type="text"
+                          name="orderNotes"
+                          placeholder="Notes about your order, e.g. special notes for delivery."
+                          className="w-full border border-gray-300 rounded-[8px] py-[30px] pl-2 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                  />
-                </div>
-              </div>
+                        />
+                      </div>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
             </div>
           </div>
 

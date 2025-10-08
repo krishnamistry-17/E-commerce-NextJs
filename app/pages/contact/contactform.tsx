@@ -2,12 +2,42 @@ import React from "react";
 import address from "../../../public/svgs/whitelocation.svg";
 import contact from "../../../public/images/contact.png";
 import Image from "next/image";
+import * as Yup from "yup";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { toast } from "react-toastify";
+
+const validationSchema = Yup.object({
+  firstName: Yup.string().required("First Name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  phone: Yup.string()
+    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .required("Phone is required"),
+  subject: Yup.string().required("Subject is required"),
+});
+
+const initialValues = {
+  firstName: "",
+  email: "",
+  phone: "",
+  subject: "",
+};
 
 const ContactForm = () => {
   const heads = ["Office", "Studio", "Shop"];
   const addressText =
     "205 North Michigan Avenue, Suite 810 Chicago, 60601, USA Phone: (123) 456-7890 Email: contact@Evara.com";
   const buttonText = "view map";
+
+  const handleSubmit = (
+    values: typeof initialValues,
+    { resetForm }: { resetForm: () => void }
+  ) => {
+    toast.success("Message sent successfully!");
+    console.log("Form submitted with values:", values);
+    resetForm();
+  };
 
   return (
     <div>
@@ -41,63 +71,120 @@ const ContactForm = () => {
           <p className="md:text-[40px] text-[32px] font-quick-bold-700 text-regalblue py-[10px]">
             Drop Us a Line
           </p>
-          <p className="text-[14px] font-lato-regular-400  text-ratingtext pb-[30px]">
-            Your email address will not be published. Required fields are marked
-            *
-          </p>
 
-          <form>
-            <div className="md:flex gap-[24px] max-w-[894px]">
-              <div className="w-full border border-bordercolor rounded-[10px]">
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
-                />
-              </div>
-              <div className="w-full border border-bordercolor rounded-[10px] md:mt-0 mt-[20px]">
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
-                />
-              </div>
-            </div>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {() => (
+              <Form>
+                <div className="md:flex gap-[24px] max-w-[894px]">
+                  <div className="w-full space-y-1">
+                    <label
+                      htmlFor="firstName"
+                      className="block text-regalblue text-[16px] font-quick-semibold-600"
+                    >
+                      First Name<span className="text-red-600">*</span>
+                    </label>
 
-            <div className="md:flex gap-[24px] max-w-[894px] pt-[20px]">
-              <div className="w-full border border-bordercolor rounded-[10px]">
-                <input
-                  type="tel"
-                  placeholder="Your Phone"
-                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
-                />
-              </div>
-              <div className="w-full border border-bordercolor rounded-[10px] md:mt-0 mt-[20px]">
-                <input
-                  type="text"
-                  placeholder="Subject"
-                  className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none"
-                />
-              </div>
-            </div>
+                    <Field
+                      name="firstName"
+                      type="text"
+                      placeholder="First Name"
+                      className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none border border-bordercolor rounded-[10px]"
+                    />
+                    <ErrorMessage
+                      name="firstName"
+                      component="div"
+                      className="text-red-500 pt-1 text-[12px]"
+                    />
+                  </div>
 
-            <div className="pt-[20px]">
-              <textarea
-                placeholder="Enter Query"
-                className="focus:outline-none w-full h-[100px] p-[21px] border border-bordercolor rounded-[10px]"
-              ></textarea>
-            </div>
+                  <div className="w-full space-y-1 md:mt-0 mt-[20px]">
+                    <label
+                      htmlFor="email"
+                      className="block text-regalblue text-[16px] font-quick-semibold-600"
+                    >
+                      Email<span className="text-red-600">*</span>
+                    </label>
 
-            <div className="pt-[37px]">
-              <button
-                type="submit"
-                className="text-[17px] font-quick-medium-500 text-white bg-regalblue
+                    <Field
+                      name="email"
+                      type="email"
+                      placeholder="Your Email"
+                      className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none border border-bordercolor rounded-[10px]"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-red-500 pt-1 text-[12px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="md:flex gap-[24px] max-w-[894px] pt-[20px]">
+                  <div className="w-full space-y-1">
+                    <label
+                      htmlFor="phone"
+                      className="block text-regalblue text-[16px] font-quick-semibold-600"
+                    >
+                      Phone<span className="text-red-600">*</span>
+                    </label>
+                    <Field
+                      name="phone"
+                      type="tel"
+                      placeholder="Your Phone"
+                      className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none border border-bordercolor rounded-[10px]"
+                    />
+                    <ErrorMessage
+                      name="phone"
+                      component="div"
+                      className="text-red-500 pt-1 text-[12px]"
+                    />
+                  </div>
+                  <div className="w-full space-y-1 md:mt-0 mt-[20px]">
+                    <label
+                      htmlFor="subject"
+                      className="block text-regalblue text-[16px] font-quick-semibold-600"
+                    >
+                      Subject<span className="text-red-600">*</span>
+                    </label>
+                    <Field
+                      name="subject"
+                      type="text"
+                      placeholder="Subject"
+                      className="md:py-[22px] py-[18px] pl-[21px] w-full focus:outline-none border border-bordercolor rounded-[10px]"
+                    />
+                    <ErrorMessage
+                      name="subject"
+                      component="div"
+                      className="text-red-500 pt-1 text-[12px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-[20px]">
+                  <Field
+                    name="message"
+                    as="textarea"
+                    placeholder="Enter Query"
+                    className="focus:outline-none w-full h-[100px] p-[21px] border border-bordercolor rounded-[10px]"
+                  />
+                </div>
+
+                <div className="pt-[37px]">
+                  <button
+                    type="submit"
+                    className="text-[17px] font-quick-medium-500 text-white bg-regalblue
                 lg:px-[39px] lg:py-[21px] px-[20px] py-[12px] rounded-[10px]"
-              >
-                Send message
-              </button>
-            </div>
-          </form>
+                  >
+                    Send message
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
 
         <div>

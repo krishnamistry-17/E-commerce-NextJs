@@ -58,6 +58,16 @@ export const handleCart = async (
   } catch (error: any) {
     if (error.response?.status === 409) {
       toast.info("Product already exists in cart.");
+      dispatch(
+        addToCart({
+          id: product?._id,
+          productName: product?.productName,
+          price: product?.price.toString(),
+          quantity: product?.quantity || 1,
+          image: product?.image,
+          stock: product?.stock,
+        })
+      );
     } else {
       console.error("Error adding to cart:", error);
       toast.error("Failed to add product to cart");

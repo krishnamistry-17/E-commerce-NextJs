@@ -9,35 +9,44 @@ import { apiRoutes } from "@/app/api/apiRoutes";
 
 const CartIcon = () => {
   const [cartCount, setCartCount] = useState(0);
-
+  console.log("CartIcon: Current cart count:", cartCount);
   useEffect(() => {
     if (typeof window === "undefined") return; // Safety for SSR
 
     const fetchCart = async () => {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
+        console.log("CartIcon: No access token, setting count to 0");
         setCartCount(0);
         return;
       }
 
       try {
         const res = await axiosInstance.get(apiRoutes.GET_CART);
+        console.log("CartIcon: Fetched cart response:", res.data);
 
         const items = res.data.cart.cartItems || [];
+        console.log("CartIcon: Cart items:", items);
 
         const totalQuantity = items.reduce(
           (acc: number, item: { quantity: number }) => acc + item.quantity,
           0
         );
+        console.log("CartIcon: Total quantity calculated:", totalQuantity);
         setCartCount(totalQuantity);
       } catch (err) {
         console.error("Failed to fetch cart", err);
+        // Reset cart count on error
+        setCartCount(0);
       }
     };
 
     fetchCart(); // initial fetch
 
-    const handleCartUpdate = () => fetchCart();
+    const handleCartUpdate = () => {
+      console.log("CartIcon: Received cartUpdated event, refetching...");
+      fetchCart();
+    };
 
     window.addEventListener("cartUpdated", handleCartUpdate);
 

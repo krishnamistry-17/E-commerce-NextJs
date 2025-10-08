@@ -7,8 +7,9 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 import drop from "../../../public/svgs/drop.svg";
 import cart from "../../../public/svgs/cart.svg";
 import { apiRoutes } from "@/app/api/apiRoutes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { addToClickedCartIds } from "../slice/cartSlice";
 
 interface Category {
   productName: string;
@@ -20,18 +21,13 @@ interface Category {
 
 const PopularProduct = () => {
   const [product, setProducts] = useState<Category[]>([]);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const router = useRouter();
   const clickedCartIds = useSelector(
     (state: { cart: { clickedCartIds: string[] } }) => state.cart.clickedCartIds
-  );
-  const setClickedCartIds = useSelector(
-    (state: {
-      cart: { setClickedCartIds: (fn: (prev: string[]) => string[]) => void };
-    }) => state.cart.setClickedCartIds
   );
 
   useEffect(() => {
@@ -78,14 +74,15 @@ const PopularProduct = () => {
 
       if (res.status === 200 || res.data.success) {
         toast.success("Added to cart successfully!");
-        setClickedCartIds((prev: string[]) => [...prev, productId]);
+        dispatch(addToClickedCartIds(productId));
       }
     } catch (error: unknown) {
       console.error("Failed to add to cart", error);
       if (
         (error as { response?: { status?: number } })?.response?.status === 409
       ) {
-        toast.error("Could not add item to cart.");
+        toast.info("Product already exists in cart");
+        dispatch(addToClickedCartIds(productId));
       }
     }
 
@@ -232,6 +229,7 @@ const PopularProduct = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     // call the reusable handleCart helper
+
                     handleCart(item?.id);
                   }}
                 >
