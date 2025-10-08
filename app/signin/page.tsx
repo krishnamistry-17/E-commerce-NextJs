@@ -9,6 +9,7 @@ import { setAccessToken, setUser } from "../store/authSlice";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { toast } from "react-toastify";
+import { AxiosResponse } from "axios";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -45,10 +46,13 @@ const Signin = () => {
     setIsSubmitting(true);
 
     try {
-      const response: any = await axiosInstance.post(apiRoutes.GET_SIGNIN, {
-        email: values.email,
-        password: values.password,
-      });
+      const response: AxiosResponse = await axiosInstance.post(
+        apiRoutes.GET_SIGNIN,
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
 
       console.log(response);
 
@@ -70,22 +74,32 @@ const Signin = () => {
         setError(errorMsg);
         toast.error(errorMsg);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Signin error:", error);
 
-      if (error.response) {
+      if (error && typeof error === "object" && "response" in error) {
         // Server responded with error
-        const errorMsg = error.response.data?.message || "Invalid credentials";
+        const axiosError = error as {
+          response?: { data?: { message?: string } };
+          request?: unknown;
+          message?: string;
+        };
+        const errorMsg =
+          axiosError.response?.data?.message || "Invalid credentials";
         setError(errorMsg);
         toast.error(errorMsg);
-      } else if (error.request) {
+      } else if (error && typeof error === "object" && "request" in error) {
         // Request made but no response
         setError("Network error. Please check your connection.");
         toast.error("Network error. Please check your connection.");
       } else {
         // Something else happened
-        setError(error.message || "Signin error");
-        toast.error(error.message || "Signin error");
+        const errorMsg =
+          error && typeof error === "object" && "message" in error
+            ? (error as { message: string }).message
+            : "Signin error";
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } finally {
       setIsSubmitting(false);

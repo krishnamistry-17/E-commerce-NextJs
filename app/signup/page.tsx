@@ -8,6 +8,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "../api/apiRoutes";
 import { toast } from "react-toastify";
+import { AxiosResponse } from "axios";
 
 const validationSchema = Yup.object({
   fullName: Yup.string().required("Full Name is required"),
@@ -45,11 +46,14 @@ export default function SignUpPage() {
     setIsSubmitting(true);
 
     try {
-      const response: any = await axiosInstance.post(apiRoutes.GET_SIGNUP, {
-        fullName: values.fullName,
-        email: values.email,
-        password: values.password,
-      });
+      const response: AxiosResponse = await axiosInstance.post(
+        apiRoutes.GET_SIGNUP,
+        {
+          fullName: values.fullName,
+          email: values.email,
+          password: values.password,
+        }
+      );
 
       console.log("Signup response:", response);
 
@@ -65,22 +69,31 @@ export default function SignUpPage() {
         setError(errorMsg);
         toast.error(errorMsg);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Signup error:", error);
 
-      if (error.response) {
+      if (error && typeof error === "object" && "response" in error) {
         // Server responded with error
-        const errorMsg = error.response.data?.message || "Signup failed";
+        const axiosError = error as {
+          response?: { data?: { message?: string } };
+          request?: unknown;
+          message?: string;
+        };
+        const errorMsg = axiosError.response?.data?.message || "Signup failed";
         setError(errorMsg);
         toast.error(errorMsg);
-      } else if (error.request) {
+      } else if (error && typeof error === "object" && "request" in error) {
         // Request made but no response
         setError("Network error. Please check your connection.");
         toast.error("Network error. Please check your connection.");
       } else {
         // Something else happened
-        setError(error.message || "Signup error");
-        toast.error(error.message || "Signup error");
+        const errorMsg =
+          error && typeof error === "object" && "message" in error
+            ? (error as { message: string }).message
+            : "Signup error";
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } finally {
       setIsSubmitting(false);
