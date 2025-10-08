@@ -1,13 +1,19 @@
+import Image from "next/image";
 import React, { useState } from "react";
+import drop from "../../public/svgs/drop.svg";
 
 const Description = () => {
+  const [categoryMenu, setCategoryMenu] = useState(false);
+
+  const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const headings = [
     { id: "1", title: "Description" },
     { id: "2", title: "Additional info" },
     { id: "1", title: "Vendor" },
     { id: "1", title: "Reviews (3)" },
   ];
-
+  const [activeTab, setActiveTab] = useState(headings[0].title);
+  
   const infoList = [
     { title: "Type Of Packing", content: "Bottle" },
     { title: "Color", content: "Green, Pink, Powder Blue, Purple" },
@@ -36,11 +42,9 @@ const Description = () => {
     content6: "Oil separation occurs naturally. May contain pieces of shell.",
   };
 
-  const [activeTab, setActiveTab] = useState(headings[0].title);
-
   return (
     <div className="max-w-[1082.86px] border border-productborder rounded-[15px] xl:py-[41px] xl:px-[50px] px-5 py-5">
-      <div className="md:flex items-center gap-[10px] ">
+      <div className="md:flex hidden items-center gap-[10px] ">
         {headings?.map((item, index) => (
           <div key={index}>
             <button
@@ -56,6 +60,43 @@ const Description = () => {
         ))}
       </div>
 
+      <div className="md:hidden">
+        {/*dropdown trigger */}
+        <div
+          className="flex items-center justify-between w-full bg-white py-2 px-4 
+                rounded-[50px] border border-gray-200 cursor-pointer"
+          onClick={toggleCategoryMenu}
+        >
+          <p className={`${activeTab ? "text-shopbtn" : "text-regalblue"}`}>
+            {activeTab}
+          </p>
+          <Image src={drop} alt="Dropdown Icon" height={30} width={30} />
+        </div>
+
+        {/*dropdown menu */}
+        {categoryMenu && (
+          <div className="mt-2 bg-white border border-gray-200 rounded-[20px] p-2">
+            <div className="flex flex-col pl-2 gap-4 flex-wrap">
+              {headings?.map((item) => (
+                <div
+                  key={item?.id}
+                  onClick={() => {
+                    setActiveTab(item?.title);
+                    setCategoryMenu(false);
+                  }}
+                  className={`cursor-pointer ${
+                    activeTab === item?.title
+                      ? "text-shopbtn font-bold"
+                      : "text-regalblue"
+                  }`}
+                >
+                  <p>{item?.title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       <div className="pt-[42px]">
         <p className="text-[16px] font-lato-regular-400 text-bgbrown text-justify">
           Uninhibited carnally hired played in whimpered dear gorilla koala

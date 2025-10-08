@@ -21,14 +21,6 @@ const TopbarDropdowns = () => {
     setShowLangDropdown(false);
   };
 
-  // const handleCurrencyChange = (currency: string) => {
-  //   setSelectedCurrency(currency);
-  //   setShowCurrencyDropdown(false);
-  // };
-
-  // const language = localStorage.getItem("lang");
-  // console.log('language :', language);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedLang = localStorage.getItem("lang");
@@ -96,18 +88,20 @@ const TopbarDropdowns = () => {
         </button>
         {showLangDropdown && (
           <div className="absolute bg-white border border-gray-200 shadow-md rounded mt-2 z-50 min-w-[100px]">
-            {languages.map((lang) => (
-              <button
-                key={lang}
-                onClick={() => {
-                  handleLanguageChange(lang);
-                  setShowLangDropdown(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-              >
-                {lang}
-              </button>
-            ))}
+            {languages
+              ?.filter((lang) => lang !== selectedLang)
+              .map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => {
+                    handleLanguageChange(lang);
+                    setShowLangDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  {lang}
+                </button>
+              ))}
           </div>
         )}
       </div>
@@ -131,18 +125,20 @@ const TopbarDropdowns = () => {
         </button>
         {showCurrencyDropdown && (
           <div className="absolute bg-white border border-gray-200 shadow-md rounded mt-2 z-50 min-w-[100px]">
-            {currencies.map((cur) => (
-              <button
-                key={cur}
-                onClick={() => {
-                  setSelectedCurrency(cur);
-                  setShowCurrencyDropdown(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-              >
-                {cur}
-              </button>
-            ))}
+            {currencies
+              ?.filter((cur) => cur !== selectedCurrency)
+              .map((cur) => (
+                <button
+                  key={cur}
+                  onClick={() => {
+                    setSelectedCurrency(cur);
+                    setShowCurrencyDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  {cur}
+                </button>
+              ))}
           </div>
         )}
       </div>
