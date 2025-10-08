@@ -56,6 +56,7 @@ const ProductDetail = () => {
   const clickedCartIds = useSelector(
     (state: { cart: { clickedCartIds: string[] } }) => state.cart.clickedCartIds
   );
+  console.log("clickedCartIds", clickedCartIds);
   const setClickedCartIds = useSelector(
     (state: {
       cart: { setClickedCartIds: (fn: (prev: string[]) => string[]) => void };

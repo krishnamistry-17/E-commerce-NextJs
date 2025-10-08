@@ -57,6 +57,7 @@ const CheckoutForm = ({
   const [cartData, setCartData] = useState<
     Array<{
       productId: string;
+      productName: string;
       quantity: number;
       price: number;
       total: number;
@@ -78,7 +79,7 @@ const CheckoutForm = ({
 
   const USD_TO_INR_RATE = 91.6422;
 
-  const totalUSD = cartItems.reduce(
+  const totalUSD = cartData.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
@@ -89,7 +90,22 @@ const CheckoutForm = ({
     const fetchCartData = async () => {
       try {
         const response = await axiosInstance.get(apiRoutes.GET_CART);
-        setCartData(response?.data?.cart?.cartItems || []);
+        const backendCartData = response?.data?.cart?.cartItems;
+        console.log("backendCartData???????checkoutform", backendCartData);
+        if (backendCartData && backendCartData.length > 0) {
+          setCartData(backendCartData);
+        } else {
+          if (cartItems.length > 0) {
+            const formattedCartData = cartItems.map((item) => ({
+              productId: item.id,
+              productName: item.productName,
+              price: parseFloat(item.price),
+              quantity: item.quantity,
+              total: parseFloat(item.price) * item.quantity,
+            }));
+            setCartData(formattedCartData);
+          }
+        }
       } catch (error) {
         console.error("Error fetching cart data", error);
       }
@@ -123,7 +139,7 @@ const CheckoutForm = ({
       country: urlParams.get("country") || "",
     };
     setShippingAddress(address);
-  }, []);
+  }, [cartData]);
 
   useEffect(() => {
     // Use passed client secret if available, otherwise create new one
@@ -163,7 +179,7 @@ const CheckoutForm = ({
 
       createPaymentIntent();
     }
-  }, [selectedCurrency, totalUSD, totalINR, passedClientSecret]);
+  }, [selectedCurrency, cartData, passedClientSecret]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -239,7 +255,7 @@ const CheckoutForm = ({
             await clearCartAfterPayment(
               dispatch,
               clearCart,
-              cartData[0].productId
+              orderResponse.data.orderId
             );
             router.push(
               `/pages/thankyou?orderId=${orderResponse.data.orderId}`
@@ -347,26 +363,35 @@ const CheckoutForm = ({
             </span>
           </p>
 
-          {cartItems.map((item, index) => {
-            const itemTotalUSD = Number(item?.price) * item?.quantity;
-            const itemTotalINR = itemTotalUSD * USD_TO_INR_RATE;
+          <div className="flex items-center justify-between py-[16px]">
+            <p className="text-regalblue text-[16px]">Product</p>
+            <p className="text-regalblue text-[16px]">Price</p>
+          </div>
 
-            return (
-              <div
-                className="flex items-center justify-between py-[16px]"
-                key={index}
-              >
-                <p className="text-regalblue text-[16px]">
-                  {item?.productName}
-                </p>
-                <p className="text-regalblue text-[16px] font-medium">
-                  {selectedCurrency === "USD"
-                    ? `$${itemTotalUSD.toFixed(2)}`
-                    : `₹${itemTotalINR.toFixed(2)}`}
-                </p>
-              </div>
-            );
-          })}
+          <div className="flex flex-col gap-[12px]">
+            {cartData.map((item, index) => {
+              console.log("item???????checkoutform", item);
+              const itemTotalUSD = Number(item?.price) * item?.quantity;
+              const itemTotalINR = itemTotalUSD * USD_TO_INR_RATE;
+
+              return (
+                <div
+                  className="flex items-center justify-between py-[12px]"
+                  key={index}
+                >
+                  <p className="text-regalblue text-[16px]">
+                    {item?.productName}
+                  </p>
+                  <p className="text-regalblue text-[16px] font-medium">
+                    {selectedCurrency === "USD"
+                      ? `$${itemTotalUSD.toFixed(2)}`
+                      : `₹${itemTotalINR.toFixed(2)}`}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="border-t pt-4 mt-4">
             <p className="text-lg font-semibold text-regalblue">
               Total:{" "}

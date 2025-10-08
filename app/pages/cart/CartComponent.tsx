@@ -11,11 +11,15 @@ import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import cartimage from "../../../public/images/cart.png";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import { clearCart } from "../slice/cartSlice";
 
 const CartComponent = () => {
   const { accessToken } = useSelector((state: RootState) => state.auth);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  console.log("cartItems", cartItems);
+  const dispatch = useDispatch();
   const router = useRouter();
   const [cartData, setCartData] = useState<
     Array<{
@@ -27,26 +31,63 @@ const CartComponent = () => {
       image: string;
     }>
   >([]);
+  console.log("cartData", cartData);
 
-  // Fetch cart on mount
+  // Fetch cart on mount and sync with Redux
   const fetchCart = async () => {
     try {
       const res = await axiosInstance.get(apiRoutes.GET_CART);
-      setCartData(res?.data?.cart?.cartItems);
+      const backendCartData = res?.data?.cart?.cartItems;
+
+      if (backendCartData && backendCartData.length > 0) {
+        setCartData(backendCartData);
+      } else {
+        // If backend cart is empty, use Redux store data
+        if (cartItems.length > 0) {
+          const formattedCartData = cartItems.map((item) => ({
+            _id: item.id,
+            productId: item.id,
+            productName: item.productName,
+            price: parseFloat(item.price),
+            quantity: item.quantity,
+            image: item.image,
+          }));
+          setCartData(formattedCartData);
+        }
+      }
     } catch (error) {
       console.error("Error fetching cart data", error);
+      // Fallback to Redux store data
+      if (cartItems.length > 0) {
+        const formattedCartData = cartItems.map((item) => ({
+          _id: item.id,
+          productId: item.id,
+          productName: item.productName,
+          price: parseFloat(item.price),
+          quantity: item.quantity,
+          image: item.image,
+        }));
+        setCartData(formattedCartData);
+      }
     }
   };
 
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [cartItems.length, cartData]); // Re-fetch when Redux cart changes
 
-  // Total price calculation
-  // const totalPrice = cartData.reduce(
-  //   (acc, item) => acc + Number(item.price) * (item.quantity || 1),
-  //   0
-  // );
+  // Listen for cart update events
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      fetchCart();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
 
   const totalPrice = cartData?.reduce(
     (acc, item) => acc + Number(item.price) * (item.quantity || 1),
@@ -102,6 +143,11 @@ const CartComponent = () => {
 
   const handleNavigation = () => router.push("/pages/checkout");
 
+  // const handleClearCart = () => {
+  //   dispatch(clearCart());
+  //   toast.success("Cart cleared successfully");
+  // };
+
   return (
     <>
       <div className="w-full border-b border-gray-200 py-[6px] px-5">
@@ -125,6 +171,17 @@ const CartComponent = () => {
       </div>
 
       <div className="max-w-[1640px] mx-auto xl:px-[103px] px-2 pt-[20px]">
+        <div className="flex items-center justify-between px-5">
+          <h1 className="text-[24px] text-regalblue font-semibold">Cart</h1>
+          {/* {cartData?.length !== 0 && (
+            <button
+              className="bg-shopbtn text-white px-4 py-2 rounded-md"
+              onClick={() => handleClearCart()}
+            >
+              Clear Cart
+            </button>
+          )} */}
+        </div>
         <div className="flex flex-col md:flex-row gap-3 py-10">
           <div className="flex-1">
             {cartData?.length === 0 ? (

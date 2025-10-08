@@ -40,22 +40,102 @@ const CheckOut = () => {
     }>
   >([]);
 
-  const {} = useSelector((state: RootState) => state.auth);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
 
-  // Fetch cart on mount
+  // Fetch cart from backend and sync with Redux store
   const fetchCart = async () => {
     try {
       const res = await axiosInstance.get(apiRoutes.GET_CART);
-      setCartData(res?.data?.cart?.cartItems);
+      const backendCartData = res?.data?.cart?.cartItems;
+
+      console.log("Backend cart data:", backendCartData);
+      console.log("Redux cart items:", cartItems);
+
+      // Merge backend and Redux data - prioritize backend but include Redux items not in backend
+      let mergedCartData: Array<{
+        productId: string;
+        productName: string;
+        price: number;
+        quantity: number;
+        total: number;
+      }> = [];
+
+      if (backendCartData && backendCartData.length > 0) {
+        // Convert backend data to checkout format
+        const backendFormatted = backendCartData.map(
+          (item: {
+            productId: string;
+            productName: string;
+            price: number;
+            quantity: number;
+          }) => ({
+            productId: item.productId,
+            productName: item.productName,
+            price: item.price,
+            quantity: item.quantity,
+            total: item.price * item.quantity,
+          })
+        );
+        mergedCartData = [...backendFormatted];
+      }
+
+      // Add Redux items that might not be in backend (for offline/local additions)
+      if (cartItems.length > 0) {
+        const reduxFormatted = cartItems.map((item) => ({
+          productId: item.id,
+          productName: item.productName,
+          price: parseFloat(item.price),
+          quantity: item.quantity,
+          total: parseFloat(item.price) * item.quantity,
+        }));
+
+        // Add Redux items that are not already in backend data
+        reduxFormatted.forEach((reduxItem) => {
+          const existsInBackend = mergedCartData.some(
+            (backendItem) => backendItem.productId === reduxItem.productId
+          );
+          if (!existsInBackend) {
+            mergedCartData.push(reduxItem);
+          }
+        });
+      }
+
+      setCartData(mergedCartData);
+      console.log("Final merged cart data:", mergedCartData);
     } catch (error) {
       console.error("Error fetching cart data", error);
+      // Fallback to Redux store data only
+      if (cartItems.length > 0) {
+        const formattedCartData = cartItems.map((item) => ({
+          productId: item.id,
+          productName: item.productName,
+          price: parseFloat(item.price),
+          quantity: item.quantity,
+          total: parseFloat(item.price) * item.quantity,
+        }));
+        setCartData(formattedCartData);
+        console.log("Fallback to Redux data:", formattedCartData);
+      }
     }
   };
 
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [cartItems.length]); // Re-fetch when Redux cart changes
+
+  // Listen for cart update events
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      fetchCart();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, [cartData]);
 
   const handlePaymentChange = (method: string) => {
     setPaymentMethod(method);
@@ -120,7 +200,7 @@ const CheckOut = () => {
           await clearCartAfterPayment(
             dispatch,
             clearCart,
-            cartData[0].productId
+            orderResponse.data.orderId
           );
           router.push(`/pages/thankyou?orderId=${orderResponse.data.orderId}`);
         } else {
@@ -210,7 +290,7 @@ const CheckOut = () => {
             await clearCartAfterPayment(
               dispatch,
               clearCart,
-              cartData[0].productId
+              orderResponse.data.orderId
             );
             window.location.href = res.data.approvalUrl;
           } else {
@@ -243,7 +323,7 @@ const CheckOut = () => {
           await clearCartAfterPayment(
             dispatch,
             clearCart,
-            cartData[0].productId
+            orderResponse.data.orderId
           );
           router.push(`/pages/thankyou?orderId=${orderResponse.data.orderId}`);
         } else {
@@ -305,8 +385,8 @@ const CheckOut = () => {
               <div className="flex items-center gap-[5px] md:pb-[19px] pb-[10px]">
                 <Image src={shipping} alt="image" width={20} height={20} />
                 <p className="text-[13px] font-quick-bold-700 text-regalblue">
-                  Add<span className="text-red-700 pl-1">₹299.11</span> to cart and
-                  get free shipping!
+                  Add<span className="text-red-700 pl-1">₹299.11</span> to cart
+                  and get free shipping!
                 </p>
               </div>
               <div className="w-full border border-pinkbg rounded-sm">

@@ -44,14 +44,25 @@ export const handleCart = async (
           stock: product?.stock,
         })
       );
+
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(
+        new CustomEvent("cartUpdated", {
+          detail: {
+            action: "add",
+            productId: product?._id,
+          },
+        })
+      );
     }
   } catch (error: any) {
     if (error.response?.status === 409) {
       toast.info("Product already exists in cart.");
+    } else {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add product to cart");
     }
   }
-
-  window.dispatchEvent(new Event("cartUpdated"));
 };
 
 export const clearCartAfterPayment = async (
@@ -66,7 +77,7 @@ export const clearCartAfterPayment = async (
     if (res.status === 200 || res.data.success) {
       console.log("Cart cleared successfully!");
     }
-    dispatch(clearCart());
+    dispatch(clearCart(productId));
 
     window.dispatchEvent(new CustomEvent("cartUpdated"));
   } catch (error) {
