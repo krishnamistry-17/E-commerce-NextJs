@@ -53,8 +53,6 @@ const initialValues = {
   street: "",
   street1: "",
   agreed: false,
-  shipToDifferentAddress: false,
-  orderNotes: "",
 };
 
 const CheckOut = () => {
@@ -235,7 +233,7 @@ const CheckOut = () => {
           apiRoutes.CREATE_ALL_PAYMENT,
           orderData
         );
-
+        console.log("Order response:", orderResponse);
         if (orderResponse.status === 200) {
           toast.success("Order placed successfully!");
           // Clear cart after successful order
@@ -244,6 +242,8 @@ const CheckOut = () => {
             clearCart,
             orderResponse.data.orderId
           );
+          // Clear local cart data state
+          setCartData([]);
           router.push(`/pages/thankyou?orderId=${orderResponse.data.orderId}`);
         } else {
           toast.error(orderResponse.data.message || "Failed to create order");
@@ -334,6 +334,8 @@ const CheckOut = () => {
               clearCart,
               orderResponse.data.orderId
             );
+            // Clear local cart data state
+            setCartData([]);
             window.location.href = res.data.approvalUrl;
           } else {
             toast.error("Failed to get PayPal approval URL");
@@ -367,6 +369,8 @@ const CheckOut = () => {
             clearCart,
             orderResponse.data.orderId
           );
+          // Clear local cart data state
+          setCartData([]);
           router.push(`/pages/thankyou?orderId=${orderResponse.data.orderId}`);
         } else {
           toast.error(orderResponse.data.message || "Failed to create order");
@@ -458,228 +462,249 @@ const CheckOut = () => {
                   setCompany(values.company);
                 }}
               >
-                {() => (
-                  <Form>
-                    <div className="w-full">
-                      <div className="md:flex items-center gap-[20px] w-full">
-                        <div className="flex flex-col w-full">
+                {({ values, handleChange, handleBlur }) => {
+                  // Sync Formik values with state on change
+                  React.useEffect(() => {
+                    setFName(values.fname);
+                    setLName(values.lname);
+                    setEmail(values.email);
+                    setphone(values.phone);
+                    setCity(values.city);
+                    setState(values.state);
+                    setZipCode(values.zipcode);
+                    setCountry(values.country);
+                    setStreet(values.street);
+                    setStreet1(values.street1);
+                    setCompany(values.company);
+                  }, [values]);
+
+                  return (
+                    <Form>
+                      <div className="w-full">
+                        <div className="md:flex items-center gap-[20px] w-full">
+                          <div className="flex flex-col w-full">
+                            <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                              First Name<span className="text-red-600">*</span>
+                            </label>
+                            <Field
+                              type="text"
+                              name="fname"
+                              className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                      text-[12px] font-quick-medium-500 text-regalblue
+                      "
+                            />
+                            <ErrorMessage
+                              name="fname"
+                              component="div"
+                              className="text-red-500 pt-1 text-[12px]"
+                            />
+                          </div>
+                          <div className="flex flex-col w-full">
+                            <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                              Last Name<span className="text-red-600">*</span>
+                            </label>
+                            <Field
+                              type="text"
+                              name="lname"
+                              className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                      text-[12px] font-quick-medium-500 text-regalblue
+                      "
+                            />
+                            <ErrorMessage
+                              name="lname"
+                              component="div"
+                              className="text-red-500 pt-1 text-[12px]"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
                           <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            First Name<span className="text-red-600">*</span>
+                            Company Name (Optional)
                           </label>
                           <Field
                             type="text"
-                            name="fname"
+                            name="company"
                             className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                      text-[12px] font-quick-medium-500 text-regalblue
-                      "
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
                           />
                           <ErrorMessage
-                            name="fname"
+                            name="company"
                             component="div"
                             className="text-red-500 pt-1 text-[12px]"
                           />
                         </div>
-                        <div className="flex flex-col w-full">
+                        <div className="flex flex-col">
                           <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Last Name<span className="text-red-600">*</span>
+                            Country / Region
+                            <span className="text-red-600">*</span>
                           </label>
                           <Field
                             type="text"
-                            name="lname"
+                            name="country"
                             className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                      text-[12px] font-quick-medium-500 text-regalblue
-                      "
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
                           />
                           <ErrorMessage
-                            name="lname"
+                            name="country"
                             component="div"
                             className="text-red-500 pt-1 text-[12px]"
                           />
                         </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Company Name (Optional)
-                        </label>
-                        <Field
-                          type="text"
-                          name="company"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                        />
-                        <ErrorMessage
-                          name="company"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Country / Region
-                          <span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="text"
-                          name="country"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                        />
-                        <ErrorMessage
-                          name="country"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Street address<span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="text"
-                          name="street"
-                          placeholder="House number and street name"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                        />
-                        <ErrorMessage
-                          name="street"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                        <div className="pt-[8px]">
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            Street address
+                            <span className="text-red-600">*</span>
+                          </label>
                           <Field
                             type="text"
-                            name="street1"
-                            placeholder="Apartment, suite, unit, etc. (optional)"
+                            name="street"
+                            placeholder="House number and street name"
                             className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                      text-[12px] font-quick-medium-500 text-regalblue
-                      "
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
                           />
                           <ErrorMessage
-                            name="street1"
+                            name="street"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                          <div className="pt-[8px]">
+                            <Field
+                              type="text"
+                              name="street1"
+                              placeholder="Apartment, suite, unit, etc. (optional)"
+                              className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                      text-[12px] font-quick-medium-500 text-regalblue
+                      "
+                            />
+                            <ErrorMessage
+                              name="street1"
+                              component="div"
+                              className="text-red-500 pt-1 text-[12px]"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            Town / City<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="city"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                          />
+                          <ErrorMessage
+                            name="city"
                             component="div"
                             className="text-red-500 pt-1 text-[12px]"
                           />
                         </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Town / City<span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="text"
-                          name="city"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            State<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="state"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                        />
-                        <ErrorMessage
-                          name="city"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          State<span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="text"
-                          name="state"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                          />
+                          <ErrorMessage
+                            name="state"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            ZIP Code<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="zipcode"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                        />
-                        <ErrorMessage
-                          name="state"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          ZIP Code<span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="text"
-                          name="zipcode"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                          />
+                          <ErrorMessage
+                            name="zipcode"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            Phone<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="tel"
+                            name="phone"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                        />
-                        <ErrorMessage
-                          name="zipcode"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Phone<span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="tel"
-                          name="phone"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                          />
+                          <ErrorMessage
+                            name="phone"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            Email address<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="email"
+                            name="email"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                        />
-                        <ErrorMessage
-                          name="phone"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Email address<span className="text-red-600">*</span>
-                        </label>
-                        <Field
-                          type="email"
-                          name="email"
-                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                        />
-                        <ErrorMessage
-                          name="email"
-                          component="div"
-                          className="text-red-500 pt-1 text-[12px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-[5px] py-[8px]">
-                        <Field type="checkbox" name="agreed" />
+                          />
+                          <ErrorMessage
+                            name="email"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                        <div className="flex items-center gap-[5px] py-[8px]">
+                          <Field type="checkbox" name="agreed" />
 
-                        <p className="text-[14px] font-quick-medium-500 text-regalblue">
-                          Create an account?
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-[5px] py-[8px]">
-                        <Field type="checkbox" name="shipToDifferentAddress" />
+                          <p className="text-[14px] font-quick-medium-500 text-regalblue">
+                            Create an account?
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-[5px] py-[8px]">
+                          <Field
+                            type="checkbox"
+                            name="shipToDifferentAddress"
+                          />
 
-                        <p className="text-[14px] font-quick-bold-700 text-regalblue">
-                          Ship to a different address?
-                        </p>
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                          Order notes (optional)
-                        </label>
-                        <Field
-                          type="text"
-                          name="orderNotes"
-                          placeholder="Notes about your order, e.g. special notes for delivery."
-                          className="w-full border border-gray-300 rounded-[8px] py-[30px] pl-2 focus:outline-none 
+                          <p className="text-[14px] font-quick-bold-700 text-regalblue">
+                            Ship to a different address?
+                          </p>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            Order notes (optional)
+                          </label>
+                          <Field
+                            type="text"
+                            name="orderNotes"
+                            placeholder="Notes about your order, e.g. special notes for delivery."
+                            className="w-full border border-gray-300 rounded-[8px] py-[30px] pl-2 focus:outline-none 
                     text-[12px] font-quick-medium-500 text-regalblue
                     "
-                        />
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Form>
-                )}
+                    </Form>
+                  );
+                }}
               </Formik>
             </div>
           </div>

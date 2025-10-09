@@ -19,7 +19,7 @@ const CartComponent = () => {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  console.log("cartItems", cartItems);
+  
 
   const router = useRouter();
   const [cartData, setCartData] = useState<
@@ -32,7 +32,7 @@ const CartComponent = () => {
       image: string;
     }>
   >([]);
-  console.log("cartData", cartData);
+
 
   // Fetch cart on mount and sync with Redux
   const fetchCart = async () => {
@@ -43,16 +43,13 @@ const CartComponent = () => {
       const backendCartData = res?.data?.cart?.cartItems;
 
       if (backendCartData && backendCartData.length > 0) {
-        console.log(
-          "CartComponent: Setting cart data from backend:",
-          backendCartData
-        );
+       
         setCartData(backendCartData);
       } else {
-        console.log("CartComponent: Backend cart is empty");
+       
         // If backend cart is empty, use Redux store data
         if (cartItems.length > 0) {
-          console.log("CartComponent: Using Redux cart data:", cartItems);
+         
           const formattedCartData = cartItems.map((item) => ({
             _id: item.id,
             productId: item.id,
@@ -63,7 +60,7 @@ const CartComponent = () => {
           }));
           setCartData(formattedCartData);
         } else {
-          console.log("CartComponent: Both backend and Redux carts are empty");
+ 
           setCartData([]);
         }
       }
@@ -71,10 +68,7 @@ const CartComponent = () => {
       console.error("Error fetching cart data", error);
       // Fallback to Redux store data
       if (cartItems.length > 0) {
-        console.log(
-          "CartComponent: Error occurred, using Redux fallback:",
-          cartItems
-        );
+        
         const formattedCartData = cartItems.map((item) => ({
           _id: item.id,
           productId: item.id,
@@ -85,9 +79,7 @@ const CartComponent = () => {
         }));
         setCartData(formattedCartData);
       } else {
-        console.log(
-          "CartComponent: Error occurred, no fallback data available"
-        );
+        
         setCartData([]);
       }
     }
@@ -149,7 +141,7 @@ const CartComponent = () => {
           : null;
       if (!accessToken) return;
 
-      console.log("CartComponent: Deleting product:", productId);
+      
       await axiosInstance.delete(apiRoutes.REMOVE_FROM_CART(productId));
       toast.success("Item removed from cart");
 
@@ -162,7 +154,7 @@ const CartComponent = () => {
       );
       setCartData(updatedCart); // Manually update state first
 
-      console.log("CartComponent: Updated cart data, dispatching event");
+     
       // Dispatch event to update cart icon
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("cartUpdated"));

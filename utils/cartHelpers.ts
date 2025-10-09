@@ -16,9 +16,10 @@ interface Product {
 export const handleCart = async (
   product: Product,
   clickedCartIds: string[],
-  dispatch: Dispatch
+  dispatch: Dispatch,
+  productId: string
 ) => {
-  if (clickedCartIds?.includes(product?._id)) {
+  if (clickedCartIds?.includes(productId)) {
     toast.info("Product already exists in cart");
     return;
   }
@@ -50,7 +51,7 @@ export const handleCart = async (
         new CustomEvent("cartUpdated", {
           detail: {
             action: "add",
-            productId: product?._id,
+            productId: productId,
           },
         })
       );
@@ -60,7 +61,7 @@ export const handleCart = async (
       toast.info("Product already exists in cart.");
       dispatch(
         addToCart({
-          id: product?._id,
+          id: productId,
           productName: product?.productName,
           price: product?.price.toString(),
           quantity: product?.quantity || 1,
@@ -78,19 +79,41 @@ export const handleCart = async (
 export const clearCartAfterPayment = async (
   dispatch: any,
   clearCart: any,
-  productId: string
+  orderId?: string
 ): Promise<void> => {
   try {
-    const res = await axiosInstance.delete(
-      apiRoutes.REMOVE_FROM_CART(productId)
-    );
-    if (res.status === 200 || res.data.success) {
-      console.log("Cart cleared successfully!");
-    }
-    dispatch(clearCart(productId));
+    // First, get all cart items
+    const cartResponse = await axiosInstance.get(apiRoutes.GET_CART);
+    const cartItems = cartResponse?.data?.cart?.cartItems || [];
 
+    console.log("Clearing cart after payment for order:", orderId);
+    console.log("Cart items to remove:", cartItems);
+
+    // Remove each item from the backend
+    if (cartItems.length > 0) {
+      const removePromises = cartItems.map((item: any) =>
+        axiosInstance
+          .delete(apiRoutes.REMOVE_FROM_CART(item.productId))
+          .catch((err) =>
+            console.error(`Failed to remove item ${item.productId}:`, err)
+          )
+      );
+
+      await Promise.all(removePromises);
+      console.log("All cart items removed from backend");
+    }
+
+    // Clear Redux cart store
+    dispatch(clearCart());
+
+    // Dispatch event to notify other components
     window.dispatchEvent(new CustomEvent("cartUpdated"));
+
+    toast.success("Cart cleared successfully!");
   } catch (error) {
-    console.error("Error clearing cart:", error);
+    console.error("Error clearing cart after payment:", error);
+    // Even if backend fails, clear Redux store
+    dispatch(clearCart());
+    window.dispatchEvent(new CustomEvent("cartUpdated"));
   }
 };
