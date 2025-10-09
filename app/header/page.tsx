@@ -166,7 +166,7 @@ const Navbar = () => {
         {isMenuOpen && (
           <div
             ref={mobileMenuRef}
-            className="absolute top-[60px] md:right-4 right-1 w-[120px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden"
+            className="absolute top-[64px] md:right-4 right-1 w-[133px] bg-white border border-gray-200 rounded-md shadow-md p-4 z-50 lg:hidden"
             onClick={() => setIsMenuOpen(false)}
           >
             <nav className="flex flex-col gap-3 text-sm text-start">
@@ -178,6 +178,9 @@ const Navbar = () => {
               </Link>
               <Link href="/pages/contact" onClick={() => setIsMenuOpen(false)}>
                 Contact
+              </Link>
+              <Link href={"/pages/orders"} onClick={() => setIsMenuOpen(false)}>
+                Order Tracking
               </Link>
 
               {accessToken ? (

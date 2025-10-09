@@ -109,8 +109,8 @@ const RelatedProduct = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="md:flex hidden justify-between items-center">
-        <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
+      <div>
+        <p className="lg:text-[32px] text-[27px] md:pl-0 pl-3 text-regalblue font-quick-bold-700">
           Related Products
         </p>
       </div>
