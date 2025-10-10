@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { toast } from "react-toastify";
 import { AxiosResponse } from "axios";
+import SignInButton from "../component/SignInButton";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -121,7 +122,10 @@ const Signin = () => {
           {() => (
             <Form>
               <div className="mb-4">
-                <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+                <label
+                  htmlFor="email"
+                  className="block text-regalblue text-[16px] font-quick-semibold-600"
+                >
                   Email<span className="text-red-600">*</span>
                 </label>
                 <Field
@@ -139,7 +143,7 @@ const Signin = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-gray-700">
+                <label htmlFor="password" className="block text-gray-700">
                   Password<span className="text-red-600">*</span>
                 </label>
                 <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1">
@@ -170,13 +174,15 @@ const Signin = () => {
                 </p>
               </div>
 
-              <button
+              {/* <button
                 type="submit"
                 className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700 hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Signing In..." : "Sign In"}
-              </button>
+              </button> */}
+
+              <SignInButton isSubmitting={isSubmitting} />
 
               <div className="py-[10px]">
                 <p>

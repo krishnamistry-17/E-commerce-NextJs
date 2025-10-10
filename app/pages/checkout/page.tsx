@@ -483,7 +483,9 @@ const CheckOut = () => {
                       <div className="w-full">
                         <div className="md:flex items-center gap-[20px] w-full">
                           <div className="flex flex-col w-full">
-                            <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            <label 
+                            htmlFor="fname"
+                            className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                               First Name<span className="text-red-600">*</span>
                             </label>
                             <Field
@@ -500,7 +502,9 @@ const CheckOut = () => {
                             />
                           </div>
                           <div className="flex flex-col w-full">
-                            <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                            <label 
+                            htmlFor="lname"
+                            className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                               Last Name<span className="text-red-600">*</span>
                             </label>
                             <Field
@@ -518,7 +522,9 @@ const CheckOut = () => {
                           </div>
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="company"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             Company Name (Optional)
                           </label>
                           <Field
@@ -535,7 +541,9 @@ const CheckOut = () => {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="country"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             Country / Region
                             <span className="text-red-600">*</span>
                           </label>
@@ -553,7 +561,9 @@ const CheckOut = () => {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="street"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             Street address
                             <span className="text-red-600">*</span>
                           </label>
@@ -587,7 +597,9 @@ const CheckOut = () => {
                           </div>
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="city"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             Town / City<span className="text-red-600">*</span>
                           </label>
                           <Field
@@ -604,7 +616,9 @@ const CheckOut = () => {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="state"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             State<span className="text-red-600">*</span>
                           </label>
                           <Field
@@ -638,7 +652,9 @@ const CheckOut = () => {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="phone"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             Phone<span className="text-red-600">*</span>
                           </label>
                           <Field
@@ -655,7 +671,9 @@ const CheckOut = () => {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
+                          <label 
+                          htmlFor="email"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
                             Email address<span className="text-red-600">*</span>
                           </label>
                           <Field

@@ -9,6 +9,7 @@ import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "../api/apiRoutes";
 import { toast } from "react-toastify";
 import { AxiosResponse } from "axios";
+import SignupButton from "../component/SignupButton";
 
 const validationSchema = Yup.object({
   fullName: Yup.string().required("Full Name is required"),
@@ -115,7 +116,10 @@ export default function SignUpPage() {
           {() => (
             <Form>
               <div className="mb-4">
-                <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+                <label
+                  htmlFor="fullName"
+                  className="block text-regalblue text-[16px] font-quick-semibold-600"
+                >
                   Full Name<span className="text-red-600">*</span>
                 </label>
                 <Field
@@ -133,7 +137,10 @@ export default function SignUpPage() {
               </div>
 
               <div className="mb-4">
-                <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+                <label
+                  htmlFor="email"
+                  className="block text-regalblue text-[16px] font-quick-semibold-600"
+                >
                   Email<span className="text-red-600">*</span>
                 </label>
                 <Field
@@ -151,7 +158,10 @@ export default function SignUpPage() {
               </div>
 
               <div className="mb-6">
-                <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+                <label
+                  htmlFor="password"
+                  className="block text-regalblue text-[16px] font-quick-semibold-600"
+                >
                   Password<span className="text-red-600">*</span>
                 </label>
                 <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1 focus-within:ring-0 ">
@@ -182,13 +192,7 @@ export default function SignUpPage() {
                 </p>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-shopbtn text-white py-2 rounded text-[16px] font-quick-bold-700 hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Signing Up..." : "Sign Up"}
-              </button>
+              <SignupButton isSubmitting={isSubmitting} />
             </Form>
           )}
         </Formik>

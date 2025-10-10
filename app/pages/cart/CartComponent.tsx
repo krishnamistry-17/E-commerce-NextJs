@@ -13,7 +13,7 @@ import cartimage from "../../../public/images/cart.png";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { removeFromCart } from "../slice/cartSlice";
+import { removeFromCart } from "../slice/cartSlice";  
 
 const CartComponent = () => {
   const dispatch = useDispatch();
