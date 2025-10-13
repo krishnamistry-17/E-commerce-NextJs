@@ -18,7 +18,8 @@
 
 ///test next
 -utils
--redux slicee,userprofile,logout,wishlist,blog,aboutus
+-redux slicee all-authslice,
+userprofile,wishlist,blog,blogdetail,aboutus
 -api routes
 
 

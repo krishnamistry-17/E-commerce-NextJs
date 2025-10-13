@@ -80,7 +80,9 @@ const ResetPasswordForm = () => {
           {() => (
             <Form className="w-full max-w-lg">
               <div className="mb-6">
-                <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+                <label 
+                htmlFor="email"
+                className="block text-regalblue text-[16px] font-quick-semibold-600">
                   Email<span className="text-red-600">*</span>
                 </label>
                 <Field
@@ -98,7 +100,9 @@ const ResetPasswordForm = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-gray-700">
+                <label 
+                htmlFor="password"
+                className="block text-gray-700">
                   Password<span className="text-red-600">*</span>
                 </label>
                 <div className="flex items-center justify-between w-full px-4 py-2 border rounded mt-1">

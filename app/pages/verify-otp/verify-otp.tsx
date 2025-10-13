@@ -1,7 +1,8 @@
 import { apiRoutes } from "@/app/api/apiRoutes";
 import axiosInstance from "@/lib/axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -47,7 +48,10 @@ const Verifyotp = () => {
         {() => (
           <Form className="bg-white p-8 rounded shadow-md w-full max-w-md flex flex-col space-y-4">
             <div className="mb-4">
-              <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+              <label
+                htmlFor="email"
+                className="block text-regalblue text-[16px] font-quick-semibold-600"
+              >
                 Email<span className="text-red-600">*</span>
               </label>
               <Field
@@ -64,7 +68,10 @@ const Verifyotp = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-regalblue text-[16px] font-quick-semibold-600">
+              <label
+                htmlFor="otp"
+                className="block text-regalblue text-[16px] font-quick-semibold-600"
+              >
                 otp<span className="text-red-600">*</span>
               </label>
               <Field
