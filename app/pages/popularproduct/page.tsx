@@ -100,7 +100,7 @@ const PopularProduct = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid="popular-product">
       <div className="md:flex hidden justify-between items-center">
         <p className="lg:text-[32px] text-[27px] text-regalblue font-quick-bold-700">
           Popular Products

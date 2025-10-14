@@ -42,6 +42,7 @@ export default function SignInWithEmail() {
         placeholder="Enter your email"
         value={email}
         required
+        data-testid="email-input"
         onChange={(e) => setEmail(e.target.value)}
         className="w-full px-4 py-2 border rounded"
       />

@@ -58,7 +58,7 @@ const Welcome = () => {
                   alt={`Subimage ${idx + 1}`}
                   height={192}
                   width={236}
-                  objectFit="cover"
+                  className="object-cover"
                   unoptimized
                 />
               </div>

@@ -1,7 +1,8 @@
 "use client";
 import BlogDetailClient from "@/app/pages/blogproduct/[id]/BlogDetailClient";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { useRouter } from "next/navigation";
+import { act } from "react";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
@@ -47,17 +48,25 @@ describe("BlogDetail", () => {
     });
   });
 
-  it("should render the blog detail client component", () => {
-    render(<BlogDetailClient id="122" />);
-    const recipesText = screen.getByText("Recipes");
-    expect(recipesText).toBeInTheDocument();
-  })
+  it("should render the blog detail client component", async () => {
+    await act(async () => {
+      render(<BlogDetailClient id="122" />);
+    });
+    await waitFor(() => {
+      const recipesText = screen.getByText("Recipes");
+      expect(recipesText).toBeInTheDocument();
+    });
+  });
 
-  it("should render category and selected products sections", () => {
-    render(<BlogDetailClient id="122" />);
-    const categoryText = screen.getByText("Category");
-    const selectedProductsText = screen.getByText("Selected products");
-    expect(categoryText).toBeInTheDocument();
-    expect(selectedProductsText).toBeInTheDocument();
+  it("should render category and selected products sections", async () => {
+    await act(async () => {
+      render(<BlogDetailClient id="122" />);
+    });
+    await waitFor(() => {
+      const categoryText = screen.getByText("Category");
+      const selectedProductsText = screen.getByText("Selected products");
+      expect(categoryText).toBeInTheDocument();
+      expect(selectedProductsText).toBeInTheDocument();
+    });
   });
 });

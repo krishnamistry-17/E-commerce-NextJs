@@ -424,31 +424,46 @@ const CheckOut = () => {
           </div>
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="md:flex  gap-[15px] pt-[30px]">
-          <div className="max-w-[980px] w-full ">
-            <div className="bg-bgpink px-[15px] py-[19px] rounded-[5px] border border-pinkbg">
-              <div className="flex items-center gap-[5px] md:pb-[19px] pb-[10px]">
-                <Image src={shipping} alt="image" width={20} height={20} />
-                <p className="text-[13px] font-quick-bold-700 text-regalblue">
-                  Add<span className="text-red-700 pl-1">₹299.11</span> to cart
-                  and get free shipping!
-                </p>
-              </div>
-              <div className="w-full border border-pinkbg rounded-sm">
-                <div className="w-full bg-pinkbg h-[5px]"></div>
-              </div>
-            </div>
-
-            <div className="pt-[15px]">
-              <p className="text-[15px] lg:text-[18px] xl:text-[22px] font-quick-bold-700  text-regalblue">
-                Billing details
+      <div className="md:flex  gap-[15px] pt-[30px]">
+        <div className="max-w-[980px] w-full ">
+          <div className="bg-bgpink px-[15px] py-[19px] rounded-[5px] border border-pinkbg">
+            <div className="flex items-center gap-[5px] md:pb-[19px] pb-[10px]">
+              <Image src={shipping} alt="image" width={20} height={20} />
+              <p className="text-[13px] font-quick-bold-700 text-regalblue">
+                Add<span className="text-red-700 pl-1">₹299.11</span> to cart
+                and get free shipping!
               </p>
-              <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={(values) => {
-                  // Update state with Formik values
+            </div>
+            <div className="w-full border border-pinkbg rounded-sm">
+              <div className="w-full bg-pinkbg h-[5px]"></div>
+            </div>
+          </div>
+
+          <div className="pt-[15px]">
+            <p className="text-[15px] lg:text-[18px] xl:text-[22px] font-quick-bold-700  text-regalblue">
+              Billing details
+            </p>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={(values) => {
+                // Update state with Formik values
+                setFName(values.fname);
+                setLName(values.lname);
+                setEmail(values.email);
+                setphone(values.phone);
+                setCity(values.city);
+                setState(values.state);
+                setZipCode(values.zipcode);
+                setCountry(values.country);
+                setStreet(values.street);
+                setStreet1(values.street1);
+                setCompany(values.company);
+              }}
+            >
+              {({ values, handleChange, handleBlur }) => {
+                // Sync Formik values with state on change
+                React.useEffect(() => {
                   setFName(values.fname);
                   setLName(values.lname);
                   setEmail(values.email);
@@ -460,457 +475,511 @@ const CheckOut = () => {
                   setStreet(values.street);
                   setStreet1(values.street1);
                   setCompany(values.company);
-                }}
-              >
-                {({ values, handleChange, handleBlur }) => {
-                  // Sync Formik values with state on change
-                  React.useEffect(() => {
-                    setFName(values.fname);
-                    setLName(values.lname);
-                    setEmail(values.email);
-                    setphone(values.phone);
-                    setCity(values.city);
-                    setState(values.state);
-                    setZipCode(values.zipcode);
-                    setCountry(values.country);
-                    setStreet(values.street);
-                    setStreet1(values.street1);
-                    setCompany(values.company);
-                  }, [values]);
+                }, [values]);
 
-                  return (
-                    <Form>
-                      <div className="w-full">
-                        <div className="md:flex items-center gap-[20px] w-full">
-                          <div className="flex flex-col w-full">
-                            <label 
+                return (
+                  <Form onSubmit={handleSubmit}>
+                    <div className="w-full">
+                      <div className="md:flex items-center gap-[20px] w-full">
+                        <div className="flex flex-col w-full">
+                          <label
                             htmlFor="fname"
-                            className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                              First Name<span className="text-red-600">*</span>
-                            </label>
-                            <Field
-                              type="text"
-                              name="fname"
-                              className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                            className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                          >
+                            First Name<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="fname"
+                            id="fname"
+                            aria-label="First Name"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
-                            />
-                            <ErrorMessage
-                              name="fname"
-                              component="div"
-                              className="text-red-500 pt-1 text-[12px]"
-                            />
-                          </div>
-                          <div className="flex flex-col w-full">
-                            <label 
+                          />
+                          <ErrorMessage
+                            name="fname"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                        <div className="flex flex-col w-full">
+                          <label
                             htmlFor="lname"
-                            className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                              Last Name<span className="text-red-600">*</span>
-                            </label>
-                            <Field
-                              type="text"
-                              name="lname"
-                              className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                            className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                          >
+                            Last Name<span className="text-red-600">*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="lname"
+                            id="lname"
+                            aria-label="Last Name"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
                       text-[12px] font-quick-medium-500 text-regalblue
                       "
-                            />
-                            <ErrorMessage
-                              name="lname"
-                              component="div"
-                              className="text-red-500 pt-1 text-[12px]"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="company"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Company Name (Optional)
-                          </label>
-                          <Field
-                            type="text"
-                            name="company"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
                           />
                           <ErrorMessage
-                            name="company"
+                            name="lname"
                             component="div"
                             className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="country"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Country / Region
-                            <span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="text"
-                            name="country"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="country"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="street"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Street address
-                            <span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="text"
-                            name="street"
-                            placeholder="House number and street name"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="street"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                          <div className="pt-[8px]">
-                            <Field
-                              type="text"
-                              name="street1"
-                              placeholder="Apartment, suite, unit, etc. (optional)"
-                              className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                      text-[12px] font-quick-medium-500 text-regalblue
-                      "
-                            />
-                            <ErrorMessage
-                              name="street1"
-                              component="div"
-                              className="text-red-500 pt-1 text-[12px]"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="city"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Town / City<span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="text"
-                            name="city"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="city"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="state"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            State<span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="text"
-                            name="state"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="state"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            ZIP Code<span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="text"
-                            name="zipcode"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="zipcode"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="phone"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Phone<span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="tel"
-                            name="phone"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="phone"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label 
-                          htmlFor="email"
-                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Email address<span className="text-red-600">*</span>
-                          </label>
-                          <Field
-                            type="email"
-                            name="email"
-                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
-                          />
-                          <ErrorMessage
-                            name="email"
-                            component="div"
-                            className="text-red-500 pt-1 text-[12px]"
-                          />
-                        </div>
-                        <div className="flex items-center gap-[5px] py-[8px]">
-                          <Field type="checkbox" name="agreed" />
-
-                          <p className="text-[14px] font-quick-medium-500 text-regalblue">
-                            Create an account?
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-[5px] py-[8px]">
-                          <Field
-                            type="checkbox"
-                            name="shipToDifferentAddress"
-                          />
-
-                          <p className="text-[14px] font-quick-bold-700 text-regalblue">
-                            Ship to a different address?
-                          </p>
-                        </div>
-                        <div className="flex flex-col">
-                          <label className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]">
-                            Order notes (optional)
-                          </label>
-                          <Field
-                            type="text"
-                            name="orderNotes"
-                            placeholder="Notes about your order, e.g. special notes for delivery."
-                            className="w-full border border-gray-300 rounded-[8px] py-[30px] pl-2 focus:outline-none 
-                    text-[12px] font-quick-medium-500 text-regalblue
-                    "
                           />
                         </div>
                       </div>
-                    </Form>
-                  );
-                }}
-              </Formik>
-            </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="company"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Company Name (Optional)
+                        </label>
+                        <Field
+                          type="text"
+                          name="company"
+                          id="company"
+                          aria-label="Company Name"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="company"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="country"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Country / Region
+                          <span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="country"
+                          id="country"
+                          aria-label="Country / Region"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="country"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="street"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Street address
+                          <span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="street"
+                          id="street"
+                          aria-label="Street address"
+                          placeholder="House number and street name"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="street"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                        <div className="pt-[8px]">
+                          <Field
+                            type="text"
+                            name="street1"
+                            id="street1"
+                            aria-label="Apartment, suite, unit"
+                            placeholder="Apartment, suite, unit, etc. (optional)"
+                            className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                      text-[12px] font-quick-medium-500 text-regalblue
+                      "
+                          />
+                          <ErrorMessage
+                            name="street1"
+                            component="div"
+                            className="text-red-500 pt-1 text-[12px]"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="city"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Town / City<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="city"
+                          id="city"
+                          aria-label="Town / City"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="city"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="state"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          State<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="state"
+                          id="state"
+                          aria-label="State"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="state"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="zipcode"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          ZIP Code<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="zipcode"
+                          id="zipcode"
+                          aria-label="ZIP Code"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="zipcode"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="phone"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Phone<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="tel"
+                          name="phone"
+                          id="phone"
+                          aria-label="Phone"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="phone"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="email"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Email address<span className="text-red-600">*</span>
+                        </label>
+                        <Field
+                          type="email"
+                          name="email"
+                          id="email"
+                          aria-label="Email address"
+                          className="w-full border border-gray-300 rounded-[8px] py-[8px] px-3 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-red-500 pt-1 text-[12px]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-[5px] py-[8px]">
+                        <Field
+                          type="checkbox"
+                          name="agreed"
+                          id="agreed"
+                          aria-label="Create an account?"
+                        />
+
+                        <p className="text-[14px] font-quick-medium-500 text-regalblue">
+                          Create an account?
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-[5px] py-[8px]">
+                        <Field
+                          type="checkbox"
+                          name="shipToDifferentAddress"
+                          id="shipToDifferentAddress"
+                          aria-label="Ship to a different address?"
+                        />
+
+                        <p className="text-[14px] font-quick-bold-700 text-regalblue">
+                          Ship to a different address?
+                        </p>
+                      </div>
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="orderNotes"
+                          className="text-[13px] md:text-[16px] font-quick-bold-700 text-regalblue py-[8px]"
+                        >
+                          Order notes (optional)
+                        </label>
+                        <Field
+                          type="text"
+                          name="orderNotes"
+                          id="orderNotes"
+                          aria-label="Order notes"
+                          placeholder="Notes about your order, e.g. special notes for delivery."
+                          className="w-full border border-gray-300 rounded-[8px] py-[30px] pl-2 focus:outline-none 
+                    text-[12px] font-quick-medium-500 text-regalblue
+                    "
+                        />
+                      </div>
+                    </div>
+                  </Form>
+                );
+              }}
+            </Formik>
           </div>
+        </div>
 
-          <div className="md:max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50 md:mt-0 mt-[30px] ">
-            <div className="flex flex-col px-[21px]">
-              <p className="text-[15px] font-quick-bold-700 text-regalblue py-[21px] ">
-                Your Order
+        <div className="md:max-w-[380px] w-full h-fit border border-bordercolor rounded-[6px] bg-gray-50 md:mt-0 mt-[30px] ">
+          <div className="flex flex-col px-[21px]">
+            <p className="text-[15px] font-quick-bold-700 text-regalblue py-[21px] ">
+              Your Order
+            </p>
+
+            {/* Header */}
+            <div className="flex items-center justify-between py-[15px] border-b border-bordercolor1">
+              <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
+                Product
               </p>
+              <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
+                Subtotal
+              </p>
+            </div>
 
-              {/* Header */}
-              <div className="flex items-center justify-between py-[15px] border-b border-bordercolor1">
-                <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                  Product
-                </p>
+            {/* Items */}
+            <div className="py-[12px]">
+              {cartData.map((item, index) => (
+                <div key={index} className="mb-[12px]">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] font-quick-semibold-600 text-regalblue">
+                      {item?.productName} x{item?.quantity}
+                    </p>
+                    <p className="text-[14px] font-quick-semibold-600 text-regalblue">
+                      ₹{Number(item?.price) * item?.quantity}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {/* Subtotal */}
+              <div className="flex items-center justify-between py-[10px] border-t border-bordercolor1">
                 <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
                   Subtotal
                 </p>
+                <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
+                  ₹
+                  {cartData.reduce(
+                    (acc, item) => acc + Number(item?.price) * item?.quantity,
+                    0
+                  )}
+                </p>
               </div>
 
-              {/* Items */}
-              <div className="py-[12px]">
-                {cartData.map((item, index) => (
-                  <div key={index} className="mb-[12px]">
-                    <div className="flex items-center justify-between">
-                      <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        {item?.productName} x{item?.quantity}
-                      </p>
-                      <p className="text-[14px] font-quick-semibold-600 text-regalblue">
-                        ₹{Number(item?.price) * item?.quantity}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+              {/* Total */}
+              <div className="flex items-center justify-between py-[10px] border-t border-bordercolor1">
+                <p className="text-[14px] font-quick-bold-700 text-bgbrown">
+                  Total
+                </p>
+                <p className="text-[16px] font-quick-bold-700 text-regalblue">
+                  ₹
+                  {cartData.reduce(
+                    (acc, item) => acc + Number(item?.price) * item?.quantity,
+                    0
+                  )}
+                </p>
+              </div>
+            </div>
 
-                {/* Subtotal */}
-                <div className="flex items-center justify-between py-[10px] border-t border-bordercolor1">
-                  <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                    Subtotal
-                  </p>
-                  <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                    ₹
-                    {cartData.reduce(
-                      (acc, item) => acc + Number(item?.price) * item?.quantity,
-                      0
-                    )}
-                  </p>
-                </div>
-
-                {/* Total */}
-                <div className="flex items-center justify-between py-[10px] border-t border-bordercolor1">
-                  <p className="text-[14px] font-quick-bold-700 text-bgbrown">
-                    Total
-                  </p>
-                  <p className="text-[16px] font-quick-bold-700 text-regalblue">
-                    ₹
-                    {cartData.reduce(
-                      (acc, item) => acc + Number(item?.price) * item?.quantity,
-                      0
-                    )}
-                  </p>
+            {/* Payment Methods */}
+            <div className="flex flex-col py-[12px]">
+              {/* Bank Transfer */}
+              <div className="flex items-start gap-[5px]">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="bank"
+                  id="bank-transfer"
+                  checked={paymentMethod === "bank"}
+                  onChange={() => handlePaymentChange("bank")}
+                  className="mt-1"
+                  aria-label="Direct bank transfer"
+                />
+                <div>
+                  <label
+                    htmlFor="bank-transfer"
+                    className="text-[16px] font-quick-semibold-600 text-regalblue cursor-pointer"
+                  >
+                    Direct bank transfer
+                  </label>
+                  {paymentMethod === "bank" && (
+                    <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
+                      Make your payment directly into our bank account. Please
+                      use your Order ID as the payment reference. Your order
+                      will not be shipped until the funds have cleared in our
+                      account.
+                    </p>
+                  )}
                 </div>
               </div>
-
-              {/* Payment Methods */}
-              <div className="flex flex-col py-[12px]">
-                {/* Bank Transfer */}
-                <div className="flex items-start gap-[5px]">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="bank"
-                    checked={paymentMethod === "bank"}
-                    onChange={() => handlePaymentChange("bank")}
-                    className="mt-1"
-                  />
-                  <div>
-                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
-                      Direct bank transfer
+              {/*Paypal */}
+              <div className="flex items-start gap-[5px] mt-3">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="paypal"
+                  id="paypal-payment"
+                  checked={paymentMethod === "paypal"}
+                  onChange={() => handlePaymentChange("paypal")}
+                  className="mt-1"
+                  aria-label="Paypal Payment"
+                />
+                <div>
+                  <label
+                    htmlFor="paypal-payment"
+                    className="text-[16px] font-quick-semibold-600 text-regalblue cursor-pointer"
+                  >
+                    Paypal Payment
+                  </label>
+                  {paymentMethod === "paypal" && (
+                    <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
+                      You will be redirected to PayPal to complete your
+                      purchase.
                     </p>
-                    {paymentMethod === "bank" && (
-                      <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
-                        Make your payment directly into our bank account. Please
-                        use your Order ID as the payment reference. Your order
-                        will not be shipped until the funds have cleared in our
-                        account.
-                      </p>
-                    )}
-                  </div>
+                  )}
                 </div>
-                {/*Paypal */}
-                <div className="flex items-start gap-[5px] mt-3">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="paypal"
-                    checked={paymentMethod === "paypal"}
-                    onChange={() => handlePaymentChange("paypal")}
-                    className="mt-1"
-                  />
-                  <div>
-                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
-                      Paypal Payment
+              </div>
+              {/*Card Payment */}
+              <div className="flex items-start gap-[5px] mt-3">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="card"
+                  id="card-payment"
+                  checked={paymentMethod === "card"}
+                  onChange={() => handlePaymentChange("card")}
+                  className="mt-1"
+                  aria-label="Card (Stripe) Payment"
+                />
+                <div>
+                  <label
+                    htmlFor="card-payment"
+                    className="text-[16px] font-quick-semibold-600 text-regalblue cursor-pointer"
+                  >
+                    Card (Stripe) Payment
+                  </label>
+                </div>
+              </div>
+              {/* Cash on Delivery */}
+              <div className="flex items-start gap-[5px] mt-3">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  id="cod-payment"
+                  checked={paymentMethod === "cod"}
+                  onChange={() => handlePaymentChange("cod")}
+                  className="mt-1"
+                  aria-label="Cash on delivery"
+                />
+                <div>
+                  <label
+                    htmlFor="cod-payment"
+                    className="text-[16px] font-quick-semibold-600 text-regalblue cursor-pointer"
+                  >
+                    Cash on delivery
+                  </label>
+                  {paymentMethod === "cod" && (
+                    <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
+                      Your personal data will be used to process your order,
+                      support your experience throughout this website, and for
+                      other purposes described in our privacy policy.
                     </p>
-                    {paymentMethod === "paypal" && (
-                      <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
-                        You will be redirected to PayPal to complete your
-                        purchase.
-                      </p>
-                    )}
-                  </div>
-                </div>
-                {/*Card Payment */}
-                <div className="flex items-start gap-[5px] mt-3">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="card"
-                    checked={paymentMethod === "card"}
-                    onChange={() => handlePaymentChange("card")}
-                    className="mt-1"
-                  />
-                  <div>
-                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
-                      Card (Stripe) Payment
-                    </p>
-                  </div>
-                </div>
-                {/* Cash on Delivery */}
-                <div className="flex items-start gap-[5px] mt-3">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="cod"
-                    checked={paymentMethod === "cod"}
-                    onChange={() => handlePaymentChange("cod")}
-                    className="mt-1"
-                  />
-                  <div>
-                    <p className="text-[16px] font-quick-semibold-600 text-regalblue">
-                      Cash on delivery
-                    </p>
-                    {paymentMethod === "cod" && (
-                      <p className="text-[15px] font-quick-medium-500 text-bgbrown py-[6px]">
-                        Your personal data will be used to process your order,
-                        support your experience throughout this website, and for
-                        other purposes described in our privacy policy.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Agreement */}
-                <div className="flex items-start gap-[5px] mt-3">
-                  <input
-                    type="checkbox"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    className="mt-1"
-                  />
-                  <p className="text-[15px] font-quick-semibold-600 text-regalblue">
-                    I have read and agree to the website
-                    <span className="text-shopbtn block">
-                      terms and conditions
-                    </span>
-                  </p>
+                  )}
                 </div>
               </div>
 
-              {/* Hidden Input & Submit */}
-              {/* <input
+              {/* Agreement */}
+              <div className="flex items-start gap-[5px] mt-3">
+                <input
+                  type="checkbox"
+                  id="terms-agreement"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-1"
+                  aria-label="I have read and agree to the website terms and conditions"
+                />
+                <label
+                  htmlFor="terms-agreement"
+                  className="text-[15px] font-quick-semibold-600 text-regalblue cursor-pointer"
+                >
+                  I have read and agree to the website
+                  <span className="text-shopbtn block">
+                    terms and conditions
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            {/* Hidden Input & Submit */}
+            {/* <input
                 type="hidden"
                 name="item"
                 value={JSON.stringify(cartItems)}
               /> */}
-              <div className="flex items-center justify-center px-[12px] py-[12px]">
-                <button
-                  type="submit"
-                  className="text-white text-[16px] font-quick-bold-700 bg-shopbtn rounded-[5px] w-full py-[6px]"
-                  disabled={!agreed || !paymentMethod}
-                >
-                  Place Order
-                </button>
-              </div>
+            <div className="flex items-center justify-center px-[12px] py-[12px]">
+              <button
+                type="submit"
+                className="text-white text-[16px] font-quick-bold-700 bg-shopbtn rounded-[5px] w-full py-[6px]"
+                disabled={!agreed || !paymentMethod}
+              >
+                Place Order
+              </button>
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

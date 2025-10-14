@@ -11,7 +11,7 @@ const CheckoutFormWrapperContent = () => {
   const fname = searchParams.get("fname") || "";
   const lname = searchParams.get("lname") || "";
   const email = searchParams.get("email") || "";
-  const clientSecret = searchParams.get("clientSecret") || "";
+  const clientSecret = searchParams.get("clientSecret") ||   "";
   const paymentIntentId = searchParams.get("paymentIntentId") || "";
 
   // Show error if required parameters are missing

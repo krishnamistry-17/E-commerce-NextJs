@@ -22,8 +22,23 @@
 userprofile,wishlist,blog,blogdetail,aboutus
 -api routes
 
+//now next
 
+app/page.tsx - Home page component
+app/layout.tsx - Root layout with providers
+app/not-found.tsx - 404 error page
+app/error/page.tsx - Error boundary page
 
+2. Core Components (Missing Tests)
+app/component/RehydrateAuth.tsx - Authentication rehydration
+app/component/PaymentClient.tsx - Payment processing component
+app/component/SignInWithEmail.tsx - Email sign-in component
+
+3. Utility Functions (Missing Tests)
+utils/cartHelpers.ts - Cart management functions (handleCart, clearCartAfterPayment)
+hooks/useDebounce.ts - Debounce hook
+hooks/useHydrateUser.ts - User hydration hook
+hooks/useWindowWidth.ts - Window width hook
   */
 }
 

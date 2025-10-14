@@ -6,7 +6,8 @@ import Link from "next/link";
 
 const WishListIcon = () => {
   const wishItem = useSelector((state: RootState) => state.wish.items);
-  const totalQuantity = wishItem.reduce((acc, item) => acc + item.quantity, 0);
+  const totalQuantity =
+    wishItem?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   return (
     <div>
