@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: any) => {
-    const { unoptimized, ...imgProps } = props;
-    return <img {...imgProps} />;
+    const { ...imgProps } = props;
+    return <img {...imgProps} alt="image" />;
   },
 }));
 

@@ -1,5 +1,5 @@
 import OrderPage from "@/app/pages/orders/page";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 import { act } from "react";
 
@@ -19,8 +19,8 @@ jest.mock("react-toastify", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: any) => {
-    const { unoptimized, ...imgProps } = props;
-    return <img {...imgProps} />;
+    const { ...imgProps } = props;
+    return <img {...imgProps} alt="image" />;
   },
 }));
 

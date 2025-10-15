@@ -1,6 +1,5 @@
 import { handleCart, clearCartAfterPayment } from "@/utils/cartHelpers";
 import axiosInstance from "@/lib/axios";
-import { apiRoutes } from "@/app/api/apiRoutes";
 import { toast } from "react-toastify";
 import { addToCart } from "@/app/pages/slice/cartSlice";
 

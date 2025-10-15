@@ -1,7 +1,5 @@
 import CartIcon from "@/app/pages/carticon/page";
 import { render, screen, waitFor, act } from "@testing-library/react";
-import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
 
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
@@ -18,8 +16,8 @@ jest.mock("react-redux", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: any) => {
-    const { unoptimized, ...imgProps } = props;
-    return <img {...imgProps} />;
+    const { ...imgProps } = props;
+    return <img {...imgProps} alt="image" />;
   },
 }));
 

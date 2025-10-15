@@ -14,7 +14,7 @@ import fillwish from "../../public/svgs/fillwish.svg";
 import BrowseCategories from "../browsecategory/page";
 import WishListIcon from "../pages/wishlisticon/page";
 import { useRouter } from "next/navigation";
-import Search from "../pages/search/page";
+const Search = dynamic(() => import("../pages/search/page"), { ssr: false });
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { logout, setAccessToken, setUser } from "../store/authSlice";
@@ -97,7 +97,7 @@ const Navbar = () => {
             alt="logo"
             width={140}
             height={45}
-            priority
+            // no priority to avoid competing with LCP
             sizes="140px"
           />
         </Link>

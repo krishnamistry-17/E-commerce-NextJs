@@ -11,7 +11,7 @@ jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: any) => {
     const { ...imgProps } = props;
-    return <img {...imgProps} />;
+    return <img {...imgProps} alt="image" />;
   },
 }));
 

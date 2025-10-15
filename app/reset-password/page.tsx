@@ -25,8 +25,6 @@ const initialValues = {
 const ResetPasswordForm = () => {
   const [isShown, setIsShown] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [password, setPassword] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const togglePassword = () => setIsShown(!isShown);

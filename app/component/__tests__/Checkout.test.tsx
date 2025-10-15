@@ -1,6 +1,6 @@
 import CheckOut from "@/app/pages/checkout/page";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { useRouter } from "next/navigation"; //fixed: use next/navigation instead of next/router
+import { render, screen } from "@testing-library/react";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 jest.mock("next/navigation", () => ({
@@ -16,9 +16,8 @@ jest.mock("react-redux", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: any) => {
-    // eslint-disable-next-line jsx-a11y/alt-text, @next/next/no-img-element
-    const { unoptimized, ...imgProps } = props;
-    return <img {...imgProps} />;
+    const { ...imgProps } = props;
+    return <img {...imgProps} alt="image" />;
   },
 }));
 

@@ -6,6 +6,10 @@ import Banner from "./pages/banner/page";
 
 import Categories from "./pages/categories/page";
 
+// Static generation improves TTFB and enables bfcache in production
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 const Home = () => {
   // const heading = headings;
 

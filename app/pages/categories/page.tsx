@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useMemo } from "react";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import food from "../../../public/images/food.png";
@@ -28,6 +29,10 @@ const Categories = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
+  const isDesktop = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(min-width: 768px)").matches;
+  }, []);
 
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const router = useRouter();
@@ -107,14 +112,15 @@ const Categories = () => {
             {/* Reserve space to avoid CLS by using a positioned container with an explicit aspect ratio */}
             <div
               className="absolute right-0 bottom-0 z-10 pointer-events-none xl:w-[42%] 
-              lg:w-[44%] md:w-[53%] w-[50%] aspect-[3/2]"
+              lg:w-[44%] md:w-[53%] w-[50%] aspect-[3/2] hidden md:block"
               style={{ position: "absolute" }}
             >
               <Image
                 src={food}
                 alt="food"
                 fill
-                priority
+                priority={isDesktop}
+                placeholder="blur"
                 sizes="(min-width: 1280px) 50vw, (min-width: 1024px) 44vw, (min-width: 768px) 53vw, 50vw"
                 className="object-cover"
               />

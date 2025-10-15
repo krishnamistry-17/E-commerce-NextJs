@@ -62,7 +62,11 @@ describe("Layout", () => {
     // Test the actual RootLayout component
     // Note: This will show HTML nesting warnings in tests, which is expected
     // for layout components that include html/body tags
-    render(<RootLayout children={<p>Hello</p>} />);
+    render(
+      <RootLayout>
+        <p>Hello</p>
+      </RootLayout>
+    );
 
     // Check that the children are rendered
     const layout = screen.getByText("Hello");

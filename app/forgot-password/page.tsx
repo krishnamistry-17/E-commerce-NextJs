@@ -20,7 +20,6 @@ const initialValues = {
 
 const ForgotPassword = () => {
   const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (values: typeof initialValues) => {

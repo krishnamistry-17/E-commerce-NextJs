@@ -13,13 +13,12 @@ import cartimage from "../../../public/images/cart.png";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { removeFromCart } from "../slice/cartSlice";  
+import { removeFromCart } from "../slice/cartSlice";
 
 const CartComponent = () => {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  
 
   const router = useRouter();
   const [cartData, setCartData] = useState<
@@ -33,7 +32,6 @@ const CartComponent = () => {
     }>
   >([]);
 
-
   // Fetch cart on mount and sync with Redux
   const fetchCart = async () => {
     try {
@@ -43,13 +41,10 @@ const CartComponent = () => {
       const backendCartData = res?.data?.cart?.cartItems;
 
       if (backendCartData && backendCartData.length > 0) {
-       
         setCartData(backendCartData);
       } else {
-       
         // If backend cart is empty, use Redux store data
         if (cartItems.length > 0) {
-         
           const formattedCartData = cartItems.map((item) => ({
             _id: item.id,
             productId: item.id,
@@ -60,7 +55,6 @@ const CartComponent = () => {
           }));
           setCartData(formattedCartData);
         } else {
- 
           setCartData([]);
         }
       }
@@ -68,7 +62,6 @@ const CartComponent = () => {
       console.error("Error fetching cart data", error);
       // Fallback to Redux store data
       if (cartItems.length > 0) {
-        
         const formattedCartData = cartItems.map((item) => ({
           _id: item.id,
           productId: item.id,
@@ -79,7 +72,6 @@ const CartComponent = () => {
         }));
         setCartData(formattedCartData);
       } else {
-        
         setCartData([]);
       }
     }
@@ -87,7 +79,7 @@ const CartComponent = () => {
 
   useEffect(() => {
     fetchCart();
-  }, [cartItems.length]); // Re-fetch when Redux cart changes
+  }, [cartItems.length, fetchCart]); // Re-fetch when Redux cart changes
 
   // Listen for cart update events
   useEffect(() => {
@@ -141,7 +133,6 @@ const CartComponent = () => {
           : null;
       if (!accessToken) return;
 
-      
       await axiosInstance.delete(apiRoutes.REMOVE_FROM_CART(productId));
       toast.success("Item removed from cart");
 
@@ -154,7 +145,6 @@ const CartComponent = () => {
       );
       setCartData(updatedCart); // Manually update state first
 
-     
       // Dispatch event to update cart icon
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("cartUpdated"));
