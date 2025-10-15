@@ -2,7 +2,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import Link from "next/link";
 
 const WishListIcon = () => {
   const wishItem = useSelector((state: RootState) => state.wish.items);
@@ -11,15 +10,13 @@ const WishListIcon = () => {
 
   return (
     <div>
-      <Link href="/pages/wishlist">
-        <div className="relative cursor-pointer">
-          {totalQuantity > 0 && (
-            <span className="absolute top-[-32px] lg:-right-0 -right-[12px] bg-shopbtn text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {totalQuantity}
-            </span>
-          )}
-        </div>
-      </Link>
+      <div className="relative cursor-pointer">
+        {totalQuantity > 0 && (
+          <span className="absolute top-[-32px] lg:-right-0 -right-[12px] bg-shopbtn text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {totalQuantity}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

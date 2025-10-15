@@ -5,7 +5,6 @@ import Image from "next/image";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-
 const CartIcon = dynamic(() => import("../pages/carticon/page"), {
   ssr: false,
 });
@@ -89,11 +88,18 @@ const Navbar = () => {
         <HeaderTop />
       </div>
       <nav
-        className="w-full border-b border-gray-200  shadow-sm 
-    md:px-4 px-2 py-3 flex justify-between items-center relative"
+        className="w-full border-b border-gray-200 shadow-sm px-2 md:px-4 py-3 
+      flex justify-between items-center relative min-h-[64px] md:min-h-[72px]"
       >
         <Link href="/" className="flex items-center gap-2 bg-white p-2">
-          <Image src={logo} alt="logo" width={140} height={45} priority />
+          <Image
+            src={logo}
+            alt="logo"
+            width={140}
+            height={45}
+            priority
+            sizes="140px"
+          />
         </Link>
 
         <div className="md:block hidden">
@@ -107,9 +113,13 @@ const Navbar = () => {
           <Link href="/pages/blog" className="">
             Blog
           </Link>
-          <Link href="/pages/cart">
-            {/* <Image src={cart} alt="cart" className="w-6 h-6" /> */}
-            <CartIcon />
+          <Link href="/pages/cart" className="inline-flex items-center">
+            <div
+              className="w-6 h-6 inline-flex items-center justify-center"
+              aria-hidden
+            >
+              <CartIcon />
+            </div>
           </Link>
 
           {accessToken ? (
@@ -153,9 +163,13 @@ const Navbar = () => {
             <WishListIcon />
           </Link>
 
-          <Link href="/pages/cart">
-            {/* <Image src={cart} alt="cart" className="w-6 h-6" /> */}
-            <CartIcon />
+          <Link href="/pages/cart" className="inline-flex items-center">
+            <div
+              className="w-6 h-6 inline-flex items-center justify-center"
+              aria-hidden
+            >
+              <CartIcon />
+            </div>
           </Link>
 
           <button onClick={toggleMenu} aria-label="Menu">

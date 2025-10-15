@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import right from "../../../public/svgs/right.svg";
 import home from "../../../public/svgs/home.svg";
 import coupen from "../../../public/svgs/coupen.svg";
@@ -59,17 +59,7 @@ const CheckOut = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [agreed, setAgreed] = useState(false);
   const router = useRouter();
-  const [fname, setFName] = useState<string>("");
-  const [lname, setLName] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
-  const [street, setStreet] = useState<string>("");
-  const [street1, setStreet1] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [state, setState] = useState<string>("");
-  const [zipcode, setZipCode] = useState<string>("");
-  const [phone, setphone] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  // Form fields are managed by Formik; no local state needed here
   const [cartData, setCartData] = useState<
     Array<{
       productId: string;
@@ -83,107 +73,121 @@ const CheckOut = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
 
-  // Fetch cart from backend and sync with Redux store
-  const fetchCart = async () => {
-    try {
-      const res = await axiosInstance.get(apiRoutes.GET_CART);
-      const backendCartData = res?.data?.cart?.cartItems;
+  // Fetch cart from backend and sync with Redux store (cancellable + stable)
+  const fetchCart = useCallback(
+    async (signal: AbortSignal) => {
+      try {
+        const res = await axiosInstance.get(apiRoutes.GET_CART, { signal });
+        const backendCartData = res?.data?.cart?.cartItems;
 
-      console.log("Backend cart data:", backendCartData);
-      console.log("Redux cart items:", cartItems);
+        let mergedCartData: Array<{
+          productId: string;
+          productName: string;
+          price: number;
+          quantity: number;
+          total: number;
+        }> = [];
 
-      // Merge backend and Redux data - prioritize backend but include Redux items not in backend
-      let mergedCartData: Array<{
-        productId: string;
-        productName: string;
-        price: number;
-        quantity: number;
-        total: number;
-      }> = [];
-
-      if (backendCartData && backendCartData.length > 0) {
-        // Convert backend data to checkout format
-        const backendFormatted = backendCartData.map(
-          (item: {
-            productId: string;
-            productName: string;
-            price: number;
-            quantity: number;
-          }) => ({
-            productId: item.productId,
-            productName: item.productName,
-            price: item.price,
-            quantity: item.quantity,
-            total: item.price * item.quantity,
-          })
-        );
-        mergedCartData = [...backendFormatted];
-      }
-
-      // Add Redux items that might not be in backend (for offline/local additions)
-      if (cartItems.length > 0) {
-        const reduxFormatted = cartItems.map((item) => ({
-          productId: item.id,
-          productName: item.productName,
-          price: parseFloat(item.price),
-          quantity: item.quantity,
-          total: parseFloat(item.price) * item.quantity,
-        }));
-
-        // Add Redux items that are not already in backend data
-        reduxFormatted.forEach((reduxItem) => {
-          const existsInBackend = mergedCartData.some(
-            (backendItem) => backendItem.productId === reduxItem.productId
+        if (backendCartData && backendCartData.length > 0) {
+          const backendFormatted = backendCartData.map(
+            (item: {
+              productId: string;
+              productName: string;
+              price: number;
+              quantity: number;
+            }) => ({
+              productId: item.productId,
+              productName: item.productName,
+              price: item.price,
+              quantity: item.quantity,
+              total: item.price * item.quantity,
+            })
           );
-          if (!existsInBackend) {
-            mergedCartData.push(reduxItem);
-          }
-        });
-      }
+          mergedCartData = [...backendFormatted];
+        }
 
-      setCartData(mergedCartData);
-      console.log("Final merged cart data:", mergedCartData);
-    } catch (error) {
-      console.error("Error fetching cart data", error);
-      // Fallback to Redux store data only
-      if (cartItems.length > 0) {
-        const formattedCartData = cartItems.map((item) => ({
-          productId: item.id,
-          productName: item.productName,
-          price: parseFloat(item.price),
-          quantity: item.quantity,
-          total: parseFloat(item.price) * item.quantity,
-        }));
-        setCartData(formattedCartData);
-        console.log("Fallback to Redux data:", formattedCartData);
+        if (cartItems.length > 0) {
+          const reduxFormatted = cartItems.map((item) => ({
+            productId: item.id,
+            productName: item.productName,
+            price: parseFloat(item.price),
+            quantity: item.quantity,
+            total: parseFloat(item.price) * item.quantity,
+          }));
+
+          reduxFormatted.forEach((reduxItem) => {
+            const existsInBackend = mergedCartData.some(
+              (backendItem) => backendItem.productId === reduxItem.productId
+            );
+            if (!existsInBackend) {
+              mergedCartData.push(reduxItem);
+            }
+          });
+        }
+
+        if (!signal.aborted) {
+          setCartData(mergedCartData);
+        }
+      } catch (error) {
+        if (
+          (error as unknown) instanceof DOMException &&
+          (error as DOMException).name === "AbortError"
+        ) {
+          return; // request aborted, ignore
+        }
+        // Fallback to Redux data on failure
+        if (!signal.aborted && cartItems.length > 0) {
+          const formattedCartData = cartItems.map((item) => ({
+            productId: item.id,
+            productName: item.productName,
+            price: parseFloat(item.price),
+            quantity: item.quantity,
+            total: parseFloat(item.price) * item.quantity,
+          }));
+          setCartData(formattedCartData);
+        }
       }
-    }
-  };
+    },
+    [cartItems]
+  );
 
   useEffect(() => {
-    fetchCart();
-  }, [cartItems.length]); // Re-fetch when Redux cart changes
+    const controller = new AbortController();
+    fetchCart(controller.signal);
+    return () => controller.abort();
+  }, [fetchCart]);
 
   // Listen for cart update events
   useEffect(() => {
     const handleCartUpdate = () => {
-      fetchCart();
+      const controller = new AbortController();
+      fetchCart(controller.signal);
     };
 
     window.addEventListener("cartUpdated", handleCartUpdate);
-
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
+  }, [fetchCart]);
+
+  // Memoized totals to avoid repeated reductions on each render
+  const subtotal = useMemo(() => {
+    return cartData.reduce(
+      (acc, item) => acc + Number(item.price) * item.quantity,
+      0
+    );
   }, [cartData]);
 
   const handlePaymentChange = (method: string) => {
     setPaymentMethod(method);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handlePlaceOrder = async (
+    values: typeof initialValues & {
+      orderNotes?: string;
+      shipToDifferentAddress?: boolean;
+    }
+  ) => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (!accessToken) {
@@ -194,16 +198,16 @@ const CheckOut = () => {
 
     // Validation
     if (
-      !email ||
-      !fname ||
-      !lname ||
-      !phone ||
-      !city ||
-      !state ||
-      !zipcode ||
-      !country ||
-      !street ||
-      !street1
+      !values.email ||
+      !values.fname ||
+      !values.lname ||
+      !values.phone ||
+      !values.city ||
+      !values.state ||
+      !values.zipcode ||
+      !values.country ||
+      !values.street ||
+      !values.street1
     ) {
       toast.warning("Please fill all required fields");
       return;
@@ -275,16 +279,16 @@ const CheckOut = () => {
 
           // Redirect to payment page with client secret
           const queryParams = new URLSearchParams({
-            fname,
-            lname,
-            email,
-            phone,
-            city,
-            state,
-            zipcode,
-            country,
-            street,
-            street1,
+            fname: values.fname,
+            lname: values.lname,
+            email: values.email,
+            phone: values.phone,
+            city: values.city,
+            state: values.state,
+            zipcode: values.zipcode,
+            country: values.country,
+            street: values.street,
+            street1: values.street1,
             clientSecret: paymentData.clientSecret,
             paymentIntentId: paymentData.paymentIntentId,
           });
@@ -446,39 +450,11 @@ const CheckOut = () => {
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
-              onSubmit={(values) => {
-                // Update state with Formik values
-                setFName(values.fname);
-                setLName(values.lname);
-                setEmail(values.email);
-                setphone(values.phone);
-                setCity(values.city);
-                setState(values.state);
-                setZipCode(values.zipcode);
-                setCountry(values.country);
-                setStreet(values.street);
-                setStreet1(values.street1);
-                setCompany(values.company);
-              }}
+              onSubmit={(values) => handlePlaceOrder(values)}
             >
-              {({ values, handleChange, handleBlur }) => {
-                // Sync Formik values with state on change
-                React.useEffect(() => {
-                  setFName(values.fname);
-                  setLName(values.lname);
-                  setEmail(values.email);
-                  setphone(values.phone);
-                  setCity(values.city);
-                  setState(values.state);
-                  setZipCode(values.zipcode);
-                  setCountry(values.country);
-                  setStreet(values.street);
-                  setStreet1(values.street1);
-                  setCompany(values.company);
-                }, [values]);
-
+              {() => {
                 return (
-                  <Form onSubmit={handleSubmit}>
+                  <Form>
                     <div className="w-full">
                       <div className="md:flex items-center gap-[20px] w-full">
                         <div className="flex flex-col w-full">
@@ -809,11 +785,7 @@ const CheckOut = () => {
                   Subtotal
                 </p>
                 <p className="text-[12px] font-quick-semibold-600 text-bgbrown">
-                  ₹
-                  {cartData.reduce(
-                    (acc, item) => acc + Number(item?.price) * item?.quantity,
-                    0
-                  )}
+                  ₹{subtotal}
                 </p>
               </div>
 
@@ -823,11 +795,7 @@ const CheckOut = () => {
                   Total
                 </p>
                 <p className="text-[16px] font-quick-bold-700 text-regalblue">
-                  ₹
-                  {cartData.reduce(
-                    (acc, item) => acc + Number(item?.price) * item?.quantity,
-                    0
-                  )}
+                  ₹{subtotal}
                 </p>
               </div>
             </div>

@@ -11,7 +11,7 @@ const Banner = () => {
   return (
     <div className="py-[40px]">
       <div
-        className="w-full h-fit object-cover rounded-[20px]
+        className="w-full h-fit min-h-[300px] md:min-h-[360px] object-cover rounded-[20px]
              shadow-lg bg-shopbtn bg-opacity-30 relative sm:p-[40px] p-2 z-0"
       >
         <div className="flex flex-col relative z-20">
@@ -52,15 +52,21 @@ const Banner = () => {
         </div>
 
         <div className="mt-[53px] sm:mt-8 md:mt-0">
-          <Image
-            src={food}
-            alt="food"
-            width={25}
-            height={25}
-            unoptimized
-            className="absolute right-0 bottom-0 xl:w-[50%] lg:w-[44%] md:w-[53%] w-[50%] z-10 object-cover pointer-events-none"
-            style={{ zIndex: 10 }}
-          />
+          {/* Reserve space to avoid CLS by using a positioned container with an explicit aspect ratio */}
+          <div
+            className="absolute right-0 bottom-0 z-10 pointer-events-none xl:w-[42%] 
+            lg:w-[44%] md:w-[53%] w-[50%] aspect-[3/2]"
+            style={{ position: "absolute" }}
+          >
+            <Image
+              src={food}
+              alt="food"
+              fill
+              priority
+              sizes="(min-width: 1280px) 50vw, (min-width: 1024px) 44vw, (min-width: 768px) 53vw, 50vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </div>

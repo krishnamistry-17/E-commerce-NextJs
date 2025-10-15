@@ -25,6 +25,7 @@ interface Category {
 
 const Categories = () => {
   const [product, setProducts] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>("All");
   const [categoryMenu, setCategoryMenu] = useState(false);
 
@@ -38,6 +39,8 @@ const Categories = () => {
         setProducts(res.data.data);
       } catch (error) {
         console.error("Error fetching products", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -61,7 +64,7 @@ const Categories = () => {
     <>
       <div>
         <div
-          className="w-full h-fit object-cover rounded-[20px]
+          className="w-full h-fit min-h-[300px] md:min-h-[360px] object-cover rounded-[20px]
              shadow-lg bg-shopbtn bg-opacity-30 relative sm:p-[40px] p-2 z-0"
         >
           <div className="flex flex-col relative z-20">
@@ -71,11 +74,11 @@ const Categories = () => {
             >
               Fresh Vegetables Big discount
             </p>
-            <p className="md:text-[22px] text-[16px] text-bgbrown font-lato-regular-400 pt-[20px] md:pb-[46px] relative z-20">
+            <p className="md:text-[22px] text-[16px] text-bgbrown font-lato-regular-400 pt-[20px] md:pb-[46px] relative z-20 min-h-[28px]">
               Save up to 50% off on your first order
             </p>
 
-            <div className="flex w-full  xs375:max-w-[450px] h-[64px] items-center z-30 relative">
+            <div className="flex w-full xs375:max-w-[450px] h-[64px] items-center z-30 relative min-h-[64px]">
               <div className="flex items-center  bg-white rounded-[50px] relative z-30">
                 <FiSend className="text-gray-500 mr-2 ml-3" />
 
@@ -101,15 +104,21 @@ const Categories = () => {
           </div>
 
           <div className="mt-[53px] sm:mt-8 md:mt-0">
-            <Image
-              src={food}
-              alt="food"
-              width={25}
-              height={25}
-              unoptimized
-              className="absolute right-0 bottom-0 xl:w-[50%] lg:w-[44%] md:w-[53%] w-[50%] z-10 object-cover pointer-events-none"
-              style={{ zIndex: 10 }}
-            />
+            {/* Reserve space to avoid CLS by using a positioned container with an explicit aspect ratio */}
+            <div
+              className="absolute right-0 bottom-0 z-10 pointer-events-none xl:w-[42%] 
+              lg:w-[44%] md:w-[53%] w-[50%] aspect-[3/2]"
+              style={{ position: "absolute" }}
+            >
+              <Image
+                src={food}
+                alt="food"
+                fill
+                priority
+                sizes="(min-width: 1280px) 50vw, (min-width: 1024px) 44vw, (min-width: 768px) 53vw, 50vw"
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -221,43 +230,53 @@ const Categories = () => {
             </div>
           </div>
 
-          <div
-            className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-[24px] 
-          rounded-[10px] p-4 text-center items-center"
-          >
-            {filteredProduct
-              ?.flatMap((category) =>
-                category.categoryProduct.map((product) => ({
-                  ...product,
-                  category: category.category,
-                }))
-              )
-              .map((product) => (
-                <div
-                  key={product._id}
-                  className={`py-[22px] px-4 rounded-[10px] text-center ${
-                    categoryBgColors[product.category] || "bg-white"
-                  }`}
-                >
-                  <Image
-                    src={product.image}
-                    alt={product.productName}
-                    width={200}
-                    height={200}
-                    className="mx-auto mb-2 w-full"
-                    unoptimized
-                  />
-                  <p className="text-regalblue font-semibold">
-                    {product.productName}
-                  </p>
-                  <p className="text-bgbrown">
-                    ₹{product.price}
-                    <span className="text-gray-400 text-sm pl-2">
-                      (Stock: {product.stock})
-                    </span>
-                  </p>
-                </div>
-              ))}
+          <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-[24px] rounded-[10px] p-4 text-center items-start min-h-[520px]">
+            {isLoading
+              ? Array.from({ length: 10 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="py-[22px] px-4 rounded-[10px] bg-white animate-pulse"
+                  >
+                    <div className="mx-auto mb-2 w-full max-w-[200px] aspect-square bg-gray-200 rounded" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto mb-2" />
+                    <div className="h-3 bg-gray-200 rounded w-1/3 mx-auto" />
+                  </div>
+                ))
+              : filteredProduct
+                  ?.flatMap((category) =>
+                    category.categoryProduct.map((product) => ({
+                      ...product,
+                      category: category.category,
+                    }))
+                  )
+                  .map((product) => (
+                    <div
+                      key={product._id}
+                      className={`py-[22px] px-4 rounded-[10px] text-center ${
+                        categoryBgColors[product.category] || "bg-white"
+                      }`}
+                    >
+                      <div className="mx-auto mb-2 w-full max-w-[200px] aspect-square relative">
+                        <Image
+                          src={product.image}
+                          alt={product.productName}
+                          fill
+                          sizes="(min-width: 1024px) 200px, 33vw"
+                          className="object-contain"
+                          unoptimized
+                        />
+                      </div>
+                      <p className="text-regalblue font-semibold">
+                        {product.productName}
+                      </p>
+                      <p className="text-bgbrown">
+                        ₹{product.price}
+                        <span className="text-gray-400 text-sm pl-2">
+                          (Stock: {product.stock})
+                        </span>
+                      </p>
+                    </div>
+                  ))}
           </div>
         </div>
 

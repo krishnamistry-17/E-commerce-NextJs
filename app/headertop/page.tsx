@@ -10,7 +10,7 @@ const HeaderTop = () => {
     <div>
       <div className="w-full md:h-[37px] h-fit border-b border-gray-200 pl-4 md:pl-0 pb-2 md:pb-14 py-2">
         <div className="md:flex items-center justify-around">
-          <div className=" xs375:flex hidden items-center  ">
+          <div className=" xs375:flex hidden items-center">
             <Link
               href="/pages/aboutus"
               className="text-[13px] font-lato-regular-400 text-bgbrown"
