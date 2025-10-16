@@ -26,6 +26,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body
         className={`${inter.variable} ${robotoMono.variable} ${quicksandBold.variable} ${quicksandSemiBold.variable} ${quicksandMedium.variable} ${quicksandRegular.variable} ${quicksandLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased`}
       >

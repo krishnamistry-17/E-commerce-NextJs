@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const Banner = () => {
   const router = useRouter();
   return (
-    <div className="py-[40px]">
+    <div >
       <div
         className="w-full h-fit min-h-[300px] md:min-h-[360px] object-cover rounded-[20px]
              shadow-lg bg-shopbtn bg-opacity-30 relative sm:p-[40px] p-2 z-0"

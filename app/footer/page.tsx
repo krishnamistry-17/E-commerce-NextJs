@@ -18,7 +18,7 @@ const Footer = () => {
       <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 xl:gap-[50px] gap-5">
         <div className="flex flex-col xl:pl-0 pl-[12px]">
           <Link href="/">
-            <Image src={logo} alt="logo" width={140} height={45} priority />
+            <Image src={logo} alt="logo" priority />
           </Link>
           <p className="pt-[17px] font-lato-regular-400 text-[17px] text-regalblue">
             Awesome grocery store website template

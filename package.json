@@ -10,7 +10,11 @@
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "analyze": "ANALYZE=true next build",
+    "lhci:prepare": "next build && next start -p 3000",
+    "lhci:run": "lighthouse http://localhost:3000 --only-categories=performance --preset=mobile --output html --output json --output-path ./lighthouse/home-mobile",
+    "lhci:run:desktop": "lighthouse http://localhost:3000 --only-categories=performance --preset=desktop --output html --output json --output-path ./lighthouse/home-desktop"
   },
   "netlify": {
     "plugin": "@netlify/next"
@@ -45,6 +49,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

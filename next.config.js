@@ -1,10 +1,22 @@
 /** @type {import('next').NextConfig} */
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 const nextConfig = {
   // Remove this line
   // output: "export",
   reactStrictMode: true,
   images: {
     domains: ["res.cloudinary.com"],
+  },
+  compiler: {
+    removeConsole: {
+      exclude: ["error", "warn"],
+    },
+  },
+  experimental: {
+    optimizePackageImports: ["react-icons", "@headlessui/react", "lodash-es"],
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -51,4 +63,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);
