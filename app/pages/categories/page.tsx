@@ -8,6 +8,9 @@ import { FiSend } from "react-icons/fi";
 import drop from "../../../public/svgs/drop.svg";
 import { useRouter } from "next/navigation";
 import { apiRoutes } from "@/app/api/apiRoutes";
+import mixpanelInstance from "@/lib/mixPanel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 interface Product {
   _id: string;
@@ -36,7 +39,7 @@ const Categories = () => {
 
   const toggleCategoryMenu = () => setCategoryMenu((prev) => !prev);
   const router = useRouter();
-
+  const { user } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -64,6 +67,15 @@ const Categories = () => {
     activeTab === "All"
       ? product
       : product.filter((products) => products?.category === activeTab);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+  }, [mixpanelInstance]);
+
+  const handleSubscribe = () => {
+    mixpanelInstance.track("subscribe");
+  };
 
   return (
     <>
@@ -95,7 +107,7 @@ const Categories = () => {
                 />
 
                 <button
-                  onClick={() => router.push("/signup")}
+                  onClick={handleSubscribe}
                   className="ml-2 bg-shopbtn text-white text-[12px] md:text-[16px] 
         px-[14px] py-[8px] lg:px-[40px] md:px-[23px] md:py-[22px] 
         rounded-[50px] font-quick-bold-700 transition whitespace-nowrap z-30"
