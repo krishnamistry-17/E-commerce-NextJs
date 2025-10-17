@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import abourt from "../../../public/images/aboutus.png";
 import sub1 from "../../../public/images/sub1.png";
 import sub2 from "../../../public/images/sub2.png";
@@ -11,8 +11,17 @@ import ad4 from "../../../public/svgs/ad4.svg";
 import ad5 from "../../../public/svgs/ad5.svg";
 import ad6 from "../../../public/svgs/ad6.svg";
 import about from "../../../public/images/about.png";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const Welcome = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const handleClick = (index: number) => {
+    mixpanelInstance.init();
+    mixpanelInstance.track("about_us_read_more_button_click");
+    setSelectedIndex((prev) => (prev === index ? null : index));
+  };
+
   return (
     <>
       <div
@@ -94,8 +103,18 @@ const Welcome = () => {
                   available, but the majority have suffered alteration in some
                   form
                 </p>
-                <button className="mt-auto text-[16px] font-lato-regular-400 text-shopbtn py-[34px]">
-                  Read more
+                {selectedIndex === ind && (
+                  <p className="text-[16px] font-lato-regular-400 text-bgbrown text-justify px-4 pt-2">
+                    This is new content, There are many variations of passages
+                    of Lorem Ipsum available, but the majority have suffered
+                    alteration in some form
+                  </p>
+                )}
+                <button
+                  onClick={() => handleClick(ind)}
+                  className="mt-auto text-[16px] font-lato-regular-400 text-shopbtn py-[34px]"
+                >
+                  {selectedIndex === ind ? "Read less" : "Read more"}
                 </button>
               </div>
             ))}

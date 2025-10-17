@@ -25,6 +25,8 @@ import {
   setClickedCartIds as setClickedCartIdsAction,
 } from "../../pages/slice/cartSlice";
 import Description from "../description";
+import Reviews from "../reviews";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<{
@@ -145,6 +147,11 @@ const ProductDetail = () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, [productId]);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.track("product_detail_page_view", { productId });
+  }, [mixpanelInstance]);
 
   const handleWishList = async () => {
     if (clickedFavIds.has(productId)) {
@@ -547,6 +554,9 @@ const ProductDetail = () => {
           </div>
           <div className="mt-8">
             <Description />
+          </div>
+          <div className="mt-8">
+            <Reviews productId={productId} />
           </div>
         </div>
 

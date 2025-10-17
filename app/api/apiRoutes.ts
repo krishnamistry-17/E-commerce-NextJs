@@ -35,4 +35,9 @@ export const apiRoutes = {
     `api/product/order/${orderId}/status`,
   CREATE_ALL_PAYMENT: "/api/pay/create-payment",
   CLEAR_CART: "/api/product/remove-item",
+  // Reviews
+  GET_REVIEWS: (productId: string) => `/api/reviews/${productId}`,
+  CREATE_REVIEW: "/api/reviews",
+  MODERATE_REVIEW: (reviewId: string) => `/api/reviews/${reviewId}`,
+  GET_PENDING_REVIEWS: "/api/reviews/pending",
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { MdArrowBack } from "react-icons/md";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,7 @@ import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "../api/apiRoutes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -21,6 +22,11 @@ const initialValues = {
 const ForgotPassword = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.track("forgot_password_page_view");
+  }, [mixpanelInstance]);
 
   const handleSubmit = async (values: typeof initialValues) => {
     setError(null);

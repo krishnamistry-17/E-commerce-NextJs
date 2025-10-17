@@ -17,6 +17,7 @@ import { clearCart } from "../slice/cartSlice";
 import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import { clearCartAfterPayment } from "@/utils/cartHelpers";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const inputStyles = {
   style: {
@@ -277,8 +278,10 @@ const CheckoutForm = ({
   };
 
   useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.track("checkout_page_view");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  }, [mixpanelInstance]);
 
   // Show loading state while initializing payment
   if (isInitializing) {
