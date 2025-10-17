@@ -16,6 +16,7 @@ import { clearCart } from "../slice/cartSlice";
 import { clearCartAfterPayment } from "@/utils/cartHelpers";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const validationSchema = Yup.object({
   fname: Yup.string().required("First Name is required"),
@@ -179,6 +180,7 @@ const CheckOut = () => {
   }, [cartData]);
 
   const handlePaymentChange = (method: string) => {
+    mixpanelInstance.track("payment_method_change_click'");
     setPaymentMethod(method);
   };
 
@@ -189,7 +191,7 @@ const CheckOut = () => {
     }
   ) => {
     const accessToken = localStorage.getItem("accessToken");
-
+    mixpanelInstance.track("place_order_click");
     if (!accessToken) {
       console.error("No access token found, user is not authenticated.");
       toast.warn("Please signin..");
@@ -454,7 +456,7 @@ const CheckOut = () => {
             >
               {() => {
                 return (
-                  <Form>
+                  <Form id="checkout-form">
                     <div className="w-full">
                       <div className="md:flex items-center gap-[20px] w-full">
                         <div className="flex flex-col w-full">
@@ -939,6 +941,7 @@ const CheckOut = () => {
             <div className="flex items-center justify-center px-[12px] py-[12px]">
               <button
                 type="submit"
+                form="checkout-form"
                 className="text-white text-[16px] font-quick-bold-700 bg-shopbtn rounded-[5px] w-full py-[6px]"
                 disabled={!agreed || !paymentMethod}
               >

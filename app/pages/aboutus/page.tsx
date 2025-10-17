@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import home from "../../../public/svgs/home.svg";
 import right from "../../../public/svgs/right.svg";
 import { useRouter } from "next/navigation";
@@ -8,9 +8,19 @@ import Welcome from "./welcome";
 import main from "../../../public/images/Main.png";
 import Team from "./team";
 import Banner from "../banner/page";
+import mixpanelInstance from "@/lib/mixPanel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 const AboutUs = () => {
   const router = useRouter();
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+  }, [mixpanelInstance]);
+
   return (
     <div>
       <div className="w-full  border-b border-gray-200 py-[6px] xl:px-[143px] xs375:px-5 px-5">

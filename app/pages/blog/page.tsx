@@ -10,9 +10,11 @@ import sort from "../../../public/svgs/sort.svg";
 import dot from "../../../public/svgs/dot.svg";
 import filter from "../../../public/svgs/filter.svg";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setProductDetails } from "../slice/blogDetailSlice";
 import Pagination from "./pagination";
+import mixpanelInstance from "@/lib/mixPanel";
+import { RootState } from "@/app/store/store";
 
 type Recipe = {
   id: number;
@@ -37,7 +39,7 @@ const Blog = () => {
   const [postPerPage, setPostPerPage] = useState(6);
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
 
@@ -50,6 +52,15 @@ const Blog = () => {
       setCurrentPage(pageNumber);
     }
   };
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+    mixpanelInstance.track("blog_page_view");
+    mixpanelInstance.people.set({
+      $blog_page_view: true,
+    });
+  }, [mixpanelInstance]);
 
   useEffect(() => {
     const fetchProduct = async () => {

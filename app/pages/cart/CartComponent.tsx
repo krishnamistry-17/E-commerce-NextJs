@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { removeFromCart } from "../slice/cartSlice";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const CartComponent = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,10 @@ const CartComponent = () => {
       image: string;
     }>
   >([]);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+  }, [mixpanelInstance]);
 
   // Fetch cart on mount and sync with Redux
   const fetchCart = async () => {
@@ -102,6 +107,7 @@ const CartComponent = () => {
   // Update quantity
 
   const handleQuantityChange = async (productId: string, quantity: number) => {
+    mixpanelInstance.track("update_cart_quantity_click");
     try {
       const accessToken =
         typeof window !== "undefined"
@@ -126,6 +132,7 @@ const CartComponent = () => {
 
   // Delete item
   const handleDelete = async (productId: string) => {
+    mixpanelInstance.track("remove_from_cart_click");
     try {
       const accessToken =
         typeof window !== "undefined"
@@ -157,7 +164,10 @@ const CartComponent = () => {
     }
   };
 
-  const handleNavigation = () => router.push("/pages/checkout");
+  const handleNavigation = () => {
+    mixpanelInstance.track("checkout_click");
+    router.push("/pages/checkout");
+  };
 
   return (
     <>

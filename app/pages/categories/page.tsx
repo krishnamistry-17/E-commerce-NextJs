@@ -71,6 +71,7 @@ const Categories = () => {
   useEffect(() => {
     mixpanelInstance.init();
     mixpanelInstance.identify(user?._id || "");
+    mixpanelInstance.track("categories_page_view");
   }, [mixpanelInstance]);
 
   const handleSubscribe = () => {
@@ -86,7 +87,7 @@ const Categories = () => {
         >
           <div className="flex flex-col relative z-20">
             <p
-              className="lg:text-[40px] md:text-[32px] text-[22p]
+              className="lg:text-[40px] md:text-[32px] text-[22px]
                  text-regalblue font-quick-bold-700 md:max-w-[530px] relative z-20"
             >
               Fresh Vegetables Big discount
@@ -151,7 +152,7 @@ const Categories = () => {
                 </p>
               </div>
               <div>
-                <p
+                <div
                   className="lg:text-[16px] md:text-[16px] xs375:text-[13px] text-[16px] pl-[29px] pt-[20px] font-quicksand-600 
                   text-regalblue
                   xs375:flex items-center gap-[27.5px]"
@@ -181,7 +182,7 @@ const Categories = () => {
                       </div>
                     ))}
                   </div>
-                </p>
+                </div>
               </div>
             </div>
             <div className="md:hidden justify-between  items-center pb-[43px]">

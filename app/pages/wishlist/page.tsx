@@ -13,6 +13,7 @@ import home from "../../../public/svgs/home.svg";
 import right from "../../../public/svgs/right.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const WhishList = () => {
   const [product, setProduct] = useState<
@@ -25,7 +26,16 @@ const WhishList = () => {
   >([]);
   // const [favProducts, setFavProducts] = useState<any[]>([]);
   const router = useRouter();
-  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const { accessToken, user } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+    mixpanelInstance.people.set({
+      $wishlist: true,
+    });
+  }, [mixpanelInstance]);
+
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {

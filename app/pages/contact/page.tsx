@@ -3,13 +3,27 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import home from "../../../public/svgs/home.svg";
 import right from "../../../public/svgs/right.svg";
-import React from "react";
+import React, { useEffect } from "react";
 import Help from "./help";
 import ContactForm from "./contactform";
 import Banner from "../banner/page";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const Contact = () => {
   const router = useRouter();
+
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+    mixpanelInstance.track("contact_page_view");
+    mixpanelInstance.people.set({
+      $contact_page_view: true,
+    });
+  }, [mixpanelInstance]);
   return (
     <div>
       <div className="w-full  border-b border-gray-200 py-[6px] xl:px-[143px] xs375:px-5 px-5">

@@ -20,6 +20,7 @@ import { RootState } from "../store/store";
 import { logout, setAccessToken, setUser } from "../store/authSlice";
 import useWindowWidth from "../hooks/useWindowWidth";
 import { clearCart } from "../pages/slice/cartSlice";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,7 +32,23 @@ const Navbar = () => {
   const windowWidth = useWindowWidth();
 
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const { accessToken, user } = useSelector((state: RootState) => state.auth);
+
+  const handleContactClick = () => {
+    mixpanelInstance.track("contact_click");
+  };
+
+  const handleBlogClick = () => {
+    mixpanelInstance.track("blog_click");
+  };
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+    mixpanelInstance.people.set({
+      $email: user?.email,
+    });
+  }, [mixpanelInstance]);
 
   const handleOutsideClick = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -72,6 +89,7 @@ const Navbar = () => {
   }, [dispatch]);
 
   const handleLogout = () => {
+    mixpanelInstance.track("logout_click");
     dispatch(logout());
     if (typeof window !== "undefined") {
       localStorage.removeItem("accessToken");
@@ -81,6 +99,38 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const handleSignInClick = () => {
+    mixpanelInstance.track("signin_click");
+    router.push("/signin");
+  };
+
+  const handleSignUpClick = () => {
+    mixpanelInstance.track("signup_click");
+    router.push("/signup");
+  };
+
+  const handleUserProfileClick = () => {
+    mixpanelInstance.track("user_profile_view");
+    router.push("/user-profile");
+  };
+
+  const handleWishListClick = () => {
+    mixpanelInstance.track("wishlist_click");
+  };
+
+  const handleCartClick = () => {
+    mixpanelInstance.track("cart_click");
+  };
+
+  const handleAboutUsClick = () => {
+    mixpanelInstance.track("about_us_click");
+    setIsMenuOpen(false);
+  };
+
+  const handleOrderTrackingClick = () => {
+    mixpanelInstance.track("order_tracking_click");
+  };
 
   return (
     <>
@@ -107,10 +157,10 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-6 text-sm">
-          <Link href="/pages/contact" className="">
+          <Link href="/pages/contact" className="" onClick={handleContactClick}>
             Contact
           </Link>
-          <Link href="/pages/blog" className="">
+          <Link href="/pages/blog" className="" onClick={handleBlogClick}>
             Blog
           </Link>
           <Link href="/pages/cart" className="inline-flex items-center">
@@ -124,7 +174,7 @@ const Navbar = () => {
 
           {accessToken ? (
             <>
-              <div onClick={() => router.push("/user-profile")}>
+              <div onClick={handleUserProfileClick}>
                 <button className="px-4 py-1 rounded border border-black ">
                   User Profile
                 </button>
@@ -142,13 +192,13 @@ const Navbar = () => {
           ) : (
             <>
               <button
-                onClick={() => router.push("/signin")}
+                onClick={handleSignInClick}
                 className="px-4 py-1 rounded border border-black "
               >
                 Sign In
               </button>
               <button
-                onClick={() => router.push("/signup")}
+                onClick={handleSignUpClick}
                 className="px-4 py-1 rounded border border-black "
               >
                 Sign Up
@@ -158,12 +208,16 @@ const Navbar = () => {
         </div>
 
         <div className="lg:hidden flex items-center gap-[13px]">
-          <Link href={"/pages/wishlist"}>
+          <Link href={"/pages/wishlist"} onClick={handleWishListClick}>
             <Image src={fillwish} alt="fillwish" className="w-6 h-6" />
             <WishListIcon />
           </Link>
 
-          <Link href="/pages/cart" className="inline-flex items-center">
+          <Link
+            href="/pages/cart"
+            className="inline-flex items-center"
+            onClick={handleCartClick}
+          >
             <div
               className="w-6 h-6 inline-flex items-center justify-center"
               aria-hidden
@@ -184,22 +238,22 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             <nav className="flex flex-col gap-3 text-sm text-start">
-              <Link href="/pages/aboutus" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/pages/aboutus" onClick={handleAboutUsClick}>
                 About us
               </Link>
-              <Link href="/pages/blog" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/pages/blog" onClick={handleBlogClick}>
                 Blog
               </Link>
-              <Link href="/pages/contact" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/pages/contact" onClick={handleContactClick}>
                 Contact
               </Link>
-              <Link href={"/pages/orders"} onClick={() => setIsMenuOpen(false)}>
+              <Link href={"/pages/orders"} onClick={handleOrderTrackingClick}>
                 Order Tracking
               </Link>
 
               {accessToken ? (
                 <>
-                  <div onClick={() => router.push("/user-profile")}>
+                  <div onClick={handleUserProfileClick}>
                     <button className=" py-1 text-start ">User Profile</button>
                   </div>
                   <div>
@@ -215,13 +269,13 @@ const Navbar = () => {
               ) : (
                 <>
                   <button
-                    onClick={() => router.push("/signin")}
+                    onClick={handleSignInClick}
                     className=" py-1 text-start "
                   >
                     Sign In
                   </button>
                   <button
-                    onClick={() => router.push("/signup")}
+                    onClick={handleSignUpClick}
                     className=" py-1 text-start "
                   >
                     Sign Up

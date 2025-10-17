@@ -9,14 +9,14 @@ import { useRouter } from "next/navigation";
 const Banner = () => {
   const router = useRouter();
   return (
-    <div >
+    <div>
       <div
         className="w-full h-fit min-h-[300px] md:min-h-[360px] object-cover rounded-[20px]
              shadow-lg bg-shopbtn bg-opacity-30 relative sm:p-[40px] p-2 z-0"
       >
         <div className="flex flex-col relative z-20">
           <p
-            className="lg:text-[40px] md:text-[32px] text-[22p]
+            className="lg:text-[40px] md:text-[32px] text-[22px]
                  text-regalblue font-quick-bold-700 md:max-w-[530px] relative z-20"
           >
             Stay home & get your daily needs from our shop

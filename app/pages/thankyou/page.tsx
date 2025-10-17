@@ -5,6 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { Order, OrderResponse } from "@/types/order";
 import { OrderService } from "@/services/orderService";
 import Image from "next/image";
+import mixpanelInstance from "@/lib/mixPanel";
 
 const ThankyouContent = () => {
   const router = useRouter();
@@ -13,6 +14,14 @@ const ThankyouContent = () => {
   const [loading, setLoading] = useState(true);
 
   const orderId = searchParams.get("orderId");
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.track("thankyou_page_view");
+    mixpanelInstance.people.set({
+      $thankyou_page_view: true,
+    });
+  }, [mixpanelInstance]);
 
   const fetchOrderDetails = useCallback(async () => {
     try {

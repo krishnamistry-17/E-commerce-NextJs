@@ -8,6 +8,9 @@ import axiosInstance from "@/lib/axios";
 import { apiRoutes } from "@/app/api/apiRoutes";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
+import mixpanelInstance from "@/lib/mixPanel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState<
@@ -40,6 +43,15 @@ const OrderPage = () => {
       }>;
     }>
   >([]);
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.identify(user?._id || "");
+    mixpanelInstance.people.set({
+      $order_tracking: true,
+    });
+  }, [mixpanelInstance]);
 
   useEffect(() => {
     const fetchData = async () => {

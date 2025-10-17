@@ -10,6 +10,7 @@ import { apiRoutes } from "@/app/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addToClickedCartIds } from "../slice/cartSlice";
+import mixpanelInstance from "@/lib/mixPanel";
 
 interface Category {
   productName: string;
@@ -43,6 +44,11 @@ const PopularProduct = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    mixpanelInstance.init();
+    mixpanelInstance.track("popular_product_page_view");
+  }, [mixpanelInstance]);
+
   const categoriesWiseTag: Record<string, string> = {
     Hot: "bg-pinktag",
     Sale: "bg-bluetag",
@@ -56,6 +62,10 @@ const PopularProduct = () => {
       : product?.filter((products) => products?.productName === activeTab);
 
   const handleCart = async (productId: string) => {
+    mixpanelInstance.track("add_to_cart_click");
+    mixpanelInstance.people.set({
+      $add_to_cart_click: true,
+    });
     if (clickedCartIds?.includes(productId)) {
       toast.info("Product already added in cart");
       return;
@@ -96,6 +106,10 @@ const PopularProduct = () => {
       console.error("Failed to view details", error);
       // toast.info("Please try again.");
     }
+    mixpanelInstance.track("product_details_view");
+    mixpanelInstance.people.set({
+      $product_details_view: true,
+    });
     router.push(`/product/${productId}`);
   };
 
